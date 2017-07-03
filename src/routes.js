@@ -2,6 +2,7 @@ import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
+import barChart from './views/systemSetting/barChart.vue'
 import Table from './views/systemSetting/Table.vue'
 import Form from './views/systemSetting/Form.vue'
 import user from './views/systemSetting/user.vue'
@@ -79,7 +80,7 @@ let routes = [
         name: '统计分析',
         iconCls: 'fa fa-bar-chart-o',
         children: [
-            { path: '/page4', component: Page4,  name: '道路客运' },
+            { path: '/barChart', component: barChart,  name: '道路客运' },
             { path: '/page4', component: Page4,  name: '道路货运' },
             { path: '/page4', component: Page4,  name: '出租车运输' },
             { path: '/page4', component: Page4,  name: '内河运输' },

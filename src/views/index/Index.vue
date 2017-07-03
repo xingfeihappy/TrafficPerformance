@@ -27,7 +27,6 @@
                 energyTypeUrl : './api/energyTypeMonth'
             }
         },
-
         methods: {
             energyTypeSelectChange(){
                 let value= this.energyTypeSelectValue;
@@ -147,8 +146,12 @@
         .chart-container{
              background-color: #F2F2F2; 
             .chart-header{
-                 /*float: right; */
-                margin-bottom: 10px;
+                float: right;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            #energyTypePie{
+                overflow: hidden;
             }
         }
         
