@@ -21,14 +21,11 @@ var autoOpenBrowser = !!config.dev.autoOpenBrowser
 var proxyTable = config.dev.proxyTable
 
 var app = express() //在实例化express的后面开始编写测试数据的相关策略
+var apiRoutes = express.Router();
 
 // var appData = require('../data.json');
 
 var hangzhouTrack = require('../src/mock/data/hangzhouTrack.json'); // 引入测试数据
-
-var chartColume = require('../src/mock/data/chartColume.json'); // 引入测试数据
-var apiRoutes = express.Router();
-
 apiRoutes.get('/hangzhouTrack', function (req, res) {
   res.json({
     errno: 0,
@@ -36,10 +33,34 @@ apiRoutes.get('/hangzhouTrack', function (req, res) {
   });
 });
 
+var chartColume = require('../src/mock/data/chartColume.json'); // 引入测试数据
 apiRoutes.get('/chartColume', function (req, res) {
   res.json({
     errno: 0,
     data: chartColume
+  });
+});
+
+var energyTypeMonth = require('../src/mock/data/energyTypeMonth.json'); // 引入测试数据
+apiRoutes.get('/energyTypeMonth', function (req, res) {
+  res.json({
+    errno: 0,
+    data: energyTypeMonth
+  });
+});
+
+var energyTypeQuater = require('../src/mock/data/energyTypeQuater.json'); // 引入测试数据
+apiRoutes.get('/energyTypeQuater', function (req, res) {
+  res.json({
+    errno: 0,
+    data: energyTypeQuater
+  });
+});
+var energyTypeYear = require('../src/mock/data/energyTypeYear.json'); // 引入测试数据
+apiRoutes.get('/energyTypeYear', function (req, res) {
+  res.json({
+    errno: 0,
+    data: energyTypeYear
   });
 });
 
