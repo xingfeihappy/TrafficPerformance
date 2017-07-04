@@ -13,7 +13,9 @@ import Index from './views/index/Index.vue'
 import main from './views/Main.vue'
 import busChart from './components/busChart.vue'
 import taxiChart from './components/taxiChart.vue'
-
+import allTypChart from './components/allTypChart.vue'
+import engTypChgChart from './components/engTypChgChart.vue'
+import traTypPreChgChart from './components/traTypPreChgChart.vue'
 
 let routes = [
     {
@@ -91,10 +93,10 @@ let routes = [
             { path: '/page4', component: Page4,  name: '海洋货运' },
             { path: '/page4', component: Page4,  name: '海洋客运' },
             { path: '/page4', component: Page4,  name: '港口生产' },
-            { path: '/page4', component: Page4,  name: '单位运距能耗指标' },
+            { path: '/allTypChart', component: allTypChart,  name: '单位运距能耗指标' },
             { path: '/page4', component: Page4,  name: '能耗结构' },
-            { path: '/page4', component: Page4,  name: '能源类型分时趋势' },
-            { path: '/page4', component: Page4,  name: '单位能耗变化趋势' },
+            { path: '/engTypChgChart', component: engTypChgChart,  name: '能源类型分时趋势' },
+            { path: '/traTypPreChgChart', component: traTypPreChgChart,  name: '单位能耗变化趋势' },
             { path: '/page4', component: Page4,  name: '总能耗变化趋势' },
             { path: '/page4', component: Page4,  name: '地市能耗构成图' },
             { path: '/page4', component: Page4,  name: '交通方式能耗构成图' },            

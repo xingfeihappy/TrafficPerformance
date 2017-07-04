@@ -1,4 +1,4 @@
-<template>
+<<template>
     <section class="chart" >
         <el-row  >
              <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">

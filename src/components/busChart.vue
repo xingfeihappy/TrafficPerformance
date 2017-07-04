@@ -1,4 +1,4 @@
-<template>
+<<template>
     <section class="chart" >
         <el-row  >
              <el-col class="chart-container">
@@ -122,8 +122,7 @@ export default {
                     xAxis : [
                         {
                             type : 'category',
-                            data : ['6米小巴', '7米中巴', '7.5米中巴', '8米中巴', 
-                                    '8.5米中巴', '9米大巴', '9.5米大巴','10.5米大巴','11.5米大巴','12米大巴'],
+                            data : ['5-7米', '8-11米', '12-14米'],
                             axisTick: {
                                 alignWithLabel: true
                             }
@@ -138,7 +137,7 @@ export default {
                         {
                             type:'bar',
                             barWidth: '60%',
-                            data:[102, 52, 200, 334, 390, 330, 220,370,500,400]
+                            data:[334, 390, 330]
                         }
                     ]
                 };
