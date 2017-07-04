@@ -1,7 +1,7 @@
 <template>
     <section class="chart" >
         <el-row  >
-             <el-col class="chart-container">
+             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
                   <div class="chart-header">
                         <el-select v-model="timeUnitType" placeholder="查询类型" @change="selectTimeUnitTypeChange">
                             <el-option key="按年" label="按月" value="按年"></el-option>
@@ -91,7 +91,7 @@ export default {
                         {
                             type:'bar',
                             barWidth: '60%',
-                            data:[1022, 520, 200, 334, 390, 330, 220]
+                            data:[1022, 52, 200, 334, 390, 330, 220]
                         }
                     ]
                 };
@@ -102,7 +102,7 @@ export default {
             let carLenPerTimeChart = echarts.init(document.getElementById('carLenPerTimeChart'));
             let  option = {
                     title: {
-                        text: '相同燃料类型不同长度车辆单位能耗柱状图',
+                        text: '相同燃料类型不同排量车辆单位能耗柱状图',
                          left:'center'
                     },
 
@@ -149,7 +149,7 @@ export default {
             let engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
             var option={
                     title : {
-                        text: '公交客运能源结构图饼图',
+                        text: '出租车运输能源结构图饼图',
                         left:'center'
                     },
                     tooltip : {
@@ -184,7 +184,7 @@ export default {
 
     darwperAllRelChart(){
             let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
-            let colors = ['#5793f3', '#d14a61'];
+            let colors = ['#5793f3', '#d14a61', '#675bba'];
             let option = {
                 color:colors,
                 title:{
