@@ -11,6 +11,17 @@ import Page5 from './views/basicInfo/Page5.vue'
 import Page6 from './views/statisticalAnalysis/Page6.vue'
 import Index from './views/index/Index.vue'
 import main from './views/Main.vue'
+import busChart from './components/busChart.vue'
+import taxiChart from './components/taxiChart.vue'
+import allTypChart from './components/allTypChart.vue'
+import engTypChgChart from './components/engTypChgChart.vue'
+import traTypPreChgChart from './components/traTypPreChgChart.vue'
+import relTimDatChart from './components/relTimDatChart.vue'
+import OceanFreight from './views/statisticalAnalysis/OceanFreight.vue'
+import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
+import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
+import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
+import DataInMap from './views/datadetection/DataInMap.vue'
 
 let routes = [
     {
@@ -82,18 +93,19 @@ let routes = [
         children: [
             { path: '/barChart', component: barChart,  name: '道路客运' },
             { path: '/page4', component: Page4,  name: '道路货运' },
-            { path: '/page4', component: Page4,  name: '出租车运输' },
+            { path: '/busChart', component: busChart,  name: '公交客运' },
+            { path: '/taxiChart', component: taxiChart,  name: '出租车运输' },
             { path: '/page4', component: Page4,  name: '内河运输' },
-            { path: '/page4', component: Page4,  name: '海洋货运' },
+            { path: '/OceanFreight', component: OceanFreight,  name: '海洋货运' },
             { path: '/page4', component: Page4,  name: '海洋客运' },
             { path: '/page4', component: Page4,  name: '港口生产' },
-            { path: '/page4', component: Page4,  name: '单位运距能耗指标' },
+            { path: '/allTypChart', component: allTypChart,  name: '单位运距能耗指标' },
             { path: '/page4', component: Page4,  name: '能耗结构' },
-            { path: '/page4', component: Page4,  name: '能源类型分时趋势' },
-            { path: '/page4', component: Page4,  name: '单位能耗变化趋势' },
-            { path: '/page4', component: Page4,  name: '总能耗变化趋势' },
-            { path: '/page4', component: Page4,  name: '地市能耗构成图' },
-            { path: '/page4', component: Page4,  name: '交通方式能耗构成图' },            
+            { path: '/engTypChgChart', component: engTypChgChart,  name: '能源类型分时趋势' },
+            { path: '/traTypPreChgChart', component: traTypPreChgChart,  name: '单位能耗变化趋势' },
+            { path: '/TotalEnergy', component: TotalEnergy,  name: '总能耗变化趋势' },
+            { path: '/CityEnergy', component: CityEnergy,  name: '地市能耗构成图' },
+            { path: '/TrafficEnergy', component: TrafficEnergy,  name: '交通方式能耗构成图' },            
             { path: '/page4', component: Page4,  name: '年度数据对比' },
             { path: '/page4', component: Page4,  name: '分析结果发布' }
         ]
@@ -114,13 +126,13 @@ let routes = [
         name: '数据监测',
         iconCls: 'fa fa-eye',
         children: [
-            { path: '/page4', component: Page4, name: '数据展示' },
+            { path: '/relTimDatChart', component: relTimDatChart, name: '数据展示' },
             { path: '/page4', component: Page4, name: '客运车辆' },
             { path: '/page4', component: Page4, name: '货运车辆' },
             { path: '/page4', component: Page4, name: '出租车' },
             { path: '/page4', component: Page4, name: '公交车' },
             { path: '/page4', component: Page4, name: '内河船舶' },
-            { path: '/page4', component: Page4, name: '专题图展示' }
+            { path: '/DataInMap', component: DataInMap, name: '专题图展示' }
         ]
     },
     /* {
