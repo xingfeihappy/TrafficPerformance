@@ -16,6 +16,7 @@ import taxiChart from './components/taxiChart.vue'
 import allTypChart from './components/allTypChart.vue'
 import engTypChgChart from './components/engTypChgChart.vue'
 import traTypPreChgChart from './components/traTypPreChgChart.vue'
+import relTimDatChart from './components/relTimDatChart.vue'
 
 let routes = [
     {
@@ -120,7 +121,7 @@ let routes = [
         name: '数据监测',
         iconCls: 'fa fa-eye',
         children: [
-            { path: '/page4', component: Page4, name: '数据展示' },
+            { path: '/relTimDatChart', component: relTimDatChart, name: '数据展示' },
             { path: '/page4', component: Page4, name: '客运车辆' },
             { path: '/page4', component: Page4, name: '货运车辆' },
             { path: '/page4', component: Page4, name: '出租车' },
