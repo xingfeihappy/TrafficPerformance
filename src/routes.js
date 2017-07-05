@@ -9,6 +9,7 @@ import user from './views/systemSetting/user.vue'
 import Page4 from './views/basicInfo/Page4.vue'
 import Page5 from './views/basicInfo/Page5.vue'
 import Page6 from './views/statisticalAnalysis/Page6.vue'
+import RoadGoods from './views/statisticalAnalysis/RoadGoods.vue'
 import Index from './views/index/Index.vue'
 import main from './views/Main.vue'
 import busChart from './components/busChart.vue'
@@ -23,6 +24,7 @@ import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
 import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
 import rivTraChart from './components/rivTraChart.vue'
+
 
 
 let routes = [
@@ -94,7 +96,7 @@ let routes = [
         iconCls: 'fa fa-bar-chart-o',
         children: [
             { path: '/barChart', component: barChart,  name: '道路客运' },
-            { path: '/page4', component: Page4,  name: '道路货运' },
+            { path: '/RoadGoods', component: RoadGoods,  name: '道路货运' },
             { path: '/busChart', component: busChart,  name: '公交客运' },
             { path: '/taxiChart', component: taxiChart,  name: '出租车运输' },
             { path: '/rivTraChart', component: rivTraChart,  name: '内河运输' },

@@ -15,7 +15,7 @@
                 <div id="barChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
 
-            <!-- 客位车辆能耗图 -->
+            <!-- 吨位车辆能耗图 -->
              <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
                <div class="chart-header">
                     <el-select v-model="energyTypeSelectValue" placeholder="请选择" @change="energyTypeSelectChange"  >
@@ -171,7 +171,7 @@
                  
                 var option = {
                     title:{
-                        text:'客位车辆能耗图'
+                        text:'吨位车辆能耗图'
                     },
                     tooltip : {
                         trigger: 'axis'
