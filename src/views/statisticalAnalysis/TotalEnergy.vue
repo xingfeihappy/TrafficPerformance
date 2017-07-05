@@ -23,14 +23,21 @@
 
 <script>
     import echarts from 'echarts'
+    
     export default{
+        data(){
+            return{
+                yearSelectValue:''
+            }
+        },
         methods:{
             drawTrafficTypeEnergyLine(){
                 this.trafficTypeEnergyLine = echarts.init(document.getElementById('trafficTypeEnergyLine'));
                 var option={
                     title: {
-                        text: '各运输类型的总能耗变化曲线'
+                        
                     },
+
                     tooltip : {
                         trigger: 'axis',
                         axisPointer: {
@@ -50,7 +57,7 @@
                         } 
                     },
                     grid: {
-                        left: '3%',
+                        left: '4%',
                         right: '4%',
                         bottom: '3%',
                         containLabel: true
