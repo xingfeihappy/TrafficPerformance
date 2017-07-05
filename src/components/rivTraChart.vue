@@ -1,9 +1,9 @@
 <template>
-    <section>
+    <section class = "chart">
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" >
+            <el-col :xs="24" :sm="24" :md="12" :lg="12"  class="chart-container">
                   <div class="chart-header">
-                        <el-select v-model="timeUnitType" placeholder="查询类型" @change="selectTimeUnitTypeChange">
+                        <el-select v-model="timeUnitType" placeholder="查询类型" >
                             <el-option key="按年" label="按月" value="按年"></el-option>
                             <el-option key="按半年" label="按半年" value="按半年"></el-option>
                             <el-option key="按季度" label="按季度" value="按季度"></el-option>
@@ -11,7 +11,7 @@
                         </el-select>                      
                   </div>         
              </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" >
+            <el-col :xs="24" :sm="24" :md="12" :lg="12"  class="chart-container">
                 <div class="chart-header">
                    <el-select v-model="engerType" placeholder="能源类型" >
                         <el-option key="汽油" label="汽油" value="汽油"></el-option>
@@ -26,24 +26,24 @@
              </el-col>
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" >
-                <div id="weiPerChart" style="width:80%;height:300px;" class="chart-content"></div>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                <div id="weiPerChart" style="width:80%;height:400px;" class="chart-content"></div>
             </el-col>
-             <el-col :xs="24" :sm="24" :md="12" :lg="12">
-                 <div id="comSizPerChart" style="width:80%; height:300px;" class="chart-content"></div>
+             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                 <div id="comSizPerChart" style="width:80%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" >
-                <div id="shiTypPerChart" style="width:100%;height:300px;" class="chart-content"></div>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                <div id="shiTypPerChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                   <div id="engTypeAllChart" style="width:100%; height:500px;" class="chart-content"></div>
+                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row>
-            <el-col>
-                 <div id="perAllRelChart"style="width:100%; height:300px;" class="chart-content"></div>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content" ></div>
             </el-col>
         </el-row>
     </section>  
@@ -173,6 +173,7 @@ export default {
                         {
                             type : 'category',
                             name:'船舶类型',
+                            nameGap : 0,
                             data : ['集装箱船', '散杂货船', '液体散货船', '客货船','拖船'],
                             axisTick: {
                                 alignWithLabel: true
@@ -182,7 +183,7 @@ export default {
                     yAxis : [
                         {
                             type : 'value',
-                            name : '单位能耗(单位：万吨标准煤/亿吨公里)'
+                            name : '单位能耗'
                         }
                     ],
                     series : [
@@ -229,16 +230,18 @@ export default {
                         }
                     ]
                 }
-        engTypeAllChart.setOption(option);
+            engTypeAllChart.setOption(option);
     },
 
     darwperAllRelChart(){
             let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
-            let colors = ['#5793f3', '#d14a61', '#675bba'];
+            let colors = ['#5793f3', '#d14a61'];
             let option = {
                 color:colors,
                 title:{
-                    text:'年度单耗、使用能耗关系图'
+                    text:'年度单耗、使用能耗关系图',
+                    left:'center'
+
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -246,9 +249,17 @@ export default {
                         type: 'cross'
                     }
                 },
-
+                toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false}
+                        }
+                    },
                 legend: {
-                    data:['单位能耗','月使用能耗']
+                    data:['单位能耗','月使用能耗'],
+                    top : 20
                 },
                 xAxis: [
                     {
@@ -280,6 +291,8 @@ export default {
                         name: '单位能耗(万吨标准煤/亿人公里)',
                         min: 0,
                         max: 200,
+                        nameGap : 35,
+                        nameLocation:'middle',
                         axisLine: {
                             lineStyle: {
                                 color: '#d14a61'
@@ -324,7 +337,32 @@ export default {
 
 
 
+<style scoped lang="scss">
+    .chart {
+        width: 100%;
+        float: left;
+        .chart-container{
+             background-color: #F2F2F2; 
+            .chart-header{
+                float: right;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            #energyTypePie{
+                overflow: hidden;
+            }
+        }
+        
+    }
+    /*.chart div {
+        height: 400px;
+        float: left;
+    }*/
 
+    .el-col {
+        padding: 20px 20px;
+    }
+</style>
 
 
 

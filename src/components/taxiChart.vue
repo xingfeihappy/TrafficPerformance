@@ -1,43 +1,38 @@
-<<template>
-    <section class="chart" >
+<template>
+    <section  class="chart">
+        <el-row>
+            <el-col >
+                <div class="chart-header">
+                    <el-select v-model="timeUnitType" placeholder="查询类型" >
+                        <el-option key="按年" label="按月" value="按年"></el-option>
+                        <el-option key="按半年" label="按半年" value="按半年"></el-option>
+                        <el-option key="按季度" label="按季度" value="按季度"></el-option>
+                        <el-option key="按月" label="按月" value="按月"></el-option>
+                    </el-select>                      
+                </div> 
+             </el-col>
+        </el-row>
         <el-row  >
-             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                  <div class="chart-header">
-                        <el-select v-model="timeUnitType" placeholder="查询类型" @change="selectTimeUnitTypeChange">
-                            <el-option key="按年" label="按月" value="按年"></el-option>
-                            <el-option key="按半年" label="按半年" value="按半年"></el-option>
-                            <el-option key="按季度" label="按季度" value="按季度"></el-option>
-                            <el-option key="按月" label="按月" value="按月"></el-option>
-                        </el-select>                      
-                  </div>         
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                <div id="engPerTimeChart" style="width:100%;height:400px;" class="chart-content"></div>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                  <div id="carLenPerTimeChart" style="width:100%; height:400px;" class="chart-content"></div>
              </el-col>
         </el-row>
         <el-row >
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                   <div id="engPerTimeChart" style="width:100%;height:300px;" class="chart-content"></div>
+                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-
-             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                   <div id="carLenPerTimeChart" style="width:100%; height:300px;" class="chart-content"></div>
-            </el-col>
-        </el-row>
-        <el-row>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                   <div id="engTypeAllChart" style="width:100%; height:500px;" class="chart-content"></div>
+                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
-        <el-row>
-            <el-col>
-                <div id="perAllRelChart"style="width:100%; height:300px;" class="chart-content"/>
-            </el-col>
-        </el-row>
-
     </section>  
 </template>
 
 <script>
-    import echarts from 'echarts'
-
+import echarts from 'echarts';
 export default {
   data(){
       return {
@@ -59,38 +54,41 @@ export default {
                         left:'center'
                     },
 
-                    color: ['#3398DB'],
+                   color: ['#3398DB'],
                     tooltip : {
                         trigger: 'axis',
                         axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
+                    toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false},
+                        magicType : {show: true, type: ['line', 'bar']}
+                        }
                     },
                     xAxis : [
                         {
                             type : 'category',
-                            data : ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力'],
-                            axisTick: {
-                                alignWithLabel: true
-                            }
+                            data : ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力']
                         }
                     ],
                     yAxis : [
                         {
-                            type : 'value'
+                            type : 'value',
+                            nameLocation : 'middle',
+                            name : '单位能耗(单位：万吨标准煤/亿人公里)',
+                            nameGap : 35
                         }
                     ],
                     series : [
                         {
                             type:'bar',
                             barWidth: '60%',
-                            data:[1022, 52, 200, 334, 390, 330, 220]
+                            data:[550, 520, 200, 334, 390, 330, 220]
                         }
                     ]
                 };
@@ -112,14 +110,20 @@ export default {
                             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
+                    toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false},
+                        magicType : {show: true, type: ['line', 'bar']}
+                        }
                     },
+
                     xAxis : [
                         {
+                            name : '排量',
+                            nameGap : 10,
                             type : 'category',
                             data : ['排量1','排量2','排量3','排量4','排量5','排量6','排量7'],
                             axisTick: {
@@ -129,7 +133,10 @@ export default {
                     ],
                     yAxis : [
                         {
-                            type : 'value'
+                            type : 'value',
+                            nameLocation : 'middle',
+                            name : '单位能耗(单位：万吨标准煤/亿人公里)',
+                            nameGap :35
                         }
                     ],
                     series : [
@@ -147,7 +154,7 @@ export default {
             let engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
             var option={
                     title : {
-                        text: '出租车运输能源结构图饼图',
+                        text: '公交客运能源结构图饼图',
                         left:'center'
                     },
                     tooltip : {
@@ -157,6 +164,14 @@ export default {
                     legend: {
                         x : 'center',
                         y : 'bottom'
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false}
+                        }
                     },
                     calculable : true,
                     series : [
@@ -182,11 +197,13 @@ export default {
 
     darwperAllRelChart(){
             let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
-            let colors = ['#5793f3', '#d14a61', '#675bba'];
+            let colors = ['#5793f3', '#d14a61'];
             let option = {
                 color:colors,
                 title:{
-                    text:'年度单耗、使用能耗关系图'
+                    text:'年度单耗、使用能耗关系图',
+                    left:'center'
+
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -194,9 +211,17 @@ export default {
                         type: 'cross'
                     }
                 },
-
+                toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false}
+                        }
+                    },
                 legend: {
-                    data:['单位能耗','月使用能耗']
+                    data:['单位能耗','月使用能耗'],
+                    top : 20
                 },
                 xAxis: [
                     {
@@ -228,6 +253,8 @@ export default {
                         name: '单位能耗(万吨标准煤/亿人公里)',
                         min: 0,
                         max: 200,
+                        nameGap : 35,
+                        nameLocation:'middle',
                         axisLine: {
                             lineStyle: {
                                 color: '#d14a61'
@@ -268,6 +295,37 @@ export default {
     }
   }
 </script>
+
+
+
+<style scoped lang="scss">
+    .chart {
+        width: 100%;
+        float: left;
+        .chart-container{
+             background-color: #F2F2F2; 
+            .chart-header{
+                float: right;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            #energyTypePie{
+                overflow: hidden;
+            }
+        }
+        
+    }
+    /*.chart div {
+        height: 400px;
+        float: left;
+    }*/
+
+    .el-col {
+        padding: 20px 20px;
+    }
+</style>
+
+
 
 
 
