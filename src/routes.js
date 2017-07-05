@@ -9,8 +9,10 @@ import user from './views/systemSetting/user.vue'
 import Page4 from './views/basicInfo/Page4.vue'
 import Page5 from './views/basicInfo/Page5.vue'
 import Page6 from './views/statisticalAnalysis/Page6.vue'
+import RoadGoods from './views/statisticalAnalysis/RoadGoods.vue'
 import Index from './views/index/Index.vue'
 import main from './views/Main.vue'
+
 
 let routes = [
     {
@@ -81,7 +83,7 @@ let routes = [
         iconCls: 'fa fa-bar-chart-o',
         children: [
             { path: '/barChart', component: barChart,  name: '道路客运' },
-            { path: '/page4', component: Page4,  name: '道路货运' },
+            { path: '/RoadGoods', component: RoadGoods,  name: '道路货运' },
             { path: '/page4', component: Page4,  name: '出租车运输' },
             { path: '/page4', component: Page4,  name: '内河运输' },
             { path: '/page4', component: Page4,  name: '海洋货运' },
