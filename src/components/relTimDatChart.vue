@@ -116,7 +116,7 @@ export default {
                     option.xAxis[0].data.push(axisData);
                     relTimDatChart.setOption(option);
                 }, 2100);
-
+                relTimDatChart.setOption(option);
 
 
 
