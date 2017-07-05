@@ -12,20 +12,19 @@
                   </div>         
              </el-col>
         </el-row>
-        </br>
         <el-row >
-            <el-col >
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
                    <div id="engPerTimeChart" style="width:100%;height:300px;" class="chart-content"></div>
             </el-col>
-            </br>
-             <el-col >
+
+             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
                    <div id="carLenPerTimeChart" style="width:100%; height:300px;" class="chart-content"></div>
             </el-col>
-            </br>
-            <el-col >
+        </el-row>
+        <el-row>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
                    <div id="engTypeAllChart" style="width:100%; height:500px;" class="chart-content"></div>
             </el-col>
-            </br>
         </el-row>
         <el-row>
             <el-col>
@@ -122,8 +121,7 @@ export default {
                     xAxis : [
                         {
                             type : 'category',
-                            data : ['6米小巴', '7米中巴', '7.5米中巴', '8米中巴', 
-                                    '8.5米中巴', '9米大巴', '9.5米大巴','10.5米大巴','11.5米大巴','12米大巴'],
+                            data : ['排量1','排量2','排量3','排量4','排量5','排量6','排量7'],
                             axisTick: {
                                 alignWithLabel: true
                             }
@@ -138,7 +136,7 @@ export default {
                         {
                             type:'bar',
                             barWidth: '60%',
-                            data:[102, 52, 200, 334, 390, 330, 220,370,500,400]
+                            data:[102, 52, 200, 334, 390, 330, 220]
                         }
                     ]
                 };
