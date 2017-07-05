@@ -11,6 +11,11 @@ import Page5 from './views/basicInfo/Page5.vue'
 import Page6 from './views/statisticalAnalysis/Page6.vue'
 import Index from './views/index/Index.vue'
 import main from './views/Main.vue'
+import OceanFreight from './views/statisticalAnalysis/OceanFreight.vue'
+import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
+import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
+import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
+import DataInMap from './views/datadetection/DataInMap.vue'
 
 let routes = [
     {
@@ -84,16 +89,16 @@ let routes = [
             { path: '/page4', component: Page4,  name: '道路货运' },
             { path: '/page4', component: Page4,  name: '出租车运输' },
             { path: '/page4', component: Page4,  name: '内河运输' },
-            { path: '/page4', component: Page4,  name: '海洋货运' },
+            { path: '/OceanFreight', component: OceanFreight,  name: '海洋货运' },
             { path: '/page4', component: Page4,  name: '海洋客运' },
             { path: '/page4', component: Page4,  name: '港口生产' },
             { path: '/page4', component: Page4,  name: '单位运距能耗指标' },
             { path: '/page4', component: Page4,  name: '能耗结构' },
             { path: '/page4', component: Page4,  name: '能源类型分时趋势' },
             { path: '/page4', component: Page4,  name: '单位能耗变化趋势' },
-            { path: '/page4', component: Page4,  name: '总能耗变化趋势' },
-            { path: '/page4', component: Page4,  name: '地市能耗构成图' },
-            { path: '/page4', component: Page4,  name: '交通方式能耗构成图' },            
+            { path: '/TotalEnergy', component: TotalEnergy,  name: '总能耗变化趋势' },
+            { path: '/CityEnergy', component: CityEnergy,  name: '地市能耗构成图' },
+            { path: '/TrafficEnergy', component: TrafficEnergy,  name: '交通方式能耗构成图' },            
             { path: '/page4', component: Page4,  name: '年度数据对比' },
             { path: '/page4', component: Page4,  name: '分析结果发布' }
         ]
@@ -120,7 +125,7 @@ let routes = [
             { path: '/page4', component: Page4, name: '出租车' },
             { path: '/page4', component: Page4, name: '公交车' },
             { path: '/page4', component: Page4, name: '内河船舶' },
-            { path: '/page4', component: Page4, name: '专题图展示' }
+            { path: '/DataInMap', component: DataInMap, name: '专题图展示' }
         ]
     },
     /* {
