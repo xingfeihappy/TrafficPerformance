@@ -1,4 +1,4 @@
-<<template>
+<template>
   <section>
       <el-row>
             <el-col>

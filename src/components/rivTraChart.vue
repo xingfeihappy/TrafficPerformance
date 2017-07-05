@@ -1,131 +1,88 @@
 <template>
-    <section  class="chart">
+    <section class = "chart">
         <el-row>
-            <el-col >
+            <el-col :xs="24" :sm="24" :md="12" :lg="12"  class="chart-container">
+                  <div class="chart-header">
+                        <el-select v-model="timeUnitType" placeholder="查询类型" >
+                            <el-option key="按年" label="按月" value="按年"></el-option>
+                            <el-option key="按半年" label="按半年" value="按半年"></el-option>
+                            <el-option key="按季度" label="按季度" value="按季度"></el-option>
+                            <el-option key="按月" label="按月" value="按月"></el-option>
+                        </el-select>                      
+                  </div>         
+             </el-col>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12"  class="chart-container">
                 <div class="chart-header">
-                    <el-select v-model="timeUnitType" placeholder="查询类型" >
-                        <el-option key="按年" label="按月" value="按年"></el-option>
-                        <el-option key="按半年" label="按半年" value="按半年"></el-option>
-                        <el-option key="按季度" label="按季度" value="按季度"></el-option>
-                        <el-option key="按月" label="按月" value="按月"></el-option>
-                    </el-select>                      
-                </div> 
+                   <el-select v-model="engerType" placeholder="能源类型" >
+                        <el-option key="汽油" label="汽油" value="汽油"></el-option>
+                        <el-option key="柴油" label="柴油" value="柴油"></el-option>
+                        <el-option key="CNG" label="CNG" value="CNG"></el-option>
+                        <el-option key="LPG" label="LPG" value="LPG"></el-option>
+                        <el-option key="LNG" label="LNG" value="LNG"></el-option>
+                        <el-option key="重油" label="重油" value="重油"></el-option>
+                        <el-option key="电力" label="电力" value="电力"></el-option>
+                    </el-select>                     
+                </div>         
              </el-col>
         </el-row>
-        <el-row  >
+        <el-row>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                <div id="engPerTimeChart" style="width:100%;height:400px;" class="chart-content"></div>
+                <div id="weiPerChart" style="width:80%;height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                  <div id="carLenPerTimeChart" style="width:100%; height:400px;" class="chart-content"></div>
-             </el-col>
+             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                 <div id="comSizPerChart" style="width:80%; height:400px;" class="chart-content"></div>
+            </el-col>
         </el-row>
-        <el-row >
+        <el-row>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+                <div id="shiTypPerChart" style="width:100%;height:400px;" class="chart-content"></div>
+            </el-col>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
                    <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
+        </el-row>
+        <el-row>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
+                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content" ></div>
             </el-col>
         </el-row>
     </section>  
 </template>
 
+
 <script>
-    import echarts from 'echarts'
-
 export default {
-  data(){
-      return {
-           timeUnitType:'',
-           selectEnegeType:''
-      }
-  },
-    methods: {
-        selectEnegeTypeChange(){
-        },
-        selectTimeUnitTypeChange(){
-        },
-        darwEngPerTimeChart(){
-            let engPerTimeChart = echarts.init(document.getElementById('engPerTimeChart'));
-
-            let  option = {
-                    title: {
-                        text: '不同燃料类型单位能耗柱状图',
-                        left:'center'
-                    },
-
-                    color: ['#3398DB'],
-                    tooltip : {
-                        trigger: 'axis',
-                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                        }
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false},
-                        magicType : {show: true, type: ['line', 'bar']}
-                        }
-                    },
-                    xAxis : [
-                        {
-                            type : 'category',
-                            data : ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力']
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            nameLocation : 'middle',
-                            name : '单位能耗(单位：万吨标准煤/亿人公里)',
-                            nameGap : 35
-                        }
-                    ],
-                    series : [
-                        {
-                            type:'bar',
-                            barWidth: '60%',
-                            data:[550, 520, 200, 334, 390, 330, 220]
-                        }
-                    ]
-                };
-            engPerTimeChart.setOption(option);       
+    data(){
+        return {
+            timeUnitType:'',
+            engerType:''
+        }
     },
-    
-    darwCarLenPerTimeChart(){
-            let carLenPerTimeChart = echarts.init(document.getElementById('carLenPerTimeChart'));
-            let  option = {
-                    title: {
-                        text: '相同燃料类型不同长度车辆单位能耗柱状图',
-                         left:'center'
+    methods:{
+        darwWeiPerChart(){
+            let weiPerChart = echarts.init(document.getElementById('weiPerChart'));
+            let option = {
+                    title:{
+                        text:'运输单位能耗'
                     },
-
-                    color: ['#3398DB'],
+                    color: ['#3333DB'],
                     tooltip : {
                         trigger: 'axis',
                         axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false},
-                        magicType : {show: true, type: ['line', 'bar']}
-                        }
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
                     },
                     xAxis : [
                         {
                             type : 'category',
-                            name : '车长',
-                            nameGap : 10,
-                            data : ['5-7米', '8-11米', '12-14米'],
+                            name:'吨位',
+                            data : ['<1000', '1000~3000', '3000~10000', '>10000'],
                             axisTick: {
                                 alignWithLabel: true
                             }
@@ -134,29 +91,116 @@ export default {
                     yAxis : [
                         {
                             type : 'value',
-                            nameLocation : 'middle',
-                            name : '单位能耗(单位：万吨标准煤/亿人公里)',
-                            nameGap :35
-                            
-
+                            name : '单位能耗(单位：万吨标准煤/亿吨公里)'
                         }
                     ],
                     series : [
                         {
                             type:'bar',
-                            barWidth: '30%',
-                            data:[334, 390, 330]
+                            barWidth: '40%',
+                            data:[250, 304, 350, 280]
                         }
                     ]
-                };
-        carLenPerTimeChart.setOption(option);
-    },
+            };
 
-    darwEngTypeAllChart(){
+            weiPerChart.setOption(option);
+        },
+        darwComSizPerChart(){
+            let comSizPerChart = echarts.init(document.getElementById('comSizPerChart'));
+            let option = {
+                    title:{
+                        text:'不同规模企业运输单位能耗'
+                    },
+                    color: ['#33554B'],
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            name:'企业规模',
+                            data : ['规模1', '规模2', '规模3', '规模4'],
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            name : '单位能耗(单位：万吨标准煤/亿吨公里)'
+                        }
+                    ],
+                    series : [
+                        {
+                            type:'bar',
+                            barWidth: '40%',
+                            data:[150, 304, 320, 280]
+                        }
+                    ]
+            };
+            comSizPerChart.setOption(option)
+        },
+        darwShiTypPerChart(){
+            let shiTypPerChart = echarts.init(document.getElementById('shiTypPerChart'));
+            let option = {
+                    title:{
+                        text:'不同规模企业运输单位能耗'
+                    },
+                    color: ['#33744B'],
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            name:'船舶类型',
+                            nameGap : 0,
+                            data : ['集装箱船', '散杂货船', '液体散货船', '客货船','拖船'],
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            name : '单位能耗'
+                        }
+                    ],
+                    series : [
+                        {
+                            type:'bar',
+                            barWidth: '40%',
+                            data:[150, 304, 360, 280,200]
+                        }
+                    ]
+            };            
+            shiTypPerChart.setOption(option);
+        },
+        darwEngTypeAllChart(){
             let engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
             var option={
                     title : {
-                        text: '公交客运能源结构图饼图',
+                        text: '内河运输能源结构图饼图',
                         left:'center'
                     },
                     tooltip : {
@@ -166,14 +210,6 @@ export default {
                     legend: {
                         x : 'center',
                         y : 'bottom'
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false}
-                        }
                     },
                     calculable : true,
                     series : [
@@ -194,7 +230,7 @@ export default {
                         }
                     ]
                 }
-        engTypeAllChart.setOption(option);
+            engTypeAllChart.setOption(option);
     },
 
     darwperAllRelChart(){
@@ -253,10 +289,10 @@ export default {
                     {
                         type: 'value',
                         name: '单位能耗(万吨标准煤/亿人公里)',
-                        nameGap : 35,
-                        nameLocation:'middle',
                         min: 0,
                         max: 200,
+                        nameGap : 35,
+                        nameLocation:'middle',
                         axisLine: {
                             lineStyle: {
                                 color: '#d14a61'
@@ -284,19 +320,21 @@ export default {
         perAllRelChart.setOption(option);
     },
 
-
     },
     mounted:function(){
-        this.darwEngPerTimeChart();
-        this.darwCarLenPerTimeChart();
+        this.darwWeiPerChart();
+        this.darwComSizPerChart();
+        this.darwShiTypPerChart();
         this.darwEngTypeAllChart();
         this.darwperAllRelChart();
     },
-     updated: function () {
-           
+    updated:function(){
+
     }
-  }
+}
 </script>
+
+
 
 
 <style scoped lang="scss">
