@@ -22,6 +22,8 @@ import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
 import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
 import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
+import rivTraChart from './components/rivTraChart.vue'
+
 
 let routes = [
     {
@@ -95,7 +97,7 @@ let routes = [
             { path: '/page4', component: Page4,  name: '道路货运' },
             { path: '/busChart', component: busChart,  name: '公交客运' },
             { path: '/taxiChart', component: taxiChart,  name: '出租车运输' },
-            { path: '/page4', component: Page4,  name: '内河运输' },
+            { path: '/rivTraChart', component: rivTraChart,  name: '内河运输' },
             { path: '/OceanFreight', component: OceanFreight,  name: '海洋货运' },
             { path: '/page4', component: Page4,  name: '海洋客运' },
             { path: '/page4', component: Page4,  name: '港口生产' },
