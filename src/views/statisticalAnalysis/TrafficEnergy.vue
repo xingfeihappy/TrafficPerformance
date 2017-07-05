@@ -5,10 +5,10 @@
                 <div class="chart-header">
                     <el-date-picker
                         v-model="dateSelectValue"
-                        type="date"
-                        placeholder="选择日期"
-                       :picker-options="pickerOptions0">
-                        </el-date-picker>
+                        type="daterange"
+                        placeholder="选择日期范围"
+                        :picker-options="pickerOptions2">
+                    </el-date-picker>
                 </div>
                 <div class="chart-header">
                     <el-select v-model="citySelectValue" placeholder="请选择城市" @change="citySelectChange">
@@ -41,7 +41,36 @@
     export default{
         data(){
             return{
-                citySelectValue: '杭州'
+                citySelectValue: '杭州',
+                dateSelectValue:'',
+
+                pickerOptions2: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                            text: '最近三个月',
+                            onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
             }
         },
         methods:{
@@ -75,6 +104,7 @@
                             saveAsImage : {show: true}
                         }
                     },
+                    
                     series : [
                         {
                             name: '能耗',

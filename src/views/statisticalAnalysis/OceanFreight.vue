@@ -1,55 +1,67 @@
 <template>
     <section class="chart">
         <el-row> 
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-               <div class="chart-header">
-                    <el-select v-model="energyTypeSelectValue" placeholder="请选择" @change="energyTypeSelectChange"  >
-                        <el-option key="本月" label="本月" value="本月"></el-option>
-                        <el-option key="本季" label="本季" value="本季"></el-option>
-                        <el-option key="本年" label="本年" value="本年"></el-option>
+            <el-col class="chart-container">
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="dateSelectValue"
+                        type="daterange"
+                        placeholder="选择日期范围"
+                        :picker-options="pickerOptions2">
+                    </el-date-picker>
+                </div>
+                <div class="chart-header">
+                    <el-select v-model="energySelectValue" placeholder="请选择燃料类型" @change="energySelectChange">
+                        <el-option key="汽油" label="汽油" value="汽油"></el-option>
+                        <el-option key="柴油" label="柴油" value="柴油"></el-option>
+                        <el-option key="CNG" label="CNG" value="CNG"></el-option>
+                        <el-option key="LPG" label="LPG" value="LPG"></el-option>
+                        <el-option key="LNG" label="LNG" value="LNG"></el-option>
+                        <el-option key="重油" label="重油" value="重油"></el-option>
+                        <el-option key="电力" label="电力" value="电力"></el-option>
                     </el-select>
-               </div>
-
-                <div id="energyChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
-
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-               <div class="chart-header">
-                    <el-select v-model="tonnageTypeSelectValue" placeholder="请选择" @change="tonnageTypeSelectChange"  >
-                        <el-option key="本月" label="本月" value="本月"></el-option>
-                        <el-option key="本季" label="本季" value="本季"></el-option>
-                        <el-option key="本年" label="本年" value="本年"></el-option>
-                    </el-select>
-               </div>
-
-                <div id="tonnageChart" style="width:100%; height:400px;" class="chart-content"></div>
+                </div>
             </el-col>
         </el-row>
         <el-row> 
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-               <div class="chart-header">
-                    <el-select v-model="companyTypeSelectValue" placeholder="请选择" @change="companyTypeSelectChange"  >
-                        <el-option key="本月" label="本月" value="本月"></el-option>
-                        <el-option key="本季" label="本季" value="本季"></el-option>
-                        <el-option key="本年" label="本年" value="本年"></el-option>
-                    </el-select>
-               </div>
-
-                <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
+                <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-               <div class="chart-header">
-                    <el-select v-model="shipTypeSelectValue" placeholder="请选择" @change="shipTypeSelectChange"  >
-                        <el-option key="本月" label="本月" value="本月"></el-option>
-                        <el-option key="本季" label="本季" value="本季"></el-option>
-                        <el-option key="本年" label="本年" value="本年"></el-option>
-                    </el-select>
-               </div>
-
-                <div id="shipChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
+                <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>   
         </el-row>
+        <el-row> 
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+                <div id="tonnageChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+                <div id="distanceShipChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>    
+        </el-row>
+
+        <el-row> 
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+                <div id="seaShipChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>
+            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+                <div id="inlandShipChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>
+        </el-row>   
+
+        <el-row>
+            <el-col class="chart-container">
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="yearSelectValue"
+                        align="right"
+                        type="year"
+                        placeholder="选择年">
+                    </el-date-picker>
+                </div>
+                <div id="energyByYearChart" style="width:100%; height:400px;"></div>
+            </el-col>
+        </el-row>   
     </section>
 </template>
 
@@ -60,73 +72,40 @@
     export default {
         data() {
             return {
-                energyTypeSelectValue: '本月',
-                tonnageTypeSelectValue:'本月',
-                energyTypeUrl : './api/energyTypeMonth',
-                tonnageTypeUrl:'./api/energyTypeMonth'
+                pickerOptions2: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                            text: '最近三个月',
+                            onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
+                dateSelectValue:'',
+                energySelectValue:'汽油',
+                yearSelectValue:''
             }
         },
         methods: {
-            energyTypeSelectChange(){
-                let value= this.energyTypeSelectValue;
-                if(value === "本月"){
-                    this.energyTypeUrl = './api/energyTypeMonth';
-                }else if(value === "本季"){
-                    this.energyTypeUrl = './api/energyTypeQuater';
-                }else if(value === "本年"){
-                    this.energyTypeUrl = './api/energyTypeYear';
-                }
-            },
-            tonnageTypeSelectChange(){
-                let value = this.tonnageTypeSelectValue;
-                if(value === "本月"){
-                    this.tonnageTypeUrl = './api/energyTypeMonth';
-                }else if(value === "本季"){
-                    this.tonnageTypeUrl = './api/energyTypeQuater';
-                }else if(value === "本年"){
-                    this.tonnageTypeUrl = './api/energyTypeYear';
-                }
-            },
-            companyTypeSelectChange(){},
-            shipTypeSelectChange(){},
-
-            drawEnergyTypePie(){
-                let energyChart = echarts.init(document.getElementById('energyChart'));
-                 
-                let option = {
-                    title: {
-                    text: '不同燃料类型单位能耗图'
-                    },
-                    tooltip: {},
-            
-                    legend: {
-                        data:['单耗']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false},
-                        magicType : {show: true, type: ['line', 'bar']},
-                        restore : {show: true}
-                        
-                        }
-                    },
-                    xAxis: {
-                        data: ["汽油","柴油","CNG","LPG","LNG","重油","电力"]
-                    },
-                    yAxis: {},
-                        series: [{
-                        name: '单耗',
-                        type: 'bar',
-                        data: [5, 20, 36, 10, 10, 20,50]
-                    }]
-                };
-                energyChart.setOption(option);
-                
-            },
-
+            energySelectChange(){},
             drawTonnageTypeChart(){
                 let tonnageChart = echarts.init(document.getElementById('tonnageChart'));
                 let option = {
@@ -134,6 +113,7 @@
                     text: '不同吨位船舶单位能耗图'
                     },
                     tooltip: {},
+                    color: ['#3398DB'],
             
                     legend: {
                         data:['单耗']
@@ -144,25 +124,29 @@
                         mark : {show: true},
                         saveAsImage : {show: true},
                         dataView : {readOnly:false},
-                        magicType : {show: true, type: ['line', 'bar']},
-                        restore : {show: true}
-                        
+                        magicType : {show: true, type: ['line', 'bar']},                       
                         }
                     },
                     xAxis: {
-                        data: ["一等船舶","二等船舶","三等船舶","四等船舶","五等船舶"]
+                        data: ["<1000","1000~3000","3000~10000",">10000"],
+                        name:'吨位(吨)',
+                        nameGap:'10'
                     },
-                    yAxis: {},
+                    yAxis: {
+                        name:'单位能耗(万吨标煤/亿吨公里)',
+                        nameLocation:'middle',
+                        nameGap:'40'
+                    },
                         series: [{
                         name: '单耗',
                         type: 'bar',
-                        data: [50, 40, 30, 20, 10,]
+                        barWidth: '40%',
+                        data: [50, 40, 30, 20]
                     }]
                 };
                 tonnageChart.setOption(option);
             },
-
-            drawcompanyTypeChart(){
+            drawCompanyTypeChart(){
                 let companyChart = echarts.init(document.getElementById('companyChart'));
                 let option = {
                     title: {
@@ -173,15 +157,14 @@
                     legend: {
                         data:['单耗']
                     },
+                    color: ['#3398DB'],
                     toolbox: {
                         show : true,
                         feature : {
                         mark : {show: true},
                         saveAsImage : {show: true},
                         dataView : {readOnly:false},
-                        magicType : {show: true, type: ['line', 'bar']},
-                        restore : {show: true}
-                        
+                        magicType : {show: true, type: ['line', 'bar']},                   
                         }
                     },
                     xAxis: {
@@ -191,16 +174,335 @@
                         series: [{
                         name: '单耗',
                         type: 'bar',
+                        barWidth: '60%',
                         data: [45, 20, 36, 10, 28, 16,55]
                     }]
                 };
                 companyChart.setOption(option);
             },
-           
+            drawSeaShipTypeChart(){
+                let seaShipChart = echarts.init(document.getElementById('seaShipChart'));
+                let option = {
+                    title : {
+                        text: '海洋船舶单位能耗图',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                       // orient: 'vertical',
+                        y:'bottom',
+                        x:'center',
+                        data:['集装箱船','干散货船','件杂货船','液体散货船','客滚船']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            dataView : {show: true, readOnly: false},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    
+                    calculable : true,
+                    xAxis : [
+                        {
+                            name:'吨位(吨)',
+                            type : 'category',
+                            nameGap:'10',
+                            data : ['<1000','1000~3000','3000~10000','>10000']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            name: '单耗(万吨标准煤/亿吨公里)',
+                            nameLocation:'middle',
+                            nameGap:'40'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'集装箱船',
+                            type:'bar',
+                            data:[7.0, 23.2, 25.6, 76.7]
+                        },
+                        {
+                            name:'干散货船',
+                            type:'bar',
+                            data:[26.4, 28.7, 70.7, 175.6]
+                        
+                        },
+                        {
+                            name:'件杂货船',
+                            type:'bar',
+                            data:[12.4, 24.7, 67.7, 155.6]
+                        },
+                        {
+                            name:'液体散货船',
+                            type:'bar',
+                            data:[17.4, 26.7, 47.7, 55.6]
+                        },
+                        {
+                            name:'客滚船',
+                            type:'bar',
+                            data:[31.4, 36.7, 40.7, 123.6]
+                        },
+                        
+                    ]
+                };
+                seaShipChart.setOption(option);
+            },
+            drawInlandShipTypeChart(){
+                let inlandShipChart = echarts.init(document.getElementById('inlandShipChart'));
+                let option = {
+                    title : {
+                        text: '内河船舶单位能耗图',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                       // orient: 'vertical',
+                        y:'bottom',
+                        x:'center',
+                        data:['集装箱船','散杂货船','液体散货船','客货船','拖船']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            dataView : {show: true, readOnly: false},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    
+                    calculable : true,
+                    xAxis : [
+                        {
+                            name:'吨位(吨)',
+                            type : 'category',
+                            nameGap:'10',
+                            data : ['<1000','1000~3000','3000~10000','>10000']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            name: '单耗(万吨标准煤/亿吨公里)',
+                            nameLocation:'middle',
+                            nameGap:'40'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'集装箱船',
+                            type:'bar',
+                            data:[7.0, 23.2, 25.6, 76.7]
+                        },
+                        {
+                            name:'散杂货船',
+                            type:'bar',
+                            data:[26.4, 28.7, 70.7, 75.6]
+                        
+                        },
+                        {
+                            name:'液体散货船',
+                            type:'bar',
+                            data:[12.4, 24.7, 67.7, 55.6]
+                        },
+                        {
+                            name:'客货船',
+                            type:'bar',
+                            data:[17.4, 26.7, 47.7, 55.6]
+                        },
+                        {
+                            name:'拖船',
+                            type:'bar',
+                            data:[31.4, 36.7, 40.7, 23.6]
+                        },
+                        
+                    ]
+                };
+                inlandShipChart.setOption(option);
+            },
+            drawDistanceShipChart(){
+                let distanceShipChart = echarts.init(document.getElementById('distanceShipChart'));
+                let option = {
+                    title: {
+                    text: '不同运距船舶单位能耗图'
+                    },
+                    tooltip: {},
+                    color: ['#3398DB'],
+                    legend: {
+                        data:['单耗']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                        mark : {show: true},
+                        saveAsImage : {show: true},
+                        dataView : {readOnly:false},
+                        magicType : {show: true, type: ['line', 'bar']},                  
+                        }
+                    },
+                    xAxis: {
+                        data: ["一运距","二运距","三运距","四运距","五运距"]
+                    },
+                    yAxis: {},
+                        series: [{
+                        name: '单耗',
+                        type: 'bar',
+                        barWidth: '40%',
+                        data: [45, 20, 36, 10, 28]
+                    }]
+                };
+                distanceShipChart.setOption(option);
+            },
+            drawEnergyPieChart(){
+                let energyPieChart = echarts.init(document.getElementById('energyPieChart'));
+                let option={
+                    title:{
+                        text: '海洋货运能源结构图',
+                        x: 'center'
+                    },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: ['汽油','柴油','CNG','LPG','LNG','重油','电力']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            mark : {show: true},                 
+                            dataView : {show: true, readOnly: false},
+                            saveAsImage : {show: true},
+                        }
+                    },
+                    series : [
+                        {
+                            name: '能耗',
+                            type: 'pie',
+                            radius : '80%',
+                            center: ['50%', '50%'],
+                            data:[
+                                {value:535, name:'汽油'},
+                                {value:410, name:'柴油'},
+                                {value:474, name:'CNG'},
+                                {value:235, name:'LPG'},
+                                {value:200, name:'LNG'},
+                                {value:354, name:'重油'},
+                                {value:401,name:'电力'}
+                            ].sort(function(a,b){return a.value-b.value;}),
+                            roseType: 'radius',
+                            label:{
+                                normal:{
+                                    testStyle:{
+                                        color: 'rgba(255, 255, 255, 0.5)'
+                                    }
+                                }
+                            },
+                            labelLine: {
+                                 normal: {
+                                    smooth: 0.2,
+                                    length: 10,
+                                    length2: 20
+                                }
+                            
+                            },
+                            animationType: 'scale',
+                            animationEasing: 'elasticOut',
+                            animationDelay: function (idx) {
+                                return Math.random() * 200;
+                             }
+                        }
+                    ]
+                };
+                energyPieChart.setOption(option);
+            },     
+            drawenergyByYearChart(){
+                let energyByYearChart = echarts.init(document.getElementById('energyByYearChart'));
+                let colors = ['#5793f3', '#d14a61'];
+                let option = {
+                    color:colors,
+                    title:{
+                        text:'年度单耗、使用能耗关系图'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+
+                    legend: {
+                        data:['单位能耗','月使用能耗']
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisPointer: {
+                                type: 'shadow'
+                            },
+                            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '月使用能耗(万吨标准煤)',
+                            min: 0,
+                            max: 500,
+                            interval: 50,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#5793f3'
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '单位能耗(万吨标准煤/亿人公里)',
+                            min: 0,
+                            max: 200,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#d14a61'
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name:'月使用能耗',
+                            type:'line',
+                            data:[200, 220, 330, 450, 490, 102, 230, 234, 345, 165, 170, 400]
+                        },
+                        {
+                            name:'单位能耗',
+                            type:'bar',
+                            data:[20, 49, 70, 130, 125, 178, 135.6, 162.2, 132, 180, 178, 145]
+                        }
+                    ]
+                };  
+                energyByYearChart.setOption(option);
+            },  
             drawCharts() {
-                this.drawEnergyTypePie()
                 this.drawTonnageTypeChart()
-                this.drawcompanyTypeChart()
+                this.drawCompanyTypeChart()
+                this.drawSeaShipTypeChart()
+                this.drawInlandShipTypeChart()
+                this.drawDistanceShipChart()
+                this.drawEnergyPieChart()
+                this.drawenergyByYearChart()
             }
         },
         mounted: function () {
@@ -220,7 +522,8 @@
              background-color: #F2F2F2; 
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
+                margin-right: 20px;
                 position: relative;
             }
             .chart-content{
@@ -235,6 +538,6 @@
     }*/
 
     .el-col {
-        padding: 20px 20px;
+        padding: 15px 15px;
     }
 </style>
