@@ -27,10 +27,10 @@
         </el-row>
         <el-row>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                <div id="weiPerChart" style="width:80%;height:400px;" class="chart-content"></div>
+                <div id="weiPerChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
              <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                 <div id="comSizPerChart" style="width:80%; height:400px;" class="chart-content"></div>
+                 <div id="comSizPerChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row>
@@ -50,7 +50,7 @@
                         placeholder="选择年">
                     </el-date-picker>
                 </div>
-                <div id="perAllRelChart"style="width:100%; height:400px;" ></div>
+                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
     </section>  
@@ -80,25 +80,18 @@ export default {
                             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
                     xAxis : [
                         {
                             type : 'category',
                             name:'吨位',
-                            data : ['<1000', '1000~3000', '3000~10000', '>10000'],
-                            axisTick: {
-                                alignWithLabel: true
-                            }
+                            data : ['<1000', '1000~3000', '3000~10000', '>10000']
                         }
                     ],
                     yAxis : [
                         {
                             type : 'value',
+                            nameLocation:'middle',
+                            nameGap:30,
                             name : '单位能耗(单位：万吨标准煤/亿吨公里)'
                         }
                     ],
@@ -126,12 +119,6 @@ export default {
                             type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                         }
                     },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
-                    },
                     xAxis : [
                         {
                             type : 'category',
@@ -145,6 +132,8 @@ export default {
                     yAxis : [
                         {
                             type : 'value',
+                            nameLocation:'middle',
+                            nameGap:30,
                             name : '单位能耗(单位：万吨标准煤/亿吨公里)'
                         }
                     ],
@@ -356,7 +345,7 @@ export default {
                 margin-bottom: 20px;
                 position: relative;
             }
-            #energyTypePie{
+            .chart-content{
                 overflow: hidden;
             }
         }

@@ -1,7 +1,7 @@
-<<template>
-  <section>
+<template>
+  <section class = "chart">
       <el-row>
-            <el-col>
+            <el-col class="chart-container">
                 <el-date-picker
                     v-model="timeRange"
                     type="daterange"
@@ -10,8 +10,8 @@
             </el-col>
       </el-row>
       <el-row>
-            <el-col>
-            <div id="allTypChart"style="width:100%; height:400px;" class="chart-content"/>
+            <el-col class="chart-container">
+                <div id="allTypChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
       </el-row>    
   </section>
@@ -40,6 +40,7 @@ export default {
                 toolbox: {
                     show : true,
                     feature : {
+                        saveAsImage : {show: true},
                         dataView : {show: true, readOnly: false},
                         magicType : {show: true, type: ['line', 'bar']},
                     }
@@ -89,7 +90,32 @@ export default {
 }
 </script>
 
+<style scoped lang="scss">
+    .chart {
+        width: 100%;
+        float: left;
+        .chart-container{
+             background-color: #F2F2F2; 
+            .chart-header{
+                float: right;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .chart-content{
+                overflow: hidden;
+            }
+        }
+        
+    }
+    /*.chart div {
+        height: 400px;
+        float: left;
+    }*/
 
+    .el-col {
+        padding: 20px 20px;
+    }
+</style>
 
 
 
