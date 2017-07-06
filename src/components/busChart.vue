@@ -310,7 +310,7 @@ export default {
                 margin-bottom: 20px;
                 position: relative;
             }
-            #energyTypePie{
+            .chart-content{
                 overflow: hidden;
             }
         }
