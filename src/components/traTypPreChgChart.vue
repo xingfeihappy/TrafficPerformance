@@ -123,5 +123,32 @@ export default {
 
 
 
+<style scoped lang="scss">
+    .chart {
+        width: 100%;
+        float: left;
+        .chart-container{
+             background-color: #F2F2F2; 
+            .chart-header{
+                float: right;
+                margin-bottom: 20px;
+                position: relative;
+            }
+            .chart-content{
+                overflow: hidden;
+            }
+        }
+        
+    }
+    /*.chart div {
+        height: 400px;
+        float: left;
+    }*/
+
+    .el-col {
+        padding: 20px 20px;
+    }
+</style>
+
 
 

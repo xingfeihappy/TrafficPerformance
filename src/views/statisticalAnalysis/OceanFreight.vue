@@ -59,7 +59,7 @@
                         placeholder="选择年">
                     </el-date-picker>
                 </div>
-                <div id="energyByYearChart" style="width:100%; height:400px;"></div>
+                <div id="energyByYearChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>   
     </section>
