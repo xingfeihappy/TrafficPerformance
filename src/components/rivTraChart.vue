@@ -42,8 +42,15 @@
             </el-col>
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content" ></div>
+            <el-col  class="chart-container">
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="yearSelectValue"
+                        type="year"
+                        placeholder="选择年">
+                    </el-date-picker>
+                </div>
+                <div id="perAllRelChart"style="width:100%; height:400px;" ></div>
             </el-col>
         </el-row>
     </section>  
@@ -55,7 +62,8 @@ export default {
     data(){
         return {
             timeUnitType:'',
-            engerType:''
+            engerType:'',
+            yearSelectValue:''
         }
     },
     methods:{
