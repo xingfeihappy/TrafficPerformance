@@ -1,7 +1,7 @@
 <template>
     <section  class="chart">
         <el-row>
-            <el-col >
+            <el-col class="chart-container">
                 <div class="chart-header">
                     <!--<el-select v-model="timeUnitType" placeholder="查询类型" >
                         <el-option key="按年" label="按年" value="按年"></el-option>
@@ -30,10 +30,26 @@
             <el-col  class="chart-container">
                    <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
+        </el-row>
+        <el-row>
+             <el-col  class="chart-container">
+                <div  class="chart-header">
+                    <el-date-picker
+                        v-model="year"
+                        type="year"
+                        placeholder="选择年">
+                    </el-date-picker>
+                </div>
+             </el-col>
+        </el-row>
+        <el-row>
+             <el-col  class="chart-container">
             <el-col class="chart-container">
                 <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
+             </el-col>
         </el-row>
+
     </section>  
 </template>
 
@@ -43,7 +59,8 @@ var engPerTimeChart ;
 export default {
   data(){
       return {
-           timeRange:''
+           timeRange:'',
+           year:''
       }
   },
     methods: {
@@ -55,7 +72,6 @@ export default {
             if(engPerTimeChart!=null) engPerTimeChart.dispose();
 
             engPerTimeChart = echarts.init(document.getElementById('engPerTimeChart'));
-
 
             let option = {
                     title: {
@@ -100,22 +116,29 @@ export default {
                         {
                             name:'5-7米',
                             type:'bar',
-                            data:[7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6]
+                            data:[]
                         },
                         {
                             name:'8-11米',
                             type:'bar',
-                            data:[26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8,]
+                            data:[]
                         
                         },
                         {
                             name:'12-14米',
                             type:'bar',
-                            data:[12.4, 24.7, 67.7, 155.6, 132.2, 44.7, 20.8]
+                            data:[]
                         }
                     ]
             };
             engPerTimeChart.setOption(option);
+            $.get("./api/busTypLenData").done(function (res){
+                    console.log(1);
+                    option.series[0].data = res.data[0];
+                    option.series[1].data = res.data[1];
+                    option.series[2].data = res.data[2];
+                    engPerTimeChart.setOption(option);
+            });
         },
         darwEngPerTimeAllChart(){
 
@@ -165,25 +188,39 @@ export default {
                             name:'5-7米',
                             type:'bar',
                             stack: '总量',
-                            data:[7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6]
+                            data:[]
                         },
                         {
                             name:'8-11米',
                             type:'bar',
                             stack: '总量',
-                            data:[26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8,]
+
+                            data:[]
                         
                         },
                         {
                             name:'12-14米',
                             type:'bar',
                             stack: '总量',
-                            data:[12.4, 24.7, 67.7, 155.6, 132.2, 44.7, 20.8]
+                            tooltip:{
+
+                            },
+                            data:[]
                         }
                     ]
             };
         
-                engPerTimeChart.setOption(option);
+            engPerTimeChart.setOption(option);
+            
+            $.get("./api/busTypLenData").done(function (res){
+                console.log(2);
+                option.series[0].data = res.data[0];
+                option.series[1].data = res.data[1];
+                option.series[2].data = res.data[2];
+                engPerTimeChart.setOption(option)
+            });
+
+
         },
     
         darwCarLenPerTimeChart(){
@@ -271,108 +308,108 @@ export default {
                                 type:'pie',
                                 radius : [20, 110],
                                 center : ['50%', '50%'],
-                                roseType : 'area',
-                                data:[
-                                    {value:600,name:'汽油'},
-                                    {value:150,name:'柴油'},
-                                    {value:200,name:'CNG'},
-                                    {value:450,name:'LPG'},
-                                    {value:542,name:'LNG'},
-                                    {value:102,name:'重油'},
-                                    {value:360,name:'电力'},
-                                ]
+                                roseType : 'area'
                             }
                         ]
                     }
-            engTypeAllChart.setOption(option);
+                engTypeAllChart.setOption(option);
+                $.get("./api/engTypAllData").done(function(res){
+                        option.series[0].data = res.data;
+                        engTypeAllChart.setOption(option);
+                })
+
+
         },
 
-    darwperAllRelChart(){
-            let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
-            let colors = ['#5793f3', '#d14a61'];
-            let option = {
-                color:colors,
-                title:{
-                    text:'年度单耗、使用能耗关系图',
-                    left:'center'
+        darwperAllRelChart(){
+                let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
+                let colors = ['#5793f3', '#d14a61'];
+                let option = {
+                    color:colors,
+                    title:{
+                        text:'年度单耗、使用能耗关系图',
+                        left:'center'
 
-                },
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross'
-                    }
-                },
-                toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false}
-                        }
                     },
-                legend: {
-                    data:['单位能耗','月使用能耗'],
-                    top : 20
-                },
-                xAxis: [
-                    {
-                        type: 'category',
+                    tooltip: {
+                        trigger: 'axis',
                         axisPointer: {
-                            type: 'shadow'
-                        },
-                        data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name: '月使用能耗(万吨标准煤)',
-                        min: 0,
-                        max: 500,
-                        interval: 50,
-                        axisLine: {
-                            lineStyle: {
-                                color: '#5793f3'
-                            }
-                        },
-                        axisLabel: {
-                            formatter: '{value} '
+                            type: 'cross'
                         }
                     },
-                    {
-                        type: 'value',
-                        name: '单位能耗(万吨标准煤/亿人公里)',
-                        nameGap : 35,
-                        nameLocation:'middle',
-                        min: 0,
-                        max: 200,
-                        axisLine: {
-                            lineStyle: {
-                                color: '#d14a61'
+                    toolbox: {
+                            show : true,
+                            feature : {
+                            mark : {show: true},
+                            saveAsImage : {show: true},
+                            dataView : {readOnly:false}
                             }
                         },
-                        axisLabel: {
-                            formatter: '{value} '
-                        }
-                    }
-                ],
-                series: [
-                    {
-                        name:'月使用能耗',
-                        type:'line',
-                        data:[200, 220, 330, 450, 490, 102, 230, 234, 345, 165, 170, 400]
+                    legend: {
+                        data:['单位能耗','月使用能耗'],
+                        top : 20
                     },
-                     {
-                        name:'单位能耗',
-                        type:'bar',
-                        data:[20, 49, 70, 130, 125, 178, 135.6, 162.2, 132, 180, 178, 145]
-                    }
-                ]
-            };             
-            
-        perAllRelChart.setOption(option);
-    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisPointer: {
+                                type: 'shadow'
+                            },
+                            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            name: '月使用能耗(万吨标准煤)',
+                            min: 0,
+                            max: 500,
+                            interval: 50,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#5793f3'
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        },
+                        {
+                            type: 'value',
+                            name: '单位能耗(万吨标准煤/亿人公里)',
+                            nameGap : 35,
+                            nameLocation:'middle',
+                            min: 0,
+                            max: 200,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#d14a61'
+                                }
+                            },
+                            axisLabel: {
+                                formatter: '{value} '
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name:'月使用能耗',
+                            type:'line'
+                        },
+                        {
+                            name:'单位能耗',
+                            type:'bar'
+                        }
+                    ]
+                };             
+                
+            perAllRelChart.setOption(option);
+            $.get("./api/perAllRelData").done(function(res){
+                option.series[0].data = res.data[0];
+                option.series[1].data = res.data[1];
+                perAllRelChart.setOption(option);
+            });
+        },
 
 
     },

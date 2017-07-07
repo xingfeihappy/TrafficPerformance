@@ -64,6 +64,32 @@ apiRoutes.get('/energyTypeYear', function (req, res) {
   });
 });
 
+var busTypLenData = require('../src/mock/data/busTypLenData.json'); // 引入测试数据
+apiRoutes.get('/busTypLenData', function (req, res) {
+  res.json({
+    errno: 0,
+    data:busTypLenData
+  });
+});
+
+
+var engTypAllData = require('../src/mock/data/engTypAllData.json'); // 引入测试数据
+apiRoutes.get('/engTypAllData', function (req, res) {
+  res.json({
+    errno: 0,
+    data:engTypAllData
+  });
+});
+
+var perAllRelData = require('../src/mock/data/perAllRelData.json'); // 引入测试数据
+apiRoutes.get('/perAllRelData', function (req, res) {
+  res.json({
+    errno: 0,
+    data:perAllRelData
+  });
+});
+
+
 
 app.use('/api', apiRoutes);
 
