@@ -89,6 +89,16 @@ apiRoutes.get('/perAllRelData', function (req, res) {
   });
 });
 
+var relTtimeData = require('../src/mock/data/relTtimeData.json'); // 引入测试数据
+apiRoutes.get('/relTtimeData', function (req, res) {
+  res.json({
+    errno: 0,
+    data:relTtimeData
+  });
+});
+
+
+
 
 
 app.use('/api', apiRoutes);

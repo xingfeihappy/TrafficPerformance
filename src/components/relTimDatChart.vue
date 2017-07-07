@@ -1,17 +1,30 @@
 <template>
-<section>
+<section class ="chart">
     <el-row>
-        <el-col>
+        <el-col class = "chart-container">
+            <div class =" .chart-header">
+                <el-date-picker
+                v-model="datTimRange"
+                type="datetimerange"
+                placeholder="选择时间范围">
+                </el-date-picker>
+            </div>
+        </el-col>
+    </el-row>
+    <el-row>
+        <el-col class = "chart-container"> 
             <div div id="relTimDatChart"style="width:100%; height:400px;" class="chart-content"></div>
         </el-col>
     </el-row>
 </section>  
 </template>
 
-<<script>
+<script>
 export default {
   data(){
-        return {}
+        return {
+            datTimRange:''
+        }
   },
     methods:{
         darwRelTimDatChart(){
@@ -41,16 +54,7 @@ export default {
                         {
                             type: 'category',
                             boundaryGap: true,
-                            data: (function (){
-                                var now = new Date();
-                                var res = [];
-                                var len = 10;
-                                while (len--) {
-                                    res.unshift(now.toLocaleTimeString().replace(/^\D*/,''));
-                                    now = new Date(now - 2000);
-                                }
-                                return res;
-                            })()
+                            data:["17:17:00","17:17:10","17:17:20","17:17:30","17:17:40","17:17:50","17:18:00"]
                         }
                     ],
                     yAxis: [
@@ -58,7 +62,7 @@ export default {
                             type: 'value',
                             scale: true,
                             name: '百公里油耗',
-                            max: 30,
+                            max:30,
                             min: 0,
                             boundaryGap: [0.2, 0.2]
                         },
@@ -66,7 +70,7 @@ export default {
                             type: 'value',
                             scale: true,
                             name: '百公里标准煤',
-                            max: 1200,
+                            max: 100,
                             min: 0,
                             boundaryGap: [0.2, 0.2]
                         }
@@ -75,51 +79,26 @@ export default {
                         {
                             name:'百公里标准煤',
                             type:'bar',
-                            yAxisIndex: 1,
-                            data:(function (){
-                                var res = [];
-                                var len = 10;
-                                while (len--) {
-                                    res.push(Math.round(Math.random() * 1000));
-                                }
-                                return res;
-                            })()
+                            yAxisIndex: 1
+
                         },
                         {
                             name:'百公里油耗',
                             type:'line',
-                             smooth: true,
-                            data:(function (){
-                                var res = [];
-                                var len = 0;
-                                while (len < 10) {
-                                    res.push((Math.random()*10 + 5).toFixed(1) - 0);
-                                    len++;
-                                }
-                                return res;
-                            })()
+                             smooth: true
+  
                         }
                     ]
                 };
                 app.count = 11;
-                setInterval(function (){
-                    var axisData = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
-
-                    var data0 = option.series[0].data;
-                    var data1 = option.series[1].data;
-                    data0.shift();
-                    data0.push(Math.round(Math.random() * 1000));
-                    data1.shift();
-                    data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
-
-                    option.xAxis[0].data.shift();
-                    option.xAxis[0].data.push(axisData);
-                    relTimDatChart.setOption(option);
-                }, 2100);
                 relTimDatChart.setOption(option);
-
-
-
+                $.get("./api/relTtimeData").done(function(res){
+                    console.log(res);
+                    option.xAxis.data = res.data[0];
+                    option.series[0].data = res.data[1];
+                    option.series[1].data = res.data[2];
+                    relTimDatChart.setOption(option);
+                });
 
 
         }
