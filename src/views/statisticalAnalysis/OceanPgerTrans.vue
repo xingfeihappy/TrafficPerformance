@@ -3,17 +3,6 @@
         <el-row> 
             <el-col class="chart-container">
                 <div class="chart-header">
-                    <el-select v-model="energyTypeSelect" placeholder="选择燃料类型" >
-                        <el-option key="汽油" label="汽油" value="汽油"></el-option>
-                        <el-option key="柴油" label="柴油" value="柴油"></el-option>
-                        <el-option key="CNG" label="CNG" value="CNG"></el-option>
-                        <el-option key="LPG" label="LPG" value="LPG"></el-option>
-                        <el-option key="LNG" label="LNG" value="LNG"></el-option>
-                        <el-option key="重油" label="重油" value="重油"></el-option>
-                        <el-option key="电力" label="电力" value="电力"></el-option>
-                    </el-select>                      
-                </div> 
-                <div class="chart-header">
                     <el-date-picker
                         v-model="dateSelectValue"
                         type="daterange"
@@ -21,8 +10,6 @@
                         :picker-options="pickerOptions2">
                     </el-date-picker>
                 </div>
-                
-                
             </el-col>
         </el-row>
         <el-row> 
@@ -101,8 +88,7 @@
                     }]
                 },
                 dateSelectValue:'',
-                yearSelectValue:'',
-                energyTypeSelect:''
+                yearSelectValue:''
             }
         },
         methods: {
@@ -110,7 +96,7 @@
                 let guestChart = echarts.init(document.getElementById('guestChart'));
                 let option = {
                     title: {
-                    text: '不同客位车辆单位能耗图'
+                    text: '不同客位船舶单位能耗图'
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -210,7 +196,7 @@
                 let unitEnergyChart = echarts.init(document.getElementById('unitEnergyChart'));
                 let option = {
                     title : {
-                        text: '不同车辆类型单位能耗图',
+                        text: '不同燃料类型单位能耗图',
                     },
                     tooltip : {
                         trigger: 'axis',
@@ -241,7 +227,7 @@
                             type : 'category',
                             nameGap:'5',
                             //data : ['<1000','1000~3000','3000~10000','>10000']
-                            data: ['一类车', '二类车', '三类车', '四类车', '五类车']
+                            data: ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力']
                         }
                     ],
                     yAxis : [
@@ -283,7 +269,7 @@
                             name: '单耗',
                             type: 'bar',
                             barWidth: '40%',
-                            data: [4.1, 2.3, 5.4, 2.5,1.9]
+                            data: [4.1, 2.3, 5.4, 2.5,1.9,2.0,2.7]
                         }
                         
                     ]
@@ -294,7 +280,7 @@
                 let distanceShipChart = echarts.init(document.getElementById('distanceShipChart'));
                 let option = {
                     title: {
-                    text: '不同运距车辆单位能耗图'
+                    text: '不同运距船舶单位能耗图'
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -363,7 +349,7 @@
                 let energyPieChart = echarts.init(document.getElementById('energyPieChart'));
                 let option={
                     title:{
-                        text: '道路客运能源结构图',
+                        text: '海洋客运能源结构图',
                         x: 'center'
                     },
                     tooltip : {
