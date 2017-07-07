@@ -112,10 +112,10 @@ let routes = [
             { path: '/CityEnergy', component: CityEnergy,  name: '地市能耗构成图' },
             { path: '/TrafficEnergy', component: TrafficEnergy,  name: '交通方式能耗构成图' },            
             { path: '/page4', component: Page4,  name: '年度数据对比' },
-            { path: '/page4', component: Page4,  name: '分析结果发布' }
+          /*  { path: '/page4', component: Page4,  name: '分析结果发布' }*/
         ]
     },
-    {
+    /*{
         path: '/',
         component: Home,
         name: '能耗采集',
@@ -124,7 +124,7 @@ let routes = [
             { path: '/page4', component: Page4, name: '实时采集' },
             { path: '/page4', component: Page4, name: '数据校验' }
         ]
-    },
+    },*/
      {
         path: '/',
         component: Home,
