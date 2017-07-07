@@ -24,7 +24,8 @@ import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
 import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
 import rivTraChart from './components/rivTraChart.vue'
-
+import OceanPgerTrans from './views/statisticalAnalysis/OceanPgerTrans.vue'
+import PortProduction from './views/statisticalAnalysis/PortProduction.vue'
 
 
 let routes = [
@@ -101,8 +102,8 @@ let routes = [
             { path: '/taxiChart', component: taxiChart,  name: '出租车运输' },
             { path: '/rivTraChart', component: rivTraChart,  name: '内河运输' },
             { path: '/OceanFreight', component: OceanFreight,  name: '海洋货运' },
-            { path: '/page4', component: Page4,  name: '海洋客运' },
-            { path: '/page4', component: Page4,  name: '港口生产' },
+            { path: '/OceanPgerTrans', component: OceanPgerTrans,  name: '海洋客运' },
+            { path: '/PortProduction', component: PortProduction,  name: '港口生产' },
             { path: '/allTypChart', component: allTypChart,  name: '单位运距能耗指标' },
             { path: '/page4', component: Page4,  name: '能耗结构' },
             { path: '/engTypChgChart', component: engTypChgChart,  name: '能源类型分时趋势' },

@@ -33,6 +33,14 @@ apiRoutes.get('/hangzhouTrack', function (req, res) {
   });
 });
 
+var sDisShipEnergy = require('../src/mock/data/sDisShipEnergy.json');  //海洋货运运距测试数据
+apiRoutes.get('/sDisShipEnergy',function(req,res){
+    res.json({
+      errno:0,
+      data:sDisShipEnergy
+    });
+});
+
 var chartColume = require('../src/mock/data/chartColume.json'); // 引入测试数据
 apiRoutes.get('/chartColume', function (req, res) {
   res.json({
