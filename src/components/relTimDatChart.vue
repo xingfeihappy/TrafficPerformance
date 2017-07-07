@@ -94,9 +94,8 @@ export default {
                 relTimDatChart.setOption(option);
                 $.get("./api/relTtimeData").done(function(res){
                     console.log(res);
-                    option.xAxis.data = res.data[0];
-                    option.series[0].data = res.data[1];
-                    option.series[1].data = res.data[2];
+                    option.series[0].data = res.data[0];
+                    option.series[1].data = res.data[1];
                     relTimDatChart.setOption(option);
                 });
 
