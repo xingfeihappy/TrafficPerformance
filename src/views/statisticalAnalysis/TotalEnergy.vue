@@ -42,9 +42,6 @@
                         trigger: 'axis',
                         axisPointer: {
                             type: 'cross',
-                            label: {
-                                backgroundColor: '#6a7985'
-                            }
                         }
                     },
                     legend: {
@@ -71,62 +68,57 @@
                     ],
                     yAxis :[
                         {
-                            type : 'value'
+                            type : 'value',
+                            name: '单耗(万吨标准煤/亿人公里或万吨标准煤/亿吨公里)',
+                            nameLocation:'middle',
+                            nameGap:'40',
+                            axisLabel: {
+                                formatter: '{value}'
+                            },
+                            axisPointer: {
+                                snap: true
+                            }
                         }
                     ],
                     series : [
                         {
                             name:'道路客运',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[120, 132, 101, 134, 90, 230, 210,123,324,233,123,212]
                         },
                         {
                             name:'道路货运',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[220, 182, 191, 234, 290, 330, 310,315,320,330,345,242]
                         },
 
                         {
                             name:'公交客运',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[150, 232, 201, 154, 190, 330, 234,213,254,320,210,122]
                         },
 
                         {
                             name:'出租车运输',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[50, 132, 101, 54, 90, 230, 134,113,154,220,110,22]
                         },
 
                         {
                             name:'内河运输',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[250, 332, 301, 254, 190, 430, 334,313,354,420,310,222]
                         },
 
                         {
                             name:'海洋货运',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[350, 432, 401, 354, 290, 530, 434,413,454,520,410,322]
                         },
 
                         {
                             name:'海洋客运',
                             type:'line',
-                            stack: '总量',
-                            areaStyle: {normal: {}},
                             data:[350, 432, 401, 354, 290, 530, 434,413,454,520,410,322]
                         },
                     ]
