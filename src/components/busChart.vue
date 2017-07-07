@@ -3,28 +3,34 @@
         <el-row>
             <el-col >
                 <div class="chart-header">
-                    <el-select v-model="timeUnitType" placeholder="查询类型" >
-                        <el-option key="按年" label="按月" value="按年"></el-option>
+                    <!--<el-select v-model="timeUnitType" placeholder="查询类型" >
+                        <el-option key="按年" label="按年" value="按年"></el-option>
                         <el-option key="按半年" label="按半年" value="按半年"></el-option>
                         <el-option key="按季度" label="按季度" value="按季度"></el-option>
                         <el-option key="按月" label="按月" value="按月"></el-option>
-                    </el-select>                      
+                    </el-select>                      -->
+                    <el-date-picker
+                        v-model="timeRange"
+                        type="daterange"
+                        placeholder="选择日期范围">
+                    </el-date-picker>                 
                 </div> 
              </el-col>
         </el-row>
-        <el-row  >
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+        <el-row >
+            <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
+                <div >
+                    <el-button type="text"  v-on:click="darwEngPerTimeDifChart">不同车长分散</el-button> 
+                    <el-button type="text" v-on:click="darwEngPerTimeAllChart">不同车长总和</el-button>
+                </div>
                 <div id="engPerTimeChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
-                  <div id="carLenPerTimeChart" style="width:100%; height:400px;" class="chart-content"></div>
-             </el-col>
         </el-row>
         <el-row >
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+            <el-col  class="chart-container">
                    <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">
+            <el-col class="chart-container">
                 <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
@@ -32,13 +38,12 @@
 </template>
 
 <script>
-    import echarts from 'echarts'
-
+import echarts from 'echarts'
+var engPerTimeChart ;
 export default {
   data(){
       return {
-           timeUnitType:'',
-           selectEnegeType:''
+           timeRange:''
       }
   },
     methods: {
@@ -46,16 +51,22 @@ export default {
         },
         selectTimeUnitTypeChange(){
         },
-        darwEngPerTimeChart(){
-            let engPerTimeChart = echarts.init(document.getElementById('engPerTimeChart'));
+        darwEngPerTimeDifChart(){
+            if(engPerTimeChart!=null) engPerTimeChart.dispose();
 
-            let  option = {
+            engPerTimeChart = echarts.init(document.getElementById('engPerTimeChart'));
+
+
+            let option = {
                     title: {
-                        text: '不同燃料类型单位能耗柱状图',
+                        text: '不同燃料类型不同长度车长单位能耗柱状图',
                         left:'center'
                     },
 
-                    color: ['#3398DB'],
+                    legend: {
+                        data:['5-7米', '8-11米', '12-14米'],
+                        top : 30
+                    },
                     tooltip : {
                         trigger: 'axis',
                         axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -87,24 +98,39 @@ export default {
                     ],
                     series : [
                         {
+                            name:'5-7米',
                             type:'bar',
-                            barWidth: '60%',
-                            data:[550, 520, 200, 334, 390, 330, 220]
+                            data:[7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6]
+                        },
+                        {
+                            name:'8-11米',
+                            type:'bar',
+                            data:[26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8,]
+                        
+                        },
+                        {
+                            name:'12-14米',
+                            type:'bar',
+                            data:[12.4, 24.7, 67.7, 155.6, 132.2, 44.7, 20.8]
                         }
                     ]
-                };
-            engPerTimeChart.setOption(option);       
-    },
-    
-    darwCarLenPerTimeChart(){
-            let carLenPerTimeChart = echarts.init(document.getElementById('carLenPerTimeChart'));
-            let  option = {
+            };
+            engPerTimeChart.setOption(option);
+        },
+        darwEngPerTimeAllChart(){
+
+            if(engPerTimeChart!=null) engPerTimeChart.dispose();
+            engPerTimeChart = echarts.init(document.getElementById('engPerTimeChart'));
+            let option = {
                     title: {
-                        text: '相同燃料类型不同长度车辆单位能耗柱状图',
-                         left:'center'
+                        text: '不同燃料类型单位能耗柱状图',
+                        left:'center'
                     },
 
-                    color: ['#3398DB'],
+                    legend: {
+                        data:['5-7米', '8-11米', '12-14米'],
+                        top : 30
+                    },
                     tooltip : {
                         trigger: 'axis',
                         axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -123,12 +149,7 @@ export default {
                     xAxis : [
                         {
                             type : 'category',
-                            name : '车长',
-                            nameGap : 10,
-                            data : ['5-7米', '8-11米', '12-14米'],
-                            axisTick: {
-                                alignWithLabel: true
-                            }
+                            data : ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力']
                         }
                     ],
                     yAxis : [
@@ -136,66 +157,135 @@ export default {
                             type : 'value',
                             nameLocation : 'middle',
                             name : '单位能耗(单位：万吨标准煤/亿人公里)',
-                            nameGap :35
-                            
-
+                            nameGap : 35
                         }
                     ],
                     series : [
                         {
+                            name:'5-7米',
                             type:'bar',
-                            barWidth: '30%',
-                            data:[334, 390, 330]
-                        }
-                    ]
-                };
-        carLenPerTimeChart.setOption(option);
-    },
-
-    darwEngTypeAllChart(){
-            let engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
-            var option={
-                    title : {
-                        text: '公交客运能源结构图饼图',
-                        left:'center'
-                    },
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: "{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        x : 'center',
-                        y : 'bottom'
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        saveAsImage : {show: true},
-                        dataView : {readOnly:false}
-                        }
-                    },
-                    calculable : true,
-                    series : [
+                            stack: '总量',
+                            data:[7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6]
+                        },
                         {
-                            type:'pie',
-                            radius : [20, 110],
-                            center : ['50%', '50%'],
-                            roseType : 'area',
-                            data:[
-                                {value:600,name:'汽油'},
-                                {value:150,name:'柴油'},
-                                {value:200,name:'CNG'},
-                                {value:450,name:'LPG'},
-                                {value:542,name:'LNG'},
-                                {value:102,name:'重油'},
-                                {value:360,name:'电力'},
-                            ]
+                            name:'8-11米',
+                            type:'bar',
+                            stack: '总量',
+                            data:[26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8,]
+                        
+                        },
+                        {
+                            name:'12-14米',
+                            type:'bar',
+                            stack: '总量',
+                            data:[12.4, 24.7, 67.7, 155.6, 132.2, 44.7, 20.8]
                         }
                     ]
-                }
-        engTypeAllChart.setOption(option);
-    },
+            };
+        
+                engPerTimeChart.setOption(option);
+        },
+    
+        darwCarLenPerTimeChart(){
+                let carLenPerTimeChart = echarts.init(document.getElementById('carLenPerTimeChart'));
+                let  option = {
+                        title: {
+                            text: '相同燃料类型不同长度车辆单位能耗柱状图',
+                            left:'center'
+                        },
+
+                        color: ['#3398DB'],
+                        tooltip : {
+                            trigger: 'axis',
+                            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                            mark : {show: true},
+                            saveAsImage : {show: true},
+                            dataView : {readOnly:false},
+                            magicType : {show: true, type: ['line', 'bar']}
+                            }
+                        },
+                        xAxis : [
+                            {
+                                type : 'category',
+                                name : '车长',
+                                nameGap : 10,
+                                data : ['5-7米', '8-11米', '12-14米'],
+                                axisTick: {
+                                    alignWithLabel: false
+                                }
+                            }
+                        ],
+                        yAxis : [
+                            {
+                                type : 'value',
+                                nameLocation : 'middle',
+                                name : '单位能耗(单位：万吨标准煤/亿人公里)',
+                                nameGap :35
+                                
+
+                            }
+                        ],
+                        series : [
+                            {
+                                type:'bar',
+                                barWidth: '30%',
+                                data:[334, 390, 330]
+                            }
+                        ]
+                    };
+            carLenPerTimeChart.setOption(option);
+        },
+
+        darwEngTypeAllChart(){
+                let engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
+                var option={
+                        title : {
+                            text: '公交客运能源结构图饼图',
+                            left:'center'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: "{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            x : 'center',
+                            y : 'bottom'
+                        },
+                        toolbox: {
+                            show : true,
+                            feature : {
+                            mark : {show: true},
+                            saveAsImage : {show: true},
+                            dataView : {readOnly:false}
+                            }
+                        },
+                        calculable : true,
+                        series : [
+                            {
+                                type:'pie',
+                                radius : [20, 110],
+                                center : ['50%', '50%'],
+                                roseType : 'area',
+                                data:[
+                                    {value:600,name:'汽油'},
+                                    {value:150,name:'柴油'},
+                                    {value:200,name:'CNG'},
+                                    {value:450,name:'LPG'},
+                                    {value:542,name:'LNG'},
+                                    {value:102,name:'重油'},
+                                    {value:360,name:'电力'},
+                                ]
+                            }
+                        ]
+                    }
+            engTypeAllChart.setOption(option);
+        },
 
     darwperAllRelChart(){
             let perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
@@ -287,8 +377,7 @@ export default {
 
     },
     mounted:function(){
-        this.darwEngPerTimeChart();
-        this.darwCarLenPerTimeChart();
+        this.darwEngPerTimeDifChart();
         this.darwEngTypeAllChart();
         this.darwperAllRelChart();
     },
@@ -310,7 +399,7 @@ export default {
                 margin-bottom: 20px;
                 position: relative;
             }
-            #energyTypePie{
+            .chart-content{
                 overflow: hidden;
             }
         }

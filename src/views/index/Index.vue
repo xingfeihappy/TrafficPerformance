@@ -23,7 +23,7 @@
                     </el-select>
                </div>
 
-                <div id="barChart" style="width:100%; height:455px;" class="chart-content"></div>
+                <div id="barChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
     </section>
@@ -197,7 +197,7 @@
                 margin-bottom: 20px;
                 position: relative;
             }
-            #energyTypePie{
+            .chart-content{
                 overflow: hidden;
             }
         }
