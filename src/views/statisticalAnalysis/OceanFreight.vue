@@ -344,7 +344,7 @@
                 let seaShipChart = echarts.init(document.getElementById('seaShipChart'));
                 let option = {
                     title : {
-                        text: '海洋船舶单位能耗图',
+                        text: '不同船舶类型单位能耗图',
                     },
                     tooltip : {
                         trigger: 'axis',
