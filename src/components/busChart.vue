@@ -78,6 +78,14 @@ export default {
                         text: '不同燃料类型不同长度车长单位能耗柱状图',
                         left:'center'
                     },
+                    dataZoom: [
+                        {
+                            id: 'dataZoomX',
+                            type: 'slider',
+                            xAxisIndex: [0],
+                            filterMode: 'filter'
+                        }
+                    ],
 
                     legend: {
                         data:['5-7米', '8-11米', '12-14米'],

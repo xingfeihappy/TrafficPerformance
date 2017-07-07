@@ -12,10 +12,13 @@
                 </div>
                 <div class="chart-header">
                     <el-select v-model="trafficSelectValue" placeholder="请选择交通工具" @change="trafficSelectChange">
-                        <el-option key="公交车" label="公交车" value="公交车"></el-option>
-                        <el-option key="出租车" label="出租车" value="出租车"></el-option>
-                        <el-option key="客车" label="客车" value="客车"></el-option>
-                        <el-option key="客船" label="客船" value="客船"></el-option>
+                        <el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
+                        <el-option key="道路货运" label="道路货运" value="道路货运"></el-option>
+                        <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
+                        <el-option key="出租车运输" label="出租车运输" value="出租车运输"></el-option>
+                        <el-option key="内河运输" label="内河运输" value="内河运输"></el-option>
+                        <el-option key="海洋货运" label="海洋货运" value="还有货运"></el-option>
+                        <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>
                     </el-select>
                 </div>
             </el-col>
@@ -34,7 +37,7 @@
     export default{
         data(){
             return{
-                trafficSelectValue: '公交车',
+                trafficSelectValue: '',
                 dateSelectValue:'',
 
                 pickerOptions2: {

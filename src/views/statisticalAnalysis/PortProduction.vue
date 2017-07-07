@@ -3,17 +3,6 @@
         <el-row> 
             <el-col class="chart-container">
                 <div class="chart-header">
-                    <el-select v-model="energyTypeSelect" placeholder="选择燃料类型" >
-                        <el-option key="汽油" label="汽油" value="汽油"></el-option>
-                        <el-option key="柴油" label="柴油" value="柴油"></el-option>
-                        <el-option key="CNG" label="CNG" value="CNG"></el-option>
-                        <el-option key="LPG" label="LPG" value="LPG"></el-option>
-                        <el-option key="LNG" label="LNG" value="LNG"></el-option>
-                        <el-option key="重油" label="重油" value="重油"></el-option>
-                        <el-option key="电力" label="电力" value="电力"></el-option>
-                    </el-select>                      
-                </div> 
-                <div class="chart-header">
                     <el-date-picker
                         v-model="dateSelectValue"
                         type="daterange"
@@ -21,8 +10,6 @@
                         :picker-options="pickerOptions2">
                     </el-date-picker>
                 </div>
-                
-                
             </el-col>
         </el-row>
         <el-row> 
@@ -30,25 +17,9 @@
                 <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
             <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-                <div id="unitEnergyChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
-              
-        </el-row>
-        <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
-                <div id="distanceShipChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>   
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>        
-        </el-row>
-        <el-row> 
-            <el-col  class="chart-container">                
-                <div id="guestChart" style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
-              
-        </el-row>
-         
+            </el-col>   
+        </el-row>  
 
         <el-row>
             <el-col class="chart-container">
@@ -101,77 +72,11 @@
                     }]
                 },
                 dateSelectValue:'',
-                yearSelectValue:'',
-                energyTypeSelect:''
+                energySelectValue:'汽油',
+                yearSelectValue:''
             }
         },
         methods: {
-            drawGuestTypeChart(){
-                let guestChart = echarts.init(document.getElementById('guestChart'));
-                let option = {
-                    title: {
-                    text: '不同客位车辆单位能耗图'
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer : {            
-                            type : 'shadow'        
-                        }
-                    },
-            
-                    legend: {
-                       // orient: 'vertical',
-                        //y:'bottom',
-                       // x:'center',
-                        data:['一客位','二客位','三客位','四客位']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                        mark : {show: true},
-                        dataView : {readOnly:false},
-                        saveAsImage : {show: true}
-                                            
-                        }
-                    },
-                    xAxis: {
-                        data: ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力'],
-                        name:'燃料类型',
-                        nameGap:'10'
-                    },
-                    yAxis: {
-                        name:'单位能耗(万吨标煤/亿吨公里)',
-                        nameLocation:'middle',
-                        nameGap:'40'
-                    },
-                    series : [
-                        {
-                            name:'一客位',
-                            type:'bar',
-                            data:[0.123, 0.2, 0.321, 0.134,0.231,0.142,0.213]
-                        },
-                        {
-                            name:'二客位',
-                            type:'bar',
-                            data:[0.323, 0.3, 0.121, 0.231,0.131,0.242,0.243]
-                        
-                        },
-                        {
-                            name:'三客位',
-                            type:'bar',
-                            data:[0.423, 0.35, 0.221, 0.331,0.251,0.122,0.343]
-                        },
-                        {
-                            name:'四客位',
-                            type:'bar',
-                            data:[0.453, 0.42, 0.241, 0.281,0.351,0.322,0.393]
-                        }
-                        
-                    ]
-                };
-                guestChart.setOption(option);
-               
-            },
             drawCompanyTypeChart(){
                 let companyChart = echarts.init(document.getElementById('companyChart'));
                 let option = {
@@ -206,164 +111,11 @@
                 };
                 companyChart.setOption(option);
             },
-            drawUnitEnergyChart(){
-                let unitEnergyChart = echarts.init(document.getElementById('unitEnergyChart'));
-                let option = {
-                    title : {
-                        text: '不同车辆类型单位能耗图',
-                    },
-                    tooltip : {
-                        trigger: 'axis',
-                        axisPointer : {            
-                            type : 'shadow'        
-                        }
-                    },
-                    legend: {
-                       // orient: 'vertical',
-                        x:'center',
-                       // data:['集装箱船','干散货船','件杂货船','液体散货船','客滚船']
-                       data:['单耗'] //
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            dataView : {show: true, readOnly: false},
-                            magicType : {show: true, type: ['line', 'bar']},     
-                            saveAsImage : {show: true}
-                            
-                        }
-                    },
-                    
-                    calculable : true,
-                    xAxis : [
-                        {
-                            name:'燃料类型',
-                            type : 'category',
-                            nameGap:'5',
-                            //data : ['<1000','1000~3000','3000~10000','>10000']
-                            data: ['一类车', '二类车', '三类车', '四类车', '五类车']
-                        }
-                    ],
-                    yAxis : [
-                        {
-                            type : 'value',
-                            name: '单耗(万吨标准煤/亿吨公里)',
-                            nameLocation:'middle',
-                            nameGap:'40'
-                        }
-                    ],
-                    series : [
-                        /*{
-                            name:'集装箱船',
-                            type:'bar',
-                            data:[7.0, 23.2, 25.6, 76.7]
-                        },
-                        {
-                            name:'干散货船',
-                            type:'bar',
-                            data:[26.4, 28.7, 70.7, 175.6]
-                        
-                        },
-                        {
-                            name:'件杂货船',
-                            type:'bar',
-                            data:[12.4, 24.7, 67.7, 155.6]
-                        },
-                        {
-                            name:'液体散货船',
-                            type:'bar',
-                            data:[17.4, 26.7, 47.7, 55.6]
-                        },
-                        {
-                            name:'客滚船',
-                            type:'bar',
-                            data:[31.4, 36.7, 40.7, 123.6]
-                        },*/
-                        {
-                            name: '单耗',
-                            type: 'bar',
-                            barWidth: '40%',
-                            data: [4.1, 2.3, 5.4, 2.5,1.9]
-                        }
-                        
-                    ]
-                };
-                unitEnergyChart.setOption(option);
-            },
-            drawDistanceShipChart(){
-                let distanceShipChart = echarts.init(document.getElementById('distanceShipChart'));
-                let option = {
-                    title: {
-                    text: '不同运距车辆单位能耗图'
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer : {            
-                            type : 'shadow'        
-                        }
-                    },
-                    legend: {
-                        //data:['一运距','二运距','三运距','四运距']
-                        data:['单耗']//
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {readOnly:false},
-                            saveAsImage : {show: true},
-                            magicType : {show: true, type: ['line', 'bar']}                               
-                        }
-                    },
-                    xAxis: {
-                        //data: ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力'],
-                        data:['一运距','二运距','三运距','四运距'],//
-                        name:'燃料类型',
-                        nameGap:'5'
-                    },
-                    yAxis: {
-                        name:'单位能耗(万吨标煤/亿吨公里)',
-                        nameLocation:'middle',
-                        nameGap:'40'
-                    },
-                    series : [
-                        /*{
-                            name:'一运距',
-                            type:'bar',
-                            data:[0.123, 0.2, 0.321, 0.134,0.231,0.142,0.213]
-                        },
-                        {
-                            name:'二运距',
-                            type:'bar',
-                            data:[0.323, 0.3, 0.121, 0.231,0.131,0.242,0.243]
-                        
-                        },
-                        {
-                            name:'三运距',
-                            type:'bar',
-                            data:[0.423, 0.35, 0.221, 0.331,0.251,0.122,0.343]
-                        },
-                        {
-                            name:'四运距',
-                            type:'bar',
-                            data:[0.453, 0.42, 0.241, 0.281,0.351,0.322,0.393]
-                        }*/
-                        {
-                            name: '单耗',
-                            type: 'bar',
-                            barWidth: '40%',
-                            data: [45, 20, 36, 10]
-                        }
-                        
-                    ]
-                };
-                distanceShipChart.setOption(option);
-            },
             drawEnergyPieChart(){
                 let energyPieChart = echarts.init(document.getElementById('energyPieChart'));
                 let option={
                     title:{
-                        text: '道路客运能源结构图',
+                        text: '海洋客运能源结构图',
                         x: 'center'
                     },
                     tooltip : {
@@ -498,10 +250,7 @@
                 energyByYearChart.setOption(option);
             },  
             drawCharts() {
-                this.drawGuestTypeChart()
                 this.drawCompanyTypeChart()
-                this.drawUnitEnergyChart()
-                this.drawDistanceShipChart()
                 this.drawEnergyPieChart()
                 this.drawenergyByYearChart()
             }
@@ -514,6 +263,7 @@
         }
     }
 </script>
+
 
 <style scoped lang="scss">
     .chart {
