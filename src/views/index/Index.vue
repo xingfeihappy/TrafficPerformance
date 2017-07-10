@@ -39,15 +39,34 @@
             return {
                 energyTypeSelectValue: '本月',
                 energyTypeUrl : './api/energyTypeMonth',
-                // energyUseUrl:'./api/energyTotalUse'
-                energyUseUrl:'./api/electric'
+                energyUseUrl:'./api/energyTotalUse',
+                barChart:null
             }
         },
         watch:{
-            energyUseUrl: function(curVal,oldVal){
-　　　　　　　　　　alert(curVal+"---"+oldVal);
+            energyUseUrl:function(curVal,oldVal){
+// 　　　　　　　　alert(curVal+"---"+oldVal);
+                var _this = this;
+                $.get(_this.energyUseUrl).done(function (res) {
+                        // alert("饼图点击后，电力数据changed" + _this.energyUseUrl);
+                        if(res.errno ===  err_OK){
+                            // alert("res.data: "+res.data);
+                            var data = res.data;
+                            // alert("234"+_this.barChart)
+                            _this.barChart.setOption({
+                                series : [
+                                    {
+                                        data: data
+                                    }
+                                ]
+                            });
+                        }
+                    })
 　　　　　　　}
         },
+        /*mounted(){
+            this.barChart = echarts.init(document.getElementById('barChart'));
+        },*/
         methods: {
             energyTypeSelectChange(){
                 let value= this.energyTypeSelectValue;
@@ -59,17 +78,9 @@
                     this.energyTypeUrl = './api/energyTypeYear';
                 }
             },
-            // currentEnergyChange(){
-            //     alert("111")
-            //     let value= this.currentEnergy;
-            //     if(value === 0){
-            //         this.energyUseUrl = './api/electric';
-            //     }
-            //     alert(value);
-            // },
+           
             drawEnergyTypePie(){//饼图
                  this.energyTypePie = echarts.init(document.getElementById('energyTypePie'));
-                 
                 var option={
                     title : {
                         text: '能源类型图',
@@ -130,19 +141,30 @@
                  this.energyTypePie.on('click',function(param) {
                     var mes = '【' + param.type + '】';
                    currentEnergy = param.dataIndex;
-                   alert("饼图被点击"+currentEnergy);
+                   // alert("饼图被点击"+currentEnergy);
                    // currentEnergyChange();
                    let value= currentEnergy;
                    if(value == '0'){
-                    // this.energyUseUrl = './api/electric';
-                    this.energyUseUrl = './api/energyTotalUse';
-                    alert(this.energyUseUrl)
+                    _this.energyUseUrl = './api/electric';
+                   }else if(value == '1'){
+                    _this.energyUseUrl = './api/diesel';
+                   }else if(value == '2'){
+                    _this.energyUseUrl = './api/electric';
+                   }else if(value == '3'){
+                    _this.energyUseUrl = './api/diesel';
+                   }else if(value == '4'){
+                    _this.energyUseUrl = './api/electric';
+                   }else if(value == '5'){
+                    _this.energyUseUrl = './api/diesel';
+                   }else if(value == '6'){
+                    _this.energyUseUrl = './api/electric';
+                   }else if(value == '7'){
+                    _this.energyUseUrl = './api/diesel';
                    }
                 })
             },
-
-             drawEnergyTypeLine(){//柱状图
-                var barChart = echarts.init(document.getElementById('barChart'));
+             drawEnergyTypeBar(){//柱状图
+                // this.barChart = echarts.init(document.getElementById('barChart'));
                  
                 var option = {
                     title:{
@@ -172,7 +194,7 @@
                         end : 100
                     },
                     xAxis : {
-                        data:["1","2","3","4","5","6","7","8","9","10","11","12"]
+                        data:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
                     },
                     yAxis :{},
                     series : [
@@ -183,40 +205,44 @@
                         }
                     ]
                 };
-                barChart.setOption(option);
+                this.barChart.setOption(option);
                 var _this = this;
                 $.get(this.energyUseUrl).done(function (res) {
+                    // alert("chushihua :"+_this.energyUseUrl)
                     if(res.errno ===  err_OK){
                         console.log(res.data);
                         var data = res.data;
-                        barChart.setOption({
+                            _this.barChart.setOption({
                             series : [
                                 {
                                     data: data
                                 }
                             ]
                         });
+
+                        
                     }
                 })
-                // barChart.on('click',function(param) {
-                //     var mes = '【' + param.type + '】';
-                //     if (typeof param.seriesIndex != 'undefined') {
-                //         mes += '  seriesIndex : ' + param.seriesIndex;
-                //         mes += '  dataIndex : ' + param.dataIndex;
-                //     }
-                //     if (param.type == 'hover') {
-                //         alert('Event Console : ' + mes);
-                //     }
-                //     else {
-                //         alert(mes);
-                //     }
-                //     console.log(param);
-                // })
+                this.barChart.on('click',function(param) {
+                    var mes = '【' + param.type + '】';
+                    if (typeof param.seriesIndex != 'undefined') {
+                        mes += '  seriesIndex : ' + param.seriesIndex;
+                        mes += '  dataIndex : ' + param.dataIndex;
+                    }
+                    if (param.type == 'hover') {
+                        alert('Event Console : ' + mes);
+                    }
+                    else {
+                        alert(mes);
+                    }
+                    console.log(param);
+                })
             },
            
             drawCharts() {
+                this.barChart = echarts.init(document.getElementById('barChart'));
                 this.drawEnergyTypePie()
-                this.drawEnergyTypeLine()
+                this.drawEnergyTypeBar()
             }
         },
         mounted: function () {
