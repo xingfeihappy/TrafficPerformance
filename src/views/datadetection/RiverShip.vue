@@ -46,8 +46,9 @@ export default {
                     legend: {
                         data:['百公里油耗', '百公里标准煤']
                     },
+                    calculable:true,
                     dataZoom: {
-                        show: false,
+                        show: true,
                         start: 0,
                         end: 100
                     },
