@@ -40,6 +40,23 @@ apiRoutes.get('/sDisShipEnergy',function(req,res){
       data:sDisShipEnergy
     });
 });
+// 暴露能源信息（电力）的json接口
+var electric = require('../src/mock/data/electric.json');  
+apiRoutes.get('/electric',function(req,res){
+    res.json({
+      errno:0,
+      data:electric
+    });
+});
+
+// 暴露能源使用总量信息的json接口
+var energyTotalUse = require('../src/mock/data/energyTotalUse.json');  
+apiRoutes.get('/energyTotalUse',function(req,res){
+    res.json({
+      errno:0,
+      data:energyTotalUse
+    });
+});
 
 var chartColume = require('../src/mock/data/chartColume.json'); // 引入测试数据
 apiRoutes.get('/chartColume', function (req, res) {
