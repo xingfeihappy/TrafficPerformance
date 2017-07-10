@@ -23,9 +23,15 @@ import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
 import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
 import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
+import guestCar from './views/datadetection/guestCar.vue'//数据监测，客运车辆
+import goodsCar from './views/datadetection/GoodsCar.vue'//数据监测，货运车辆
+import taxi from './views/datadetection/Taxi.vue'//数据监测，出租车
+import bus from './views/datadetection/Bus.vue'//数据监测，公交车
+import riverShip from './views/datadetection/RiverShip.vue'//数据监测，内河船舶
 import rivTraChart from './components/rivTraChart.vue'
 import OceanPgerTrans from './views/statisticalAnalysis/OceanPgerTrans.vue'
 import PortProduction from './views/statisticalAnalysis/PortProduction.vue'
+import EnergyStruct from './views/statisticalAnalysis/EnergyStruct.vue'
 
 
 let routes = [
@@ -105,7 +111,7 @@ let routes = [
             { path: '/OceanPgerTrans', component: OceanPgerTrans,  name: '海洋客运' },
             { path: '/PortProduction', component: PortProduction,  name: '港口生产' },
             { path: '/allTypChart', component: allTypChart,  name: '单位运距能耗指标' },
-            { path: '/page4', component: Page4,  name: '能耗结构' },
+            { path: '/EnergyStruct', component: EnergyStruct,  name: '能耗结构' },
             { path: '/engTypChgChart', component: engTypChgChart,  name: '能源类型分时趋势' },
             { path: '/traTypPreChgChart', component: traTypPreChgChart,  name: '单位能耗变化趋势' },
             { path: '/TotalEnergy', component: TotalEnergy,  name: '总能耗变化趋势' },
@@ -132,11 +138,11 @@ let routes = [
         iconCls: 'fa fa-eye',
         children: [
             { path: '/relTimDatChart', component: relTimDatChart, name: '数据展示' },
-            { path: '/page4', component: Page4, name: '客运车辆' },
-            { path: '/page4', component: Page4, name: '货运车辆' },
-            { path: '/page4', component: Page4, name: '出租车' },
-            { path: '/page4', component: Page4, name: '公交车' },
-            { path: '/page4', component: Page4, name: '内河船舶' },
+            { path: '/guestCar', component: guestCar, name: '客运车辆' },
+            { path: '/goodsCar', component: goodsCar, name: '货运车辆' },
+            { path: '/taxi', component: taxi, name: '出租车' },
+            { path: '/bus', component: bus, name: '公交车' },
+            { path: '/riverShip', component: riverShip, name: '内河船舶' },
             { path: '/DataInMap', component: DataInMap, name: '专题图展示' }
         ]
     },
