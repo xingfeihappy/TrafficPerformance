@@ -21,6 +21,8 @@
 </template>
 
 <script>
+//import {ajaxAddress} from '../../common/js/constant.js'
+
 export default {
   data(){
         return {
@@ -46,8 +48,9 @@ export default {
                     legend: {
                         data:['百公里油耗', '百公里标准煤']
                     },
+                    calculable:true,
                     dataZoom: {
-                        show: false,
+                        show: true,
                         start: 0,
                         end: 100
                     },
@@ -93,7 +96,8 @@ export default {
                 };
                 app.count = 11;
                 relTimDatChart.setOption(option);
-                $.get("./api/relTtimeData").done(function(res){
+                // $.get("http://localhost:8081/relTtimeData").done(function(res){
+                 $.get(this.Constant.ajaxAddress+"/relTtimeData").done(function(res){   
                     console.log(res);
                     option.series[0].data = res.data[0];
                     option.series[1].data = res.data[1];

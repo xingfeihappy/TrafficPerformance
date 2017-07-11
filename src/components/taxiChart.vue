@@ -131,7 +131,7 @@ export default {
                     ]
             };
             engPerTimeChart.setOption(option);
-            $.get("./api/busTypLenData").done(function (res){
+            $.get(this.Constant.ajaxAddress+"/busTypLenData").done(function (res){
                     console.log(1);
                     option.series[0].data = res.data[0];
                     option.series[1].data = res.data[1];
@@ -211,7 +211,7 @@ export default {
         
             engPerTimeChart.setOption(option);
             
-            $.get("./api/busTypLenData").done(function (res){
+            $.get(this.Constant.ajaxAddress+"//busTypLenData").done(function (res){
                 console.log(2);
                 option.series[0].data = res.data[0];
                 option.series[1].data = res.data[1];
@@ -312,7 +312,7 @@ export default {
                         ]
                     }
                 engTypeAllChart.setOption(option);
-                $.get("./api/engTypAllData").done(function(res){
+                $.get(this.Constant.ajaxAddress+"/energyTypeMonth").done(function(res){
                         option.series[0].data = res.data;
                         engTypeAllChart.setOption(option);
                 })
@@ -362,7 +362,7 @@ export default {
                             type: 'value',
                             name: '月使用能耗(万吨标准煤)',
                             min: 0,
-                            max: 500,
+                            max: 300,
                             interval: 50,
                             axisLine: {
                                 lineStyle: {
@@ -379,7 +379,7 @@ export default {
                             nameGap : 35,
                             nameLocation:'middle',
                             min: 0,
-                            max: 200,
+                            max: 100,
                             axisLine: {
                                 lineStyle: {
                                     color: '#d14a61'
@@ -397,13 +397,14 @@ export default {
                         },
                         {
                             name:'单位能耗',
-                            type:'bar'
+                            type:'bar',
+                            yAxisIndex: 1
                         }
                     ]
                 };             
                 
             perAllRelChart.setOption(option);
-            $.get("./api/perAllRelData").done(function(res){
+            $.get(this.Constant.ajaxAddress+"/perAllRelData").done(function(res){
                 option.series[0].data = res.data[0];
                 option.series[1].data = res.data[1];
                 perAllRelChart.setOption(option);
