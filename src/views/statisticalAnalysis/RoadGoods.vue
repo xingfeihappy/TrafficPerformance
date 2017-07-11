@@ -110,7 +110,7 @@
                 let guestChart = echarts.init(document.getElementById('guestChart'));
                 let option = {
                     title: {
-                    text: '不同吨位车辆单位能耗图'
+                    text: '不同燃料类型、不同吨位车辆单位能耗图'
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -123,7 +123,7 @@
                        // orient: 'vertical',
                         //y:'bottom',
                        // x:'center',
-                        data:['一客位','二客位','三客位','四客位']
+                        data:['一吨位','二吨位','三吨位','四吨位']
                     },
                     toolbox: {
                         show : true,
@@ -146,23 +146,23 @@
                     },
                     series : [
                         {
-                            name:'一客位',
+                            name:'一吨位',
                             type:'bar',
                             data:[0.123, 0.2, 0.321, 0.134,0.231,0.142,0.213]
                         },
                         {
-                            name:'二客位',
+                            name:'二吨位',
                             type:'bar',
                             data:[0.323, 0.3, 0.121, 0.231,0.131,0.242,0.243]
                         
                         },
                         {
-                            name:'三客位',
+                            name:'三吨位',
                             type:'bar',
                             data:[0.423, 0.35, 0.221, 0.331,0.251,0.122,0.343]
                         },
                         {
-                            name:'四客位',
+                            name:'四吨位',
                             type:'bar',
                             data:[0.453, 0.42, 0.241, 0.281,0.351,0.322,0.393]
                         }
@@ -194,9 +194,16 @@
                         }
                     },
                     xAxis: {
-                        data: ["一规模","二规模","三规模","四规模","五规模","六规模","七规模"]
+                        data: ["一规模","二规模","三规模","四规模","五规模","六规模","七规模"],
+                        name:'规模类型',
+                        nameGap:3
+
                     },
-                    yAxis: {},
+                    yAxis: {
+                        name:'单位能耗(万吨标煤/亿吨公里)',
+                        nameLocation:'middle',
+                        nameGap:'40'
+                    },
                         series: [{
                         name: '单耗',
                         type: 'bar',
@@ -237,7 +244,7 @@
                     calculable : true,
                     xAxis : [
                         {
-                            name:'燃料类型',
+                            name:'车辆类型',
                             type : 'category',
                             nameGap:'5',
                             //data : ['<1000','1000~3000','3000~10000','>10000']
@@ -317,8 +324,8 @@
                     },
                     xAxis: {
                         //data: ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力'],
-                        data:['一运距','二运距','三运距','四运距'],//
-                        name:'燃料类型',
+                        data:['一吨位','二吨位','三吨位','四吨位'],//
+                        name:'吨位类型',
                         nameGap:'5'
                     },
                     yAxis: {
