@@ -92,7 +92,7 @@ export default {
                 };
                 app.count = 11;
                 relTimDatChart.setOption(option);
-                $.get("./api/relTtimeData").done(function(res){
+                $.get(this.Constant.ajaxAddress+"/relTtimeData").done(function(res){
                     console.log(res);
                     option.series[0].data = res.data[0];
                     option.series[1].data = res.data[1];
