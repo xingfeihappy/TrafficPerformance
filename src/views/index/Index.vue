@@ -31,15 +31,15 @@
 
 <script>
     import echarts from 'echarts'
-
+ //   import {ajaxAddress} from '../../common/js/constant.js'
     const err_OK = 0;
     var currentEnergy = -1;
     export default {
         data() {
             return {
                 energyTypeSelectValue: '本月',
-                energyTypeUrl : './api/energyTypeMonth',
-                energyUseUrl:'./api/energyTotalUse',
+                energyTypeUrl : this.Constant.ajaxAddress+'/energyTypeMonth',
+                energyUseUrl:this.Constant.ajaxAddress+'/energyTotalUse',
                 barChart:null
             }
         },
@@ -71,11 +71,11 @@
             energyTypeSelectChange(){
                 let value= this.energyTypeSelectValue;
                 if(value === "本月"){
-                    this.energyTypeUrl = './api/energyTypeMonth';
+                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeMonth';
                 }else if(value === "本季"){
-                    this.energyTypeUrl = './api/energyTypeQuater';
+                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeQuater';
                 }else if(value === "本年"){
-                    this.energyTypeUrl = './api/energyTypeYear';
+                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeYear';
                 }
             },
            
@@ -145,21 +145,21 @@
                    // currentEnergyChange();
                    let value= currentEnergy;
                    if(value == '0'){
-                    _this.energyUseUrl = './api/electric';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
                    }else if(value == '1'){
-                    _this.energyUseUrl = './api/diesel';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
                    }else if(value == '2'){
-                    _this.energyUseUrl = './api/electric';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
                    }else if(value == '3'){
-                    _this.energyUseUrl = './api/diesel';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
                    }else if(value == '4'){
-                    _this.energyUseUrl = './api/electric';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
                    }else if(value == '5'){
-                    _this.energyUseUrl = './api/diesel';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
                    }else if(value == '6'){
-                    _this.energyUseUrl = './api/electric';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
                    }else if(value == '7'){
-                    _this.energyUseUrl = './api/diesel';
+                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
                    }
                 })
             },
