@@ -81,12 +81,29 @@
             // });
 
 
-            // $.get(this.Constant.ajaxAddress+"/login?username="+loginParams.username+
-            //                                   "&password="+loginParams.password).done(function(data){
-            //   console.log(data);
-            //   this.$router.push({ path: '/index' });
-            // })
-          this.$router.push({ path: '/index' });
+            $.get(this.Constant.ajaxAddress+"/login.json?username="+loginParams.username+
+                                              "&password="+loginParams.password).done(function(data){
+              console.log(data);
+            _this.$router.push({ path: '/index' });
+            })
+            // $.ajax({
+            //             type: "GET",
+            //             url: this.Constant.ajaxAddress+"/login.json",
+            //             data: {username:loginParams.username, password:loginParams.password},
+            //             dataType: "jsonp",
+            //             success: function(data){
+            //                 console.log(data);
+            //                 _this.$router.push({ path: '/index' }); 
+            //             }
+            //         });
+
+
+
+
+          //this.$router.push({ path: '/index' });
+
+
+          
 
 
           } else {

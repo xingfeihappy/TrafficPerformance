@@ -58,6 +58,11 @@ let routes = [
         hidden: true,
         redirect: { path: '/login' }
     },
+    {
+        path: '/index.html',
+        hidden: true,
+        redirect: { path: '/login' }
+    },
     //{ path: '/main', component: Main },
     {
         path: '/',
