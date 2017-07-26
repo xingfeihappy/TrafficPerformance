@@ -1,13 +1,17 @@
 import Login from './views/Login.vue'
-import Register from './views/Register.vue'
+import Register from './views/register3.vue'
+import scale from './views/scale.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
 import barChart from './views/systemSetting/barChart.vue'
 import Table from './views/systemSetting/Table.vue'
 import Form from './views/systemSetting/Form.vue'
 import user from './views/systemSetting/user.vue'
-import Page4 from './views/basicInfo/Page4.vue'
-import Page5 from './views/basicInfo/Page5.vue'
+import unitInfo from './views/basicInfo/unitInfo.vue'
+import unitScale from './views/basicInfo/unitScale.vue'
+import carEquip from './views/basicInfo/carEquip.vue'
+import shipEquip from './views/basicInfo/shipEquip.vue'
+import harbourEquip from './views/basicInfo/harbourEquip.vue'
 import Page6 from './views/statisticalAnalysis/Page6.vue'
 import RoadGoods from './views/statisticalAnalysis/RoadGoods.vue'
 import Index from './views/index/Index.vue'
@@ -46,6 +50,11 @@ let routes = [
         component: Register,
         name: '',
         hidden: true
+    },{
+        path: '/scale',
+        component: scale,
+        name: '',
+        hidden: true
     },
     {
         path: '/404',
@@ -78,8 +87,8 @@ let routes = [
             { path: '/table', component: Table, name: '用户管理' },
             { path: '/form', component: Form, name: '权限管理' },
             { path: '/user', component: user, name: '密码修改' },
-            { path: '/page4', component: Page4, name: '技术支持' },
-            { path: '/page5', component: Page5, name: '帮助文档' }
+            { path: '/unitInfo', component: unitInfo, name: '技术支持' },
+            { path: '/unitScale', component: unitScale, name: '帮助文档' }
         ]
     },
     {
@@ -88,12 +97,28 @@ let routes = [
         name: '基础信息',
         iconCls: 'fa fa-file-text',
         children: [
-            { path: '/page4', component: Page4, name: '单位信息' },
-            { path: '/page4', component: Page4, name: '单位规模' },
-            { path: '/page4', component: Page4, name: '车辆设备' },
-            { path: '/page4', component: Page4, name: '船泊设备' },
-            { path: '/page4', component: Page4, name: '港口设备' },
-            { path: '/page4', component: Page4, name: '数据字典' }
+            { path: '/unitInfo', component: unitInfo, name: '单位信息' },
+            { path: '/unitScale', component: unitScale, name: '单位规模' },
+            { path: '/carEquip', component: carEquip, name: '车辆设备' },
+            { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
+            { path: '/harbourEquip', component: harbourEquip, name: '港口设备' },
+            {
+                path:'/',
+                component:unitInfo,
+                name:'设备管理',
+                iconCls:'fa fa-file-text',
+                children:[
+                   { path: '/carEquip', component: carEquip, name: '车辆设备' },
+                   { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
+                   { path: '/harbourEquip', component: harbourEquip, name: '港口设备' }
+                ]
+
+            },
+            { path: '/unitInfo', component: unitInfo, name: '数据字典' }
+            // { path: '/unitInfo', component: unitInfo, name: '车辆设备' },
+            // { path: '/unitInfo', component: unitInfo, name: '船泊设备' },
+            // { path: '/unitInfo', component: unitInfo, name: '港口设备' },
+            // { path: '/unitInfo', component: unitInfo, name: '数据字典' }
         ]
     },
     {
@@ -117,8 +142,8 @@ let routes = [
             { path: '/TotalEnergy', component: TotalEnergy,  name: '总能耗变化趋势' },
             { path: '/CityEnergy', component: CityEnergy,  name: '地市能耗构成图' },
             { path: '/TrafficEnergy', component: TrafficEnergy,  name: '交通方式能耗构成图' },            
-            { path: '/page4', component: Page4,  name: '年度数据对比' },
-          /*  { path: '/page4', component: Page4,  name: '分析结果发布' }*/
+            { path: '/unitInfo', component: unitInfo,  name: '年度数据对比' },
+          /*  { path: '/unitInfo', component: unitInfo,  name: '分析结果发布' }*/
         ]
     },
     /*{
@@ -127,8 +152,8 @@ let routes = [
         name: '能耗采集',
         iconCls: 'fa fa-th-list',
         children: [
-            { path: '/page4', component: Page4, name: '实时采集' },
-            { path: '/page4', component: Page4, name: '数据校验' }
+            { path: '/unitInfo', component: unitInfo, name: '实时采集' },
+            { path: '/unitInfo', component: unitInfo, name: '数据校验' }
         ]
     },*/
      {
@@ -143,9 +168,23 @@ let routes = [
             { path: '/taxi', component: taxi, name: '出租车' },
             { path: '/bus', component: bus, name: '公交车' },
             { path: '/riverShip', component: riverShip, name: '内河船舶' },
-            { path: '/DataInMap', component: DataInMap, name: '专题图展示' }
+            { path: '/DataInMap', component: DataInMap, name: '专题图展示'}
         ]
     },
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '基础数据',
+    //     iconCls: 'fa fa-eye',
+    //     children: [
+    //         { path: '/unitInfo', component: unitInfo, name: '单位信息' },
+    //         { path: '/unitScale', component: unitScale, name: '单位规模' },
+    //         { path: '/unitManage', component: unitManage, name: '设备管理' ,children:[
+    //         { path: '/carEquip', component: carEquip, name: '车辆设备' }
+    //         ] },
+            
+    //     ]
+    // },
     /* {
         path: '/',
         component: Home,
@@ -164,8 +203,8 @@ let routes = [
         name: '导航二',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/page4', component: Page4, name: '页面4' },
-            { path: '/page5', component: Page5, name: '页面5' }
+            { path: '/unitInfo', component: unitInfo, name: '页面4' },
+            { path: '/unitScale', component: unitScale, name: '页面5' }
         ]
     },*/
     {
