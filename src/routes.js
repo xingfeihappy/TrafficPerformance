@@ -27,7 +27,7 @@ import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
 import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
 import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
-import guestCar from './views/datadetection/guestCar.vue'//数据监测，客运车辆
+import GuestCar from './views/datadetection/GuestCar.vue'//数据监测，客运车辆
 import goodsCar from './views/datadetection/GoodsCar.vue'//数据监测，货运车辆
 import taxi from './views/datadetection/Taxi.vue'//数据监测，出租车
 import bus from './views/datadetection/Bus.vue'//数据监测，公交车
@@ -64,6 +64,11 @@ let routes = [
     },
     {
         path: '/',
+        hidden: true,
+        redirect: { path: '/login' }
+    },
+    {
+        path: '/index.html',
         hidden: true,
         redirect: { path: '/login' }
     },
@@ -163,7 +168,7 @@ let routes = [
         iconCls: 'fa fa-eye',
         children: [
             { path: '/relTimDatChart', component: relTimDatChart, name: '数据展示' },
-            { path: '/guestCar', component: guestCar, name: '客运车辆' },
+            { path: '/GuestCar', component: GuestCar, name: '客运车辆' },
             { path: '/goodsCar', component: goodsCar, name: '货运车辆' },
             { path: '/taxi', component: taxi, name: '出租车' },
             { path: '/bus', component: bus, name: '公交车' },

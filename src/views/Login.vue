@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
     <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title">后台管理系统</h3>
+    <h3 class="title">能源监测平台</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
@@ -65,20 +65,47 @@
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
             //验证用户名密码
-            requestLogin(loginParams).then(data => {
-              this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/index' });
-              }
-            });
+            // requestLogin(loginParams).then(data => {
+            //   this.logining = false;
+            //   //NProgress.done();
+            //   let { msg, code, user } = data;
+            //   if (code !== 200) {
+            //     this.$message({
+            //       message: msg,
+            //       type: 'error'
+            //     });
+            //   } else {
+            //     sessionStorage.setItem('user', JSON.stringify(user));
+            //     this.$router.push({ path: '/index' });
+            //   }
+            // });
+
+
+            $.get(this.Constant.ajaxAddress+"/login.json?username="+loginParams.username+
+                                              "&password="+loginParams.password).done(function(data){
+              console.log(data);
+            _this.$router.push({ path: '/index' });
+            })
+            // $.ajax({
+            //             type: "GET",
+            //             url: this.Constant.ajaxAddress+"/login.json",
+            //             data: {username:loginParams.username, password:loginParams.password},
+            //             dataType: "jsonp",
+            //             success: function(data){
+            //                 console.log(data);
+            //                 _this.$router.push({ path: '/index' }); 
+            //             }
+            //         });
+
+
+
+
+          //this.$router.push({ path: '/index' });
+
+
+          
+
+
           } else {
             console.log('error submit!!');
             return false;

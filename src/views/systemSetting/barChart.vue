@@ -110,7 +110,7 @@
                 let guestChart = echarts.init(document.getElementById('guestChart'));
                 let option = {
                     title: {
-                    text: '不同客位车辆单位能耗图'
+                    text: '不同燃料类型、不同客位车辆单位能耗图'
                     },
                     tooltip: {
                         trigger: 'axis',
@@ -194,9 +194,16 @@
                         }
                     },
                     xAxis: {
-                        data: ["一规模","二规模","三规模","四规模","五规模","六规模","七规模"]
+                        data: ["一规模","二规模","三规模","四规模","五规模","六规模","七规模"],
+                        name:'规模类型',
+                        nameGap:3
                     },
-                    yAxis: {},
+                    yAxis: {
+                        type : 'value',
+                        name: '单耗(万吨标准煤/亿吨公里)',
+                        nameLocation:'middle',
+                        nameGap:'40'
+                    },
                         series: [{
                         name: '单耗',
                         type: 'bar',
@@ -237,9 +244,9 @@
                     calculable : true,
                     xAxis : [
                         {
-                            name:'燃料类型',
+                            name:'车辆类型',
                             type : 'category',
-                            nameGap:'5',
+                            nameGap:'3',
                             //data : ['<1000','1000~3000','3000~10000','>10000']
                             data: ['一类车', '二类车', '三类车', '四类车', '五类车']
                         }
@@ -318,8 +325,8 @@
                     xAxis: {
                         //data: ['汽油', '柴油', 'CNG', 'LPG', 'LNG', '重油', '电力'],
                         data:['一运距','二运距','三运距','四运距'],//
-                        name:'燃料类型',
-                        nameGap:'5'
+                        name:'运距类型',
+                        nameGap:'3'
                     },
                     yAxis: {
                         name:'单位能耗(万吨标煤/亿吨公里)',
@@ -364,16 +371,13 @@
                 let option={
                     title:{
                         text: '道路客运能源结构图',
-                        x: 'center'
+                        x: 'left'
                     },
                     tooltip : {
                         trigger: 'item',
                         formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
                     legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['汽油','柴油','CNG','LPG','LNG','重油','电力']
                     },
                     toolbox: {
                         show : true,

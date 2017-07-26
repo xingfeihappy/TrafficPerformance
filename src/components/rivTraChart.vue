@@ -89,8 +89,8 @@
                 },
                 dateSelectValue:'',
                 yearSelectValue:'',
-                energyTypeUrl : './api/energyTypeMonth',
-                disTypeUrl:'./api/sDisShipEnergy'
+                energyTypeUrl : this.Constant.ajaxAddress+'/energyTypeMonth',
+                disTypeUrl: this.Constant.ajaxAddress+'/sDisShipEnergy'
             }
         },
         methods: {
@@ -106,9 +106,7 @@
                         formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
                     legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['汽油','柴油','CNG','LPG','LNG','重油','电力']
+                        
                     },
                     toolbox: {
                         show : true,
@@ -137,18 +135,11 @@
                                  normal: {
                                     smooth: 0.2,
                                     length: 10,
-                                    length2: 20
+                                    length2: 10
                                 }
                             
                             },
                             data:[
-                                {name:'汽油'},
-                                {name:'柴油'},
-                                {name:'CNG'},
-                                {name:'LPG'},
-                                {name:'LNG'},
-                                {name:'重油'},
-                                {name:'电力'},
                             ]
                             
                         }
