@@ -86,6 +86,7 @@
               console.log(data);
             _this.$router.push({ path: '/index' });
             })
+             _this.$router.push({ path: '/index' });
             // $.ajax({
             //             type: "GET",
             //             url: this.Constant.ajaxAddress+"/login.json",
