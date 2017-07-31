@@ -359,27 +359,6 @@ function  setData(res){
 
 
     //准备能源车长数据
-    // for(var i in clsEngMap){
-    //     var tmpEngDatas = [];
-    //     console.log('clsEngMap i = ');
-    //     res.xs[1].forEach(function(e1){
-    //         var t = clsEngMap[i][e1];
-    //         if(t)
-    //         {
-    //             tmpEngDatas.push((t[0]/t[1]).toFixed(2))
-    //         }else{
-    //             //eng_all_for_PI.push({name:e1,value:0})
-    //             tmpEngDatas.push(0);
-    //         }
-    //     });
-    //     var tmpSeriseObj = {
-    //                             name:i,
-    //                             type:'bar',
-    //                             data:tmpEngDatas
-    //                     };
-    //     engClsSeries.push(tmpSeriseObj);
-    // }
-
     res.xs[2].forEach(function(i){
         var tmpEngDatas = [];
         console.log('clsEngMap i = ');
