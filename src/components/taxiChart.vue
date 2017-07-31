@@ -314,7 +314,7 @@ function  setData(res){
         });
 
         //psEngMap
-        element.engTypCLs.forEach(function(e2){
+        element.engTypPs.forEach(function(e2){
             if(!psEngMap[e2.type])
                 psEngMap[e2.type] = {};
             if(!psEngMap[e2.type][element.baseTyp])

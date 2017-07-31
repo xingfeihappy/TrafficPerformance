@@ -29,7 +29,7 @@
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden &&child.pri&& child.pri.indexOf('admin')!=-1">{{child.name}}</el-menu-item>
 						</el-submenu>
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
 					</template>
@@ -82,6 +82,10 @@
 </template>
 
 <script>
+
+
+
+
 
 	export default {
 		data() {
@@ -144,6 +148,9 @@
 
 		},
 		mounted() {
+
+				console.log("routes = " + JSON.stringify("[{1:2},{2:3}]"));
+
 			//获取用户信息
 			var user = sessionStorage.getItem('user');
 			if (user) {
