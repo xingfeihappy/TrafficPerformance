@@ -7,6 +7,7 @@ import barChart from './views/systemSetting/barChart.vue'
 import Table from './views/systemSetting/Table.vue'
 import Form from './views/systemSetting/Form.vue'
 import user from './views/systemSetting/user.vue'
+import dataDic from './views/systemSetting/dataDic.vue'
 import unitInfo from './views/basicInfo/unitInfo.vue'
 import unitScale from './views/basicInfo/unitScale.vue'
 import carEquip from './views/basicInfo/carEquip.vue'
@@ -85,42 +86,39 @@ let routes = [
         iconCls: 'fa fa-cogs',
         children: [
             { path: '/table', component: Table, name: '用户管理' },
-            { path: '/form', component: Form, name: '权限管理' },
+            // { path: '/form', component: Form, name: '权限管理' },
             { path: '/user', component: user, name: '密码修改' },
             { path: '/unitInfo', component: unitInfo, name: '技术支持' },
-            { path: '/unitScale', component: unitScale, name: '帮助文档' }
+            { path: '/unitScale', component: unitScale, name: '帮助文档' },
+            { path: '/dataDic', component: dataDic, name: '数据字典' }
         ]
     },
-    {
-        path: '/',
-        component: Home,
-        name: '基础信息',
-        iconCls: 'fa fa-file-text',
-        children: [
-            { path: '/unitInfo', component: unitInfo, name: '单位信息' },
-            { path: '/unitScale', component: unitScale, name: '单位规模' },
-            { path: '/carEquip', component: carEquip, name: '车辆设备' },
-            { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
-            { path: '/harbourEquip', component: harbourEquip, name: '港口设备' },
-            {
-                path:'/',
-                component:unitInfo,
-                name:'设备管理',
-                iconCls:'fa fa-file-text',
-                children:[
-                   { path: '/carEquip', component: carEquip, name: '车辆设备' },
-                   { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
-                   { path: '/harbourEquip', component: harbourEquip, name: '港口设备' }
-                ]
+    // {
+    //     path: '/',
+    //     component: Home,
+    //     name: '基础信息',
+    //     iconCls: 'fa fa-file-text',
+    //     children: [
+    //         { path: '/unitInfo', component: unitInfo, name: '单位信息' },
+    //         { path: '/unitScale', component: unitScale, name: '单位规模' },
+    //         { path: '/carEquip', component: carEquip, name: '车辆设备' },
+    //         { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
+    //         { path: '/harbourEquip', component: harbourEquip, name: '港口设备' },
+    //         {
+    //             path:'/',
+    //             component:unitInfo,
+    //             name:'设备管理',
+    //             iconCls:'fa fa-file-text',
+    //             children:[
+    //                { path: '/carEquip', component: carEquip, name: '车辆设备' },
+    //                { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
+    //                { path: '/harbourEquip', component: harbourEquip, name: '港口设备' }
+    //             ]
 
-            },
-            { path: '/unitInfo', component: unitInfo, name: '数据字典' }
-            // { path: '/unitInfo', component: unitInfo, name: '车辆设备' },
-            // { path: '/unitInfo', component: unitInfo, name: '船泊设备' },
-            // { path: '/unitInfo', component: unitInfo, name: '港口设备' },
-            // { path: '/unitInfo', component: unitInfo, name: '数据字典' }
-        ]
-    },
+    //         },
+    //         { path: '/unitInfo', component: unitInfo, name: '数据字典' }
+    //     ]
+    // },
     {
         path: '/',
         component: Home,
