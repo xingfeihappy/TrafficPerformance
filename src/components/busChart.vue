@@ -435,7 +435,7 @@ export default {
     methods: {
         getDataFromService(requestData){
             console.log(requestData);
-            $.get(this.Constant.ajaxAddress+"/bustranO.json",requestData).
+            $.get(this.Constant.ajaxAddress+this.Constant.bustranAjax,requestData).
             done(function (res){
                 setData(res);
                 console.log('show data k = ' + k);
