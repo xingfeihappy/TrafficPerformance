@@ -24,7 +24,7 @@
 			<el-table-column type = "carBrand" label = "车辆品牌" width = "120" sortable prop = "carBrand" text-align = "center"></el-table-column>
 			<el-table-column type = "carModel" label = "车辆型号" width = "120" sortable prop = "carModel"></el-table-column>
 			<el-table-column type = "energyCost" label = "综合燃料消耗量" width = "155" sortable prop = "energyCost"></el-table-column>
-			<el-table-column type = "airEnergyCost" label = "空载等速燃料消耗量" width = "175" sortable prop = "airEnergyCost"></el-table-column>
+			<el-table-column type = "airEnergyCost" label = "空载等速燃料消耗量" width = "185" sortable prop = "airEnergyCost"></el-table-column>
 			<el-table-column type = "operateNum" label = "营运证号码" width = "130" sortable prop = "operateNum"></el-table-column>
 			<el-table-column type = "operateStartTime" label = "营运证获取时间" width = "155" sortable prop = "operateStartTime"></el-table-column>
 			<el-table-column fixed = "right" label="操作" width="150">

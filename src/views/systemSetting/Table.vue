@@ -21,13 +21,15 @@
 			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="姓名" width="120" sortable>
+			<el-table-column prop="name" label="用户名" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="sex" label="性别" width="100" :formatter="formatSex" sortable>
+			<!-- <el-table-column prop="password" label="性别" width="100" :formatter="formatSex" sortable> -->
 			</el-table-column>
-			<el-table-column prop="age" label="年龄" width="100" sortable>
+			<el-table-column prop="age" label="密码" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="生日" width="120" sortable>
+			<el-table-column prop="options" label="角色" width="100" sortable>
+			</el-table-column>
+			<el-table-column prop="birth" label="注册日期" width="120" sortable>
 			</el-table-column>
 			<el-table-column prop="addr" label="地址" min-width="180" sortable>
 			</el-table-column>
@@ -53,7 +55,7 @@
 					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
 				<el-form-item label="性别">
-					<el-radio-group v-model="editForm.sex">
+					<el-radio-group v-model="editForm.password">
 						<el-radio class="radio" :label="1">男</el-radio>
 						<el-radio class="radio" :label="0">女</el-radio>
 					</el-radio-group>
@@ -77,19 +79,28 @@
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
 			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
+				<el-form-item label="用户名" prop="name">
 					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="性别">
-					<el-radio-group v-model="addForm.sex">
-						<el-radio class="radio" :label="1">男</el-radio>
-						<el-radio class="radio" :label="0">女</el-radio>
-					</el-radio-group>
+				<el-form-item label="密码" prop="password">
+					<el-input v-model="addForm.password" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="年龄">
-					<el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
+				<el-form-item label="角色">
+					<!-- <el-select v-model="addForm.options" placeholder = "请选择">
+						<el-option v-for = "item in options"
+						:key = "item.value"
+						:label = "item.label"
+						:value = "item.value">
+						</el-option>
+					</el-select> -->
+					<el-select v-model="addForm.options" placeholder = "请选择">
+						<el-option key = "企业" label = "企业" value = "企业"></el-option>
+						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
+						<el-option key = "运管" label = "运管" value = "运管"></el-option>
+						<el-option key = "港航" label = "港航" value = "港航"></el-option>
+					</el-select>
 				</el-form-item>
-				<el-form-item label="生日">
+				<el-form-item label="注册时间">
 					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
 				</el-form-item>
 				<el-form-item label="地址">
@@ -132,10 +143,25 @@
 				editForm: {
 					id: 0,
 					name: '',
-					sex: -1,
-					age: 0,
+					password: '',
+					// age: 0,
 					birth: '',
-					addr: ''
+					addr: '',
+					// options:[{
+					// 	value:"选项1",
+					// 	label:"企业"
+					// },{
+					// 	value:"选项2",
+					// 	label:"交通厅"
+					// },{
+					// 	value:"选项3",
+					// 	label:"运管"
+					// },{
+					// 	value:"选项4",
+					// 	label:"港航"
+					// }],
+					options:'企业',
+					value:''
 				},
 
 				addFormVisible: false,//新增界面是否显示
@@ -148,20 +174,32 @@
 				//新增界面数据
 				addForm: {
 					name: '',
-					sex: -1,
-					age: 0,
+					password: '',
+					// age: 0,
 					birth: '',
-					addr: ''
+					addr: '',
+					options:[{
+						value:"选项1",
+						label:"企业"
+					},{
+						value:"选项2",
+						label:"交通厅"
+					},{
+						value:"选项3",
+						label:"运管"
+					},{
+						value:"选项4",
+						label:"港航"
+					}],
+					value:''
 				}
-				
-
 			}
 		},
 		methods: {
 			//性别显示转换
-			formatSex: function (row, column) {
-				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
-			},
+			// formatSex: function (row, column) {
+			// 	return row.password == 1 ? '男' : row.password == 0 ? '女' : '未知';
+			// },
 			handleCurrentChange(val) {
 				this.page = val;
 				this.getUsers();
@@ -212,10 +250,11 @@
 				this.addFormVisible = true;
 				this.addForm = {
 					name: '',
-					sex: -1,
-					age: 0,
+					password: '',
+					// age: 0,
 					birth: '',
-					addr: ''
+					addr: '',
+					options:[]
 				};
 			},
 			//编辑
