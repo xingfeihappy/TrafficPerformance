@@ -12,7 +12,9 @@
                     <el-date-picker
                         v-model="timeRange"
                         type="daterange"
-                        placeholder="选择日期范围">
+                        placeholder="选择日期范围"
+                        range-separator = ':'
+                        @change="selectOther">
                     </el-date-picker>                 
                 </div> 
              </el-col>
@@ -40,7 +42,8 @@
                     <el-date-picker
                         v-model="year"
                         type="year"
-                        placeholder="选择年">
+                        placeholder="选择年"
+                        @change="selectYearMonth">
                     </el-date-picker>
                 </div>
              </el-col>
@@ -59,18 +62,32 @@
 <script>
 
 
-var xsAll; //[[],[].... ]
-var xsCon;//包含的x项
+var dataForMoth = [];//年度图表
+var dataForEngCls = [];//能源车长
+var dataForEngPer = [];//各能源类型单耗
+var dataForEngAll = [];//各能源饼图
+var k = 3;//标志
+
+var perAllRelChart;
+var engTypeAllChart;
+var engTypeChart;
+var engClsChart;
+
+var beforTimeRange = '';
+var beforeYear = '';
 
 
-var eng_type_all = new Array();//能耗总和
-var month_all = new Array();//周转量
-var month_per = new Array();// eng_cl_e / eng_cl_l ;
-var eng_all_for_PI = [];
-var eng_per = [];
+var requestData = 
+{
+    username:'zwp',
+    roleName:'enterprice',
+    roleType:'R_TRA',
+    place1:'杭州',
+    place2:'江干',
+    timeRange:'2017-01-01:2017-12-30'
+}
 
-var engClsSeries = [];
-var engClsDatas = [];
+
 
 var colors = ['#5793f3', '#d14a61'];
 var option = {
@@ -277,6 +294,132 @@ let optionClsEng = {
     series : []
 };
 
+function  setData(res){
+    console.log(res);
+
+    var monthData = new Object();
+    var clsEngMap = {};
+    var engerData = {};
+    var month_all = new Array();//周转量
+    var month_per = new Array();// eng_cl_e / eng_cl_l ;
+    var eng_type_all = new Array();//能耗总和
+    var eng_all_for_PI = [];
+    var eng_per = [];
+
+    var engClsSeries = [];
+
+    //遍历计算
+    res.engTypOther.forEach(function(element) {
+        //month data
+        element.engTypMo.forEach(function(e2){
+            var t = monthData[e2.type];
+            if(!t) t = [0,0];
+            t[0] += e2.typDatOfAllEng;
+            t[1] += e2.typDatOfAllLen;
+            monthData[e2.type] = t;
+        });
+
+        //clsEngMap
+        element.engTypCLs.forEach(function(e2){
+            if(!clsEngMap[e2.type])
+                clsEngMap[e2.type] = {};
+            if(!clsEngMap[e2.type][element.baseTyp])
+                    clsEngMap[e2.type][element.baseTyp] = [0,0];
+            
+            var t = clsEngMap[e2.type][element.baseTyp];
+            t[0] += e2.typDatOfAllEng;
+            t[1] += e2.typDatOfAllLen;
+            clsEngMap[e2.type][element.baseTyp] = t;
+
+            // cal engall
+            var t = engerData[element.baseTyp];
+            if(!t) t = [0,0];
+            t[0] += e2.typDatOfAllEng;
+            t[1] += e2.typDatOfAllLen;
+            engerData[element.baseTyp] = t;                   
+        });
+    });
+
+
+    console.log(JSON.stringify(clsEngMap));
+    console.log(JSON.stringify(engerData));
+
+    //准备能源类型数据
+    res.xs[1].forEach(function(e1){
+        var t = engerData[e1];
+        if(t)
+        {
+            eng_all_for_PI.push({name:e1,value:t[0]})
+            eng_per.push((t[0]/t[1]).toFixed(2))
+        }else{
+            //eng_all_for_PI.push({name:e1,value:0})
+            eng_per.push(0)
+        }
+    });
+
+
+    //准备能源车长数据
+    for(var i in clsEngMap){
+        var tmpEngDatas = [];
+        res.xs[1].forEach(function(e1){
+            var t = clsEngMap[i][e1];
+            if(t)
+            {
+                tmpEngDatas.push((t[0]/t[1]).toFixed(2))
+            }else{
+                //eng_all_for_PI.push({name:e1,value:0})
+                tmpEngDatas.push(0);
+            }
+        });
+        var tmpSeriseObj = {
+                                name:i,
+                                type:'bar',
+                                data:tmpEngDatas
+                        };
+        engClsSeries.push(tmpSeriseObj);
+    }
+
+    console.log(engClsSeries);
+
+    console.log('set data k = ' + k);
+    if( k == 1 ||k==3 )
+    {
+        dataForEngAll.splice(0,dataForEngAll.length);
+        dataForEngAll.push(res.xs[1]);
+        dataForEngAll.push(eng_all_for_PI);
+
+        dataForEngPer.splice(0,dataForEngPer.length);
+        dataForEngPer.push(res.xs[1]);
+        dataForEngPer.push(eng_per);
+
+        dataForEngCls.splice(0,dataForEngCls.length);
+        dataForEngCls.push(res.xs[2]);
+        dataForEngCls.push(res.xs[1]);
+        dataForEngCls.push(engClsSeries);
+    }
+    // engMonth
+    res.xs[0].forEach(function(e1){
+        var t = monthData[e1];
+        if(t) 
+        {
+            console.log(t);
+            month_all.push(t[0]);
+            month_per.push((t[0]/t[1]).toFixed(2));
+        }else
+        {
+            month_all.push(0);
+            month_per.push(0);
+        }
+    });
+    if( k == 2 || k==3 )
+    {
+        dataForMoth.splice(0,dataForMoth.length);
+        dataForMoth.push(res.xs[0]);
+        dataForMoth.push(month_all);
+        dataForMoth.push(month_per); 
+    }
+
+}  
 
 
 
@@ -290,132 +433,82 @@ export default {
       }
   },
     methods: {
-    
-    },
-    mounted:function(){
-
-    var perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
-    var engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
-    var engTypeChart = echarts.init(document.getElementById('engTypeChart'));
-    var engClsChart =  echarts.init(document.getElementById('engClsChart'));
-    perAllRelChart.setOption(option);
-    engTypeAllChart.setOption(optionPi);
-    engTypeChart.setOption(optionEng);
-    engClsChart.setOption(optionClsEng);
-
-    $.get(this.Constant.ajaxAddress+"/bustranO.json",{place1:'ttttt'}).done(function (res){
-            console.log(res);
-            var eng_cl_tds  = res.engTypOther;
-            var monthData = new Object();
-            var cls2enger = {};
-            var engerData = {};
-
-            eng_cl_tds.forEach(function(element) {
-                //month data
-                element.engTypMo.forEach(function(e2){
-                    var t = monthData[e2.type];
-                    if(!t) t = [0,0];
-                    t[0] += e2.typDatOfAllEng;
-                    t[1] += e2.typDatOfAllLen;
-                    monthData[e2.type] = t;
-                });
-
-                //cls2enger
-                element.engTypCLs.forEach(function(e2){
-                    if(!cls2enger[e2.type])
-                        cls2enger[e2.type] = {};
-                    if(!cls2enger[e2.type][element.baseTyp])
-                         cls2enger[e2.type][element.baseTyp] = [0,0];
-                    
-                    var t = cls2enger[e2.type][element.baseTyp];
-                    t[0] += e2.typDatOfAllEng;
-                    t[1] += e2.typDatOfAllLen;
-                    cls2enger[e2.type][element.baseTyp] = t;
-
-                    // cal engall
-                    var t = engerData[element.baseTyp];
-                    if(!t) t = [0,0];
-                    t[0] += e2.typDatOfAllEng;
-                    t[1] += e2.typDatOfAllLen;
-                    engerData[element.baseTyp] = t;                   
-                });
-            });
-
-
-            console.log(JSON.stringify(cls2enger));
-            console.log(JSON.stringify(engerData));
-
-            res.xs[1].forEach(function(e1){
-                var t = engerData[e1];
-                if(t)
+        getDataFromService(requestData){
+            console.log(requestData);
+            $.get(this.Constant.ajaxAddress+"/bustranO.json",requestData).
+            done(function (res){
+                setData(res);
+                console.log('show data k = ' + k);
+                if(k==1||k==3)
                 {
-                    eng_all_for_PI.push({name:e1,value:t[0]})
-                    eng_per.push((t[0]/t[1]).toFixed(2))
-                }else{
-                    //eng_all_for_PI.push({name:e1,value:0})
-                    eng_per.push(0)
+
+                    optionPi.legend.data = dataForEngAll[0];
+                    optionPi.series[0].data = dataForEngAll[1];
+                    engTypeAllChart.clear();
+                    engTypeAllChart.setOption(optionPi);
+
+                    optionClsEng.legend.data = dataForEngCls[0];
+                    optionClsEng.xAxis[0].data = dataForEngCls[1];
+                    optionClsEng.series = dataForEngCls[2];
+                    engClsChart.clear();
+                    engClsChart.setOption(optionClsEng);
+
+                    //optionEng.legend.data = res.xs[1];
+                    optionEng.xAxis.data =  dataForEngPer[0];
+                    optionEng.series[0].data = dataForEngPer[1];
+                    engTypeChart.clear();
+                    engTypeChart.setOption(optionEng);
+
                 }
-            });
-
-            optionPi.legend.data = res.xs[1];
-            optionPi.series[0].data = eng_all_for_PI;
-            engTypeAllChart.setOption(optionPi);
-
-            //optionEng.legend.data = res.xs[1];
-            optionEng.xAxis.data =  res.xs[1];
-            optionEng.series[0].data = eng_per;
-            engTypeChart.setOption(optionEng);
-
-            res.xs[0].forEach(function(e1){
-                var t = monthData[e1];
-                if(t) 
-                {
-                    console.log(t);
-                    month_all.push(t[0]);
-                    month_per.push((t[0]/t[1]).toFixed(2));
-                }else
-                {
-                    month_all.push(0);
-                    month_per.push(0);
+                if(k ==2 || k==3){
+                    option.xAxis[0].data =  dataForMoth[0];
+                    option.series[1].data = dataForMoth[2];
+                    option.series[0].data = dataForMoth[1];
+                    perAllRelChart.clear();
+                    perAllRelChart.setOption(option);
                 }
-            });
-            option.xAxis[0].data =  res.xs[0];
-            option.series[1].data = month_per;
-            option.series[0].data = month_all;
-            perAllRelChart.setOption(option);
 
-            for(var i in cls2enger){
-                var tmpEngDatas = [];
-                res.xs[1].forEach(function(e1){
-                    var t = cls2enger[i][e1];
-                    if(t)
-                    {
-                        tmpEngDatas.push((t[0]/t[1]).toFixed(2))
-                    }else{
-                        //eng_all_for_PI.push({name:e1,value:0})
-                       tmpEngDatas.push(0);
-                    }
-                });
-                var tmpSeriseObj =  {
-                                        name:i,
-                                        type:'bar',
-                                        data:tmpEngDatas
-                                    };
                 
-                engClsSeries.push(tmpSeriseObj);
-            }
-
-            console.log(engClsSeries);
-
-            optionClsEng.legend.data = res.xs[2];
-            optionClsEng.xAxis[0].data = res.xs[1];
-            optionClsEng.series = engClsSeries;
-            engClsChart.setOption(optionClsEng);
-    });
+            });
+            
         },
-     updated: function () {
+        selectOther(tr){
+            k = 1;
+            console.log(tr+'   before=' + beforTimeRange);
+            if(!tr||tr== '')
+                 return ;
+            requestData['timeRange']=tr;     
+            this.getDataFromService(requestData);
+            beforTimeRange = tr;
+        },
+        selectYearMonth(y)
+        {
+            k =2;
+            console.log(y+'   before=' + beforeYear);
+            if(!y||y=='')
+                 return ;
+            
+            y = y+'-01-01:'+y+'-12-31';
+            requestData['timeRange']=y;
+            this.getDataFromService(requestData);
+            beforeYear = y;
+        }
+    },
+    mounted:function()
+    {
+
+        perAllRelChart = echarts.init(document.getElementById('perAllRelChart'));
+        engTypeAllChart = echarts.init(document.getElementById('engTypeAllChart'));
+        engTypeChart = echarts.init(document.getElementById('engTypeChart'));
+        engClsChart =  echarts.init(document.getElementById('engClsChart'));
+        perAllRelChart.setOption(option);
+        engTypeAllChart.setOption(optionPi);
+        engTypeChart.setOption(optionEng);
+        engClsChart.setOption(optionClsEng);
+        this.getDataFromService(requestData);
+    },
+    updated: function () {
            console.log("update");
-    
     }
   }
 </script>
