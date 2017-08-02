@@ -196,7 +196,7 @@
     };
     var optionScale={
         title:{
-            text: '不同规模企业能耗柱状图',
+            text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
         tooltip: {
@@ -637,9 +637,9 @@
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 10px;
                 margin-right: 20px;
                 position: relative;
             }
@@ -656,5 +656,12 @@
 
     .el-col {
         padding: 15px 15px;
+    }
+
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
     }
 </style>
