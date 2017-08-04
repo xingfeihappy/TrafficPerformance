@@ -17,12 +17,13 @@
 
 		<!--列表-->
 		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
-			<!-- <el-table-column type="selection" width="55">
-			</el-table-column> -->
+			<el-table-column type="selection" width="55">
+			</el-table-column>
 			<el-table-column type="index" width="60">
 			</el-table-column>
-			<el-table-column prop="name" label="姓名" width="120" sortable>
+			<el-table-column prop="name" label="用户名" width="120" sortable>
 			</el-table-column>
+			<!-- <el-table-column prop="password" label="性别" width="100" :formatter="formatSex" sortable> -->
 			</el-table-column>
 			<el-table-column prop="age" label="密码" width="100" sortable>
 			</el-table-column>
@@ -49,53 +50,33 @@
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-			<el-form :inline = "true":model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="editForm.name" :disabled="true" auto-complete="off" class = "itemWidth"></el-input>
+			<el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+				<el-form-item label="用户名" prop="name">
+					<el-input v-model="editForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="用户名" prop="userName">
-					<el-input v-model="editForm.userName" auto-complete="off"></el-input>
+				<el-form-item label="密码" prop="password">
+					<el-input v-model="addForm.password" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="密码" prop="password" type = "password">
-					<el-input v-model="editForm.password" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="确认密码" prop="rePassword">
-					<el-input v-model="editForm.rePassword" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="联系方式" prop="phone">
-					<el-input v-model="editForm.phone" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="组织名称" prop="roleName">
-					<el-input v-model="editForm.roleName" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="注册日期">
-					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="组织类型">
-					<el-select v-model="addForm.roleType" placeholder = "请选择"  class = "itemWidth">
+				<el-form-item label="角色">
+					<!-- <el-select v-model="addForm.options" placeholder = "请选择">
+						<el-option v-for = "item in options"
+						:key = "item.value"
+						:label = "item.label"
+						:value = "item.value">
+						</el-option>
+					</el-select> -->
+					<el-select v-model="addForm.options" placeholder = "请选择">
 						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
 					</el-select>
 				</el-form-item>
-				
-				<el-form-item label="行政级别">
-				<div class="bottom">
-					<el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
-			      		<el-select v-model="editForm.place1" placeholder = "请选择"  class = "itemWidth">
-							<el-option key = "杭州市" label = "杭州市" value = "杭州市"></el-option>
-							<el-option key = "宁波市" label = "宁波市" value = "宁波市"></el-option>
-						</el-select>
-			    	</el-tooltip>
-		    		<el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
-						<el-select v-model="editForm.place2" placeholder = "请选择"  class = "itemWidth">
-							<el-option key = "桐庐县" label = "桐庐县" value = "桐庐县"></el-option>
-							<el-option key = "淳安县" label = "淳安县" value = "淳安县"></el-option>
-							<el-option key = "宁海县" label = "宁海县" value = "宁海县"></el-option>
-						</el-select>
-					</el-tooltip>
-		    	</div>
+				<el-form-item label="注册日期">
+					<el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
+				</el-form-item>
+				<el-form-item label="地址">
+					<el-input type="textarea" v-model="editForm.addr"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -106,56 +87,34 @@
 
 		<!--新增界面-->
 		<el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
-			<el-form :inline= "true":model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-				<el-form-item label="姓名" prop="name">
-					<el-input v-model="addForm.name" auto-complete="off" class = "itemWidth"></el-input>
+			<el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
+				<el-form-item label="用户名" prop="name">
+					<el-input v-model="addForm.name" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="用户名" prop="userName">
-					<el-input v-model="addForm.userName" auto-complete="off"></el-input>
+				<el-form-item label="密码" prop="password">
+					<el-input v-model="addForm.password" auto-complete="off"></el-input>
 				</el-form-item>
-				<el-form-item label="密码" prop="password" type = "password">
-					<el-input v-model="addForm.password" auto-complete="off" id = "password"></el-input>
-				</el-form-item>
-				<el-form-item label="确认密码" prop="rePassword">
-					<el-input v-model="addForm.rePassword" auto-complete="off" id = "rePassword"></el-input>
-				</el-form-item>
-				<el-form-item label="联系方式" prop="phone">
-					<el-input v-model="addForm.phone" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="组织名称" prop="roleName">
-					<el-input v-model="addForm.roleName" auto-complete="off"></el-input>
-				</el-form-item>
-				<el-form-item label="注册日期">
-					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
-				</el-form-item>
-				<el-form-item label="组织类型">
-					<el-select v-model="addForm.roleType" placeholder = "请选择"  class = "itemWidth">
+				<el-form-item label="角色">
+					<!-- <el-select v-model="addForm.options" placeholder = "请选择">
+						<el-option v-for = "item in options"
+						:key = "item.value"
+						:label = "item.label"
+						:value = "item.value">
+						</el-option>
+					</el-select> -->
+					<el-select v-model="addForm.options" placeholder = "请选择">
 						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
 					</el-select>
 				</el-form-item>
-				
-				<el-form-item label="行政级别">
-				<div class="bottom">
-					<el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
-			      		<el-select v-model="addForm.place1" placeholder = "请选择"  class = "itemWidth">
-							<el-option key = "杭州市" label = "杭州市" value = "杭州市"></el-option>
-							<el-option key = "宁波市" label = "宁波市" value = "宁波市"></el-option>
-						</el-select>
-			    	</el-tooltip>
-		    		<el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
-						<el-select v-model="addForm.place2" placeholder = "请选择"  class = "itemWidth">
-							<el-option key = "桐庐县" label = "桐庐县" value = "桐庐县"></el-option>
-							<el-option key = "淳安县" label = "淳安县" value = "淳安县"></el-option>
-							<el-option key = "宁海县" label = "宁海县" value = "宁海县"></el-option>
-						</el-select>
-					</el-tooltip>
-		    	</div>
+				<el-form-item label="注册时间">
+					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
 				</el-form-item>
-				
-				
+				<el-form-item label="地址">
+					<el-input type="textarea" v-model="addForm.addr"></el-input>
+				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
 				<el-button @click.native="addFormVisible = false">取消</el-button>
@@ -185,23 +144,8 @@
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
 				editFormRules: {
-					// name: [
-					// 	{ required: true, message: '请输入姓名', trigger: 'blur' }
-					// ]
-					userName: [
-						{ required: true, message: '请输入用户名', trigger: 'blur' }
-					],
-					password: [
-						{ required: true, message: '请输入密码', trigger: 'blur' }
-					],
-					rePassword: [
-						{ required: true, message: '请输入确认密码', trigger: 'blur' }
-					],
-					roleName: [
-						{ required: true, message: '请输入组织名称', trigger: 'blur' }
-					],
-					roleType: [
-						{ required: true, message: '请输入组织类型', trigger: 'blur' }
+					name: [
+						{ required: true, message: '请输入姓名', trigger: 'blur' }
 					]
 				},
 				//编辑界面数据
@@ -209,14 +153,22 @@
 					id: 0,
 					name: '',
 					password: '',
-					rePassword:'',
-					phone:'',
-					roleName:'',
 					// age: 0,
 					birth: '',
 					addr: '',
-					place1:'',
-					place2:'',
+					// options:[{
+					// 	value:"选项1",
+					// 	label:"企业"
+					// },{
+					// 	value:"选项2",
+					// 	label:"交通厅"
+					// },{
+					// 	value:"选项3",
+					// 	label:"运管"
+					// },{
+					// 	value:"选项4",
+					// 	label:"港航"
+					// }],
 					options:'企业',
 					value:''
 				},
@@ -226,38 +178,16 @@
 				addFormRules: {
 					name: [
 						{ required: true, message: '请输入姓名', trigger: 'blur' }
-					],
-					userName: [
-						{ required: true, message: '请输入用户名', trigger: 'blur' }
-					],
-					password: [
-						{ required: true, message: '请输入密码', trigger: 'blur' }
-					],
-					rePassword: [
-						{ required: true, message: '请输入确认密码', trigger: 'blur' }
-					],
-					roleName: [
-						{ required: true, message: '请输入组织名称', trigger: 'blur' }
-					],
-					roleType: [
-						{ required: true, message: '请输入组织类型', trigger: 'blur' }
 					]
-
 				},
 				//新增界面数据
 				addForm: {
 					name: '',
-					userName:'',
 					password: '',
-					rePassword:'',
-					phone:'',
-					roleName:'',
 					// age: 0,
 					birth: '',
 					addr: '',
-					place1:'',
-					place2:'',
-					roleType:[{
+					options:[{
 						value:"选项1",
 						label:"企业"
 					},{
@@ -275,6 +205,10 @@
 			}
 		},
 		methods: {
+			//性别显示转换
+			// formatSex: function (row, column) {
+			// 	return row.password == 1 ? '男' : row.password == 0 ? '女' : '未知';
+			// },
 			handleCurrentChange(val) {
 				this.page = val;
 				this.getUsers();
@@ -325,17 +259,11 @@
 				this.addFormVisible = true;
 				this.addForm = {
 					name: '',
-					userName:'',
 					password: '',
-					rePassword:'',
-					phone:'',
-					place1:'',
-					place2:'',
-					roleName:'',
 					// age: 0,
 					birth: '',
 					addr: '',
-					roleType:[]
+					options:[]
 				};
 			},
 			//编辑
@@ -432,8 +360,4 @@
 	background-color: $color-primary-hover;
     border-color: $color-primary-hover;
 }
-.itemWidth{
-	width:190px;
-}
-
 </style>
