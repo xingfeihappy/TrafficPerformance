@@ -220,7 +220,7 @@
         xAxis: {
             data: [],
             name:'企业规模',
-            nameGap:'10'
+            nameGap:'5'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -270,7 +270,9 @@
         xAxis : [
             {
                 type : 'category',
-                data : []
+                data : [],
+                name:'燃料类型',
+                nameGap:'10'
             }
         ],
         yAxis : [
@@ -318,7 +320,9 @@
         xAxis : [
             {
                 type : 'category',
-                data : []
+                data : [],
+                name:'吨位',
+                nameGap:'10'
             }
         ],
         yAxis : [

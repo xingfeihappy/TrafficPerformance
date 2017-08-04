@@ -20,8 +20,8 @@
              </el-col>
         </el-row>
         <el-row >
-            <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
-                <div id="engClsChart" style="width:100%;height:400px;" class="chart-content"></div>
+            <el-col  class="chart-container">
+                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
 
@@ -32,8 +32,8 @@
         </el-row>
 
         <el-row >
-            <el-col  class="chart-container">
-                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
+            <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
+                <div id="engClsChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row>

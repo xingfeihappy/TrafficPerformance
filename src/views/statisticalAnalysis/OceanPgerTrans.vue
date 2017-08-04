@@ -165,7 +165,7 @@
     };
     var optionPi = {
         title:{
-            text: '海洋货运能源结构图',
+            text: '海洋客运能源结构图',
             x: 'center'
         },
         tooltip : {
@@ -425,6 +425,7 @@
             scaleData[element.baseTyp] = t;
         });
 
+
         res.disTypOther.forEach(function(element){
             var t = distanceData[element.baseTyp];
             if(!t) t=[0,0];
@@ -445,6 +446,7 @@
             }
         });
 
+       // console.log(eng_per_for_BAR)
         //准备企业规模柱状图数据
         res.xs[3].forEach(function(e1){
             var t = scaleData[e1];
@@ -455,6 +457,7 @@
             }
         });
 
+        //console.log(eng_per_for_scale)
         //准备不同运距柱状图数据
         res.xs[4].forEach(function(e1){
             var t = distanceData[e1];
@@ -477,7 +480,7 @@
                 engPsgerSeries.push(tmpSeriseObj);
             }else{
                 res.xs[1].forEach(function(e1){
-                    var t = engTogMap[i][e1];
+                    var t = engPsgerMap[i][e1];
                     if(t)
                     {
                         tmpEngDatas.push((t[0]/t[1]).toFixed(2))
@@ -502,7 +505,7 @@
 
             dataForEngPer.splice(0,dataForEngPer.length);
             dataForEngPer.push(res.xs[1]);
-            dataForDisPer.push(eng_per_for_BAR);
+            dataForEngPer.push(eng_per_for_BAR);
 
             dataForScalePer.splice(0,dataForScalePer.length);
             dataForScalePer.push(res.xs[3]);

@@ -2,7 +2,7 @@
     <section class="chart">
         <el-row> 
             <el-col class="chart-container">
-                <div class="chart-header">
+               <!-- <div class="chart-header">
                     <el-select v-model="energyTypeSelect" placeholder="选择燃料类型" >
                         <el-option key="汽油" label="汽油" value="汽油"></el-option>
                         <el-option key="柴油" label="柴油" value="柴油"></el-option>
@@ -12,7 +12,7 @@
                         <el-option key="重油" label="重油" value="重油"></el-option>
                         <el-option key="电力" label="电力" value="电力"></el-option>
                     </el-select>                      
-                </div> 
+                </div> -->
                 <div class="chart-header">
                     <el-date-picker
                         v-model="dateSelectValue"
