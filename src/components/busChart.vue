@@ -48,12 +48,10 @@
                 </div>
              </el-col>
         </el-row>
-        <el-row>
-             <el-col  class="chart-container">
+        <el-row>   
             <el-col class="chart-container">
                 <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-             </el-col>
         </el-row>
 
     </section>  
@@ -384,10 +382,10 @@ function  setData(res){
                 }
             });
             var tmpSeriseObj = {
-                                    name:i,
-                                    type:'bar',
-                                    data:tmpEngDatas
-                            };
+                name:i,
+                type:'bar',
+                data:tmpEngDatas
+            };
             engClsSeries.push(tmpSeriseObj);
         }
 
@@ -534,7 +532,7 @@ export default {
         this.getDataFromService(requestData);
     },
     updated: function () {
-           console.log("update");
+        console.log("update");
     }
   }
 </script>
