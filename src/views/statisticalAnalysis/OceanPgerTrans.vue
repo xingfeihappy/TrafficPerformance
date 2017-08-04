@@ -641,7 +641,7 @@
             guestChart.setOption(optionEngPsger);
             energyByYearChart.setOption(option);
 
-            this.getDataFromService(requestData)
+            this.getDataFromService(requestData);
 
         },
         updated: function () {
@@ -659,7 +659,7 @@
              border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 10px;
+              //  margin-bottom: 10px;
                 margin-right: 20px;
                 position: relative;
             }
