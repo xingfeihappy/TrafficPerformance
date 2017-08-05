@@ -7,4 +7,11 @@ export const rivertranAjax ='/rivertranO.json'
 export const oceangoodsAjax = '/oceangoodsO.json'
 export const oceanpassAjax = '/oceanpassO.json'
 export const portproAjax = '/portproduceO.json'
+
+
+
 // export const hideHeader = 'hideHeader' 
+
+export const relTimeAjax = '/reltimedata.json'
+
+
