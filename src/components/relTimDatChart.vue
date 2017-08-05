@@ -6,111 +6,288 @@
                 <el-date-picker
                 v-model="datTimRange"
                 type="datetimerange"
-                placeholder="选择时间范围">
+                range-separator = "&"
+                placeholder="选择时间范围"
+                @change="selectTimeRange">
                 </el-date-picker>
             </div>
         </el-col>
     </el-row>
     <el-row>
         <el-col class = "chart-container"> 
-            <div div id="relTimDatChart"style="width:100%; height:400px;" class="chart-content"></div>
+            <div div id="relTimeChart"style="width:100%; height:400px;" class="chart-content"></div>
         </el-col>
     </el-row>
+
+    <el-row>
+        <el-col class = "chart-container"> 
+            <div div id="relTimeChartCo"style="width:100%; height:400px;" class="chart-content"></div>
+        </el-col>
+    </el-row>
+
 </section>  
 </template>
 
 <script>
-export default {
-  data(){
-        return {
-            datTimRange:''
+
+var titleName = '数据监测'
+var titleNameCo = '数据监测2'
+var tranTypeA = '公交客运';
+
+var relTimeData = [];//油气柱状图数据
+var relTimeDataCo = [];//标煤曲线图数据
+
+var relTimeChart;//油气柱状图
+var relTimeChartCo;//标煤曲线图
+
+
+
+var requestData = 
+{
+    username:'zwp',
+    roleName:'enterprice',
+    roleType:'R_TRA',
+    place1:'杭州',
+    place2:'江干区',
+    timeRange:'2017-01-01 00:01:01&2017-01-01 23:59:59',
+
+    tranType:tranTypeA,
+    // carId:null,
+    // shipId:null,
+    // cityType:null,
+    // companyId:null,
+
+    token:null
+
+}
+
+var option = {
+    title: {
+        text: titleName
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: [],
+        align: 'left'
+    },
+    toolbox: {
+        // y: 'bottom',
+        feature: {
+            magicType: {
+                type: ['bar', 'line']
+            },
+            dataView: {},
+            saveAsImage: {
+                pixelRatio: 2
+            }
         }
-  },
+    },
+    xAxis: {
+        name:'时间',
+        data: [],
+        silent: false,
+        splitLine: {
+            show: false
+        }
+    },
+    yAxis: {
+    },
+    
+    dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0
+        }
+    ],
+    
+    series: [],
+    animationEasing: 'elasticOut',
+    animationDelayUpdate: function (idx) {
+        return idx ;
+    }
+};
+
+var optionCo = {
+    tooltip: {
+        trigger: 'axis',
+        position: function (pt) {
+            return [pt[0], '10%'];
+        }
+    },
+    title: {
+        left: 'left',
+        text: titleNameCo,
+    },
+    legend: {
+        data: [],
+        align: 'left'
+    },
+    toolbox: {
+        feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            restore: {},
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: []
+    },
+    yAxis: {
+        // type: 'value',
+        // boundaryGap: [0, '100%']
+    },
+    dataZoom: [
+        {
+            show: true,
+            realtime: true,
+            start: 0
+        }
+    ],
+    series: [
+        {
+            name:'模拟数据',
+            type:'line',
+            smooth:true,
+            symbol: 'none',
+            sampling: 'average',
+            itemStyle: {
+                normal: {
+                    color: 'rgb(255, 70, 131)'
+                }
+            },
+            data: []
+        }
+    ]
+};
+
+export default {
+    data(){
+            return {
+                datTimRange:''
+            }
+    },
     methods:{
-        darwRelTimDatChart(){
-                let relTimDatChart = echarts.init(document.getElementById('relTimDatChart'));
-                let option = {
-                    title: {
-                        text: '实时数据展示'
-                    },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'cross',
-                            label: {
-                                backgroundColor: '#283b56'
-                            }
-                        }
-                    },
-                    legend: {
-                        data:['百公里油耗', '百公里标准煤']
-                    },
-                    dataZoom: {
-                        show: false,
-                        start: 0,
-                        end: 100
-                    },
-                    xAxis: [
-                        {
-                            type: 'category',
-                            boundaryGap: true,
-                            data:["17:17:00","17:17:10","17:17:20","17:17:30","17:17:40","17:17:50","17:18:00"]
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value',
-                            scale: true,
-                            name: '百公里油耗',
-                            max:30,
-                            min: 0,
-                            boundaryGap: [0.2, 0.2]
-                        },
-                        {
-                            type: 'value',
-                            scale: true,
-                            name: '百公里标准煤',
-                            max: 100,
-                            min: 0,
-                            boundaryGap: [0.2, 0.2]
-                        }
-                    ],
-                    series: [
-                        {
-                            name:'百公里标准煤',
-                            type:'bar',
-                            yAxisIndex: 1
+        setData(res){
+            var dataFulCa = [];
+            var dataFulCo = [];
 
-                        },
-                        {
-                            name:'百公里油耗',
-                            type:'line',
-                             smooth: true
-  
-                        }
-                    ]
-                };
-                app.count = 11;
-                relTimDatChart.setOption(option);
-                $.get(this.Constant.ajaxAddress+"/relTtimeData").done(function(res){
-                    console.log(res);
-                    option.series[0].data = res.data[0];
-                    option.series[1].data = res.data[1];
-                    relTimDatChart.setOption(option);
+            var engTMuMap = {};
+            res.engTypOther.forEach(function(eng) {
+                eng.engTypTMu.forEach(function(TMu) {
+                    if(!engTMuMap[eng.baseTyp]) 
+                        engTMuMap[eng.baseTyp] = {};
+                    if(!engTMuMap[eng.baseTyp][TMu.type]) 
+                            engTMuMap[eng.baseTyp][TMu.type] = [0,0];
+                    var t = engTMuMap[eng.baseTyp][TMu.type];
+                    t[0] = (TMu.typDatOfAllEng / TMu.typDatOfAllLen).toFixed(2);
+                    t[1] = (TMu.typDatOfAllCo / TMu.typDatOfAllLen).toFixed(2);
+                    engTMuMap[eng.baseTyp][TMu.type] = t;              
                 });
+            });
+
+            console.log(engTMuMap);
+            var relTimeSerise = [];
+            var relTimeCoSerise = [];
+            res.xs[1].forEach(function(e){
+                var t = engTMuMap[e];
+                var tmpS = {
+                    name: e,
+                    type: 'bar',
+                    data: []
+                };
+                var tmpSCo = {
+                    name: e,
+                    type:'line',
+                    smooth:true,
+                    symbol: 'none',
+                    sampling: 'average',
+                    data: []
+                };
+
+                if(!t){
+                    // for(var i =0;i<res.xs[0].length;i++)
+                    //     tmpS.data.push(0);
+                }
+                else{
+                    res.xs[0].forEach(function(mu){
+                        var t1 = t[mu];
+                        if(!t1) {
+                            tmpS.data.push(0);
+                            tmpSCo.data.push(0);
+                        }
+                        else {
+                            tmpS.data.push(t1[0]);
+                            tmpSCo.data.push(t1[1]);
+                        }
+                    });
+                }
+                relTimeSerise.push(tmpS);
+                relTimeCoSerise.push(tmpSCo);
+            });
+            
+            relTimeData.splice(0,relTimeData.length);
+            relTimeData.push(res.xs[1]);
+            relTimeData.push(res.xs[0]);
+            relTimeData.push(relTimeSerise);
+
+            relTimeDataCo.splice(0,relTimeDataCo.length);
+            relTimeDataCo.push(res.xs[1]);
+            relTimeDataCo.push(res.xs[0]);
+            relTimeDataCo.push(relTimeCoSerise);
 
 
+        },
+        selectTimeRange(tr){
+            console.log('timeRange r ='+tr);
+            if(!tr||tr== '')
+                    return ;
+            requestData['timeRange']=tr;     
+            this.getDataFromService(requestData);
+        },
+        getDataFromService(requestData){
+            console.log(requestData);
+            var _this = this;
+            $.get(this.Constant.ajaxAddress+this.Constant.relTimeAjax,requestData).
+            done(function (res){
+                console.log(res);
+                _this.setData(res);
+
+                option.legend.data = relTimeData[0];
+                option.xAxis.data = relTimeData[1];
+                option.series = relTimeData[2];
+                relTimeChart.clear();
+                relTimeChart.setOption(option);
+
+                optionCo.legend.data = relTimeDataCo[0];
+                optionCo.xAxis.data = relTimeDataCo[1];
+                optionCo.series = relTimeDataCo[2];
+                relTimeChartCo.clear();
+                relTimeChartCo.setOption(optionCo);
+
+            });
         }
     },
     mounted:function(){
-        this.darwRelTimDatChart();
+        relTimeChart =  echarts.init(document.getElementById('relTimeChart'));
+        relTimeChartCo = echarts.init(document.getElementById('relTimeChartCo'));
+        relTimeChart.setOption(option);
+        relTimeChartCo.setOption(optionCo);
+
+        this.getDataFromService(requestData);
     },
     updated:function(){
 
     }
 
-
 }
+
 </script>
 
 

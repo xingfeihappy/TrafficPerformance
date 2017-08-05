@@ -8,10 +8,20 @@ export const rivertranAjax ='/rivertranO.json'
 export const oceangoodsAjax = '/oceangoodsO.json'
 export const oceanpassAjax = '/oceanpassO.json'
 export const portproAjax = '/portproduceO.json'
+<<<<<<< HEAD
 export const roadgoodsAjax = '/roadgoodsO.json'
 export const roadpassAjax ='/roadpassO.json'
 export const perdisengAjax = '/perdisengO.json'
 export const engchangeAjax ='/tratypperyearO.json'
 export const citenergyAjax = '/citytrantypengO.json'
 export const trafficenergyAjax = '/tracitytypengO.json'
+=======
+
+
+
+>>>>>>> zwp
 // export const hideHeader = 'hideHeader' 
+
+export const relTimeAjax = '/reltimedata.json'
+
+
