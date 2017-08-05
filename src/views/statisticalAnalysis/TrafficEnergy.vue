@@ -4,14 +4,15 @@
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-date-picker
-                        v-model="dateSelectValue"
+                        v-model="timeRange"
                         type="daterange"
                         placeholder="选择日期范围"
-                        :picker-options="pickerOptions2">
+                        range-separator = ':'
+                        @change="selectOther">
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
-                    <el-select v-model="citySelectValue" placeholder="请选择城市" @change="citySelectChange">
+                    <el-select v-model="cityType" placeholder="请选择城市" @change="citySelectChange">
                         <el-option key="杭州" label="杭州" value="杭州"></el-option>
                         <el-option key="宁波" label="宁波" value="宁波"></el-option>
                         <el-option key="温州" label="温州" value="温州"></el-option>
@@ -37,125 +38,132 @@
 </template>
 
 <script>
+
+    var dataForTranEngAll = [];
+    var trafficTypeEnergyPie;
+
+    var beforTimeRange = '';
+    var beforCity ='';
+
+    var requestData = 
+    {
+        username:'zwp',
+        roleName:'enterprice',
+        roleType:'R_TRA',
+        place1:'杭州',
+        place2:'江干',
+        timeRange:'2017-01-01:2017-12-30',
+        cityType:'杭州'
+    } 
+
+    var optionPi={
+        title:{
+            text: '各运输类型能耗构成图',
+            x: 'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: []
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},                 
+                dataView : {show: true, readOnly: false},
+                saveAsImage : {show: true},
+            }
+        },
+        series : [
+            {
+                name: '能耗',
+                type: 'pie',
+                radius : '80%',
+                center: ['50%', '60%'],
+                data:[],
+            }
+        ]
+
+    };
+
+    function setData(res){
+        var engerData = {};
+        var eng_all_for_PI = []; //饼图填充数据
+
+        res.traTypOther.forEach(function(element){
+            var t = engerData[element.baseTyp];
+            if(!t) t=[0];
+            t[0] += element.baseTypDatOfAllEng;
+            //t[1] += element.baseTypDatOfAllLen;
+            engerData[element.baseTyp] = t;
+        }); 
+        res.xs[0].forEach(function(e1){
+            var t = engerData[e1];
+            if(t)
+            {
+                eng_all_for_PI.push({name:e1,value:t[0]})
+               // eng_per.push((t[0]/t[1]).toFixed(2))
+            }else{
+                //eng_all_for_PI.push({name:e1,value:0})
+               // eng_per.push(0)
+            }
+        });
+
+        dataForTranEngAll.splice(0,dataForTranEngAll.length);
+        dataForTranEngAll.push(res.xs[0]);
+        dataForTranEngAll.push(eng_all_for_PI);
+    }
+
     import echarts from 'echarts'
     export default{
         data(){
             return{
-                citySelectValue: '杭州',
-                dateSelectValue:'',
-
-                pickerOptions2: {
-                    shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
-                            text: '最近三个月',
-                            onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }]
-                },
+                timeRange:'',
+                cityType:'',
             }
         },
         methods:{
-            citySelectChange(){},
-            drawTrafficTypeEnergyPie(){
-                this.trafficTypeEnergyPie = echarts.init(document.getElementById('trafficTypeEnergyPie'));
-
-                var option={
-                    title:{
-                        text: '各运输类型所占能耗图',
-                        x: 'center'
-                    },
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['道路客运','道路货运','公交客运','出租车运输','内河运输','海洋货运','海洋客运']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {
-                                show: true,
-                                type: ['pie', 'funnel']
-                            },
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    
-                    series : [
-                        {
-                            name: '能耗',
-                            type: 'pie',
-                            radius : '80%',
-                            center: ['50%', '50%'],
-                            data:[
-                                {value:335, name:'道路客运'},
-                                {value:310, name:'道路货运'},
-                                {value:274, name:'公交客运'},
-                                {value:235, name:'出租车运输'},
-                                {value:400, name:'内河运输'},
-                                {value:354, name:'海洋货运'},
-                                {value:459, name:'海洋客运'}
-                            ].sort(function(a,b){return a.value-b.value;}),
-                            roseType: 'radius',
-                            label:{
-                                normal:{
-                                    testStyle:{
-                                        color: 'rgba(255, 255, 255, 0.5)'
-                                    }
-                                }
-                            },
-                            labelLine: {
-                                 normal: {
-                                    smooth: 0.2,
-                                    length: 10,
-                                    length2: 20
-                                }
-                            
-                            },
-                            animationType: 'scale',
-                            animationEasing: 'elasticOut',
-                            animationDelay: function (idx) {
-                                return Math.random() * 200;
-                             }
-                        }
-                    ]
-
-                }
-                this.trafficTypeEnergyPie.setOption(option);
+            getDataFromService(requestData){
+                console.log(requestData);
+                $.get(this.Constant.ajaxAddress+this.Constant.trafficenergyAjax,requestData).
+                done(function (res){
+                    setData(res);
+                    optionPi.legend.data = dataForTranEngAll[0];
+                    optionPi.series[0].data = dataForTranEngAll[1];
+                    trafficTypeEnergyPie.clear();
+                    trafficTypeEnergyPie.setOption(optionPi);
+                });
+                
             },
-            drawCharts(){
-                this.drawTrafficTypeEnergyPie()
+            selectOther(tr){
+                console.log(tr+'   before=' + beforTimeRange);
+                if(!tr||tr== '')
+                    return ;
+                requestData['timeRange']=tr;     
+                this.getDataFromService(requestData);
+                beforTimeRange = tr;
+            },
+            citySelectChange(ct){
+                console.log(ct+'   before=' + beforCity);
+                if(!ct||ct=='')
+                    return ;
+                requestData['cityType']=ct;
+                this.getDataFromService(requestData);
+                beforCity = ct;
             }
+
         },
         mounted: function () {
-            this.drawCharts();
+            trafficTypeEnergyPie = echarts.init(document.getElementById('trafficTypeEnergyPie'));
+            trafficTypeEnergyPie.setOption(optionPi);
+            this.getDataFromService(requestData);
         },
         updated: function () {
-            this.drawCharts()
+            console.log("update");
         }
     }
 </script>
@@ -167,10 +175,10 @@
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
-                margin-left: 20px;
+                margin-right: 20px;
                 position: relative;
             }
             .chart-content{
@@ -186,5 +194,11 @@
 
     .el-col {
         padding: 20px 20px;
+    }
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
     }
 </style>

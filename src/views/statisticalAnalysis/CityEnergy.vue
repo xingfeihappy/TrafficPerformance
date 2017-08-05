@@ -4,14 +4,15 @@
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-date-picker
-                        v-model="dateSelectValue"
+                        v-model="timeRange"
                         type="daterange"
                         placeholder="选择日期范围"
-                        :picker-options="pickerOptions2">
+                        range-separator = ':'
+                        @change="selectOther">
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
-                    <el-select v-model="trafficSelectValue" placeholder="请选择交通工具" @change="trafficSelectChange">
+                    <el-select v-model="tranType" placeholder="请选择交通工具" @change="trafficSelectChange">
                         <el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
                         <el-option key="道路货运" label="道路货运" value="道路货运"></el-option>
                         <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
@@ -33,128 +34,134 @@
 </template>
 
 <script>
+
+    var dataForCityEngAll = [];
+    var cityTypeEnergyPie;
+
+    var beforTimeRange = '';
+    var beforTran ='';
+
+    var requestData = 
+    {
+        username:'zwp',
+        roleName:'enterprice',
+        roleType:'R_TRA',
+        place1:'杭州',
+        place2:'江干',
+        timeRange:'2017-01-01:2017-12-30',
+        tranType:'道路客运'
+    } 
+
+    var optionPi={
+        title:{
+            text: '各地市能耗构成图',
+            x: 'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: []
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},                 
+                dataView : {show: true, readOnly: false},
+                saveAsImage : {show: true},
+            }
+        },
+        series : [
+            {
+                name: '能耗',
+                type: 'pie',
+                radius : '80%',
+                center: ['50%', '60%'],
+                data:[],
+            }
+        ]
+
+    };
+
+    function setData(res){
+        
+        var engerData = {};
+        var eng_all_for_PI = []; //饼图填充数据
+
+        res.citTypOther.forEach(function(element){
+            var t = engerData[element.baseTyp];
+            if(!t) t=[0];
+            t[0] += element.baseTypDatOfAllEng;
+            //t[1] += element.baseTypDatOfAllLen;
+            engerData[element.baseTyp] = t;
+        });
+        res.xs[0].forEach(function(e1){
+            var t = engerData[e1];
+            if(t)
+            {
+                eng_all_for_PI.push({name:e1,value:t[0]})
+               // eng_per.push((t[0]/t[1]).toFixed(2))
+            }else{
+                //eng_all_for_PI.push({name:e1,value:0})
+               // eng_per.push(0)
+            }
+        });
+
+        dataForCityEngAll.splice(0,dataForCityEngAll.length);
+        dataForCityEngAll.push(res.xs[0]);
+        dataForCityEngAll.push(eng_all_for_PI);
+
+    }
+
+
     import echarts from 'echarts'
     export default{
         data(){
             return{
-                trafficSelectValue: '',
-                dateSelectValue:'',
-
-                pickerOptions2: {
-                    shortcuts: [{
-                        text: '最近一周',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
-                        text: '最近一个月',
-                        onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }, {
-                            text: '最近三个月',
-                            onClick(picker) {
-                            const end = new Date();
-                            const start = new Date();
-                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                            picker.$emit('pick', [start, end]);
-                        }
-                    }]
-                },                
+                timeRange:'',
+                tranType:''        
             }
         },
         methods:{
-            trafficSelectChange(){},
-            drawCityTypeEnergyPie(){
-                this.cityTypeEnergyPie = echarts.init(document.getElementById('cityTypeEnergyPie'));
-
-                var option={
-                    title:{
-                        text: '各个地市所占能耗图',
-                        x: 'center'
-                    },
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        orient: 'vertical',
-                        left: 'left',
-                        data: ['杭州','宁波','温州','嘉兴','湖州','绍兴','衢州','金华','舟山','台州','丽水']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {
-                                show: true,
-                                type: ['pie', 'funnel']
-                            },
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    series : [
-                        {
-                            name: '能耗',
-                            type: 'pie',
-                            radius : '80%',
-                            center: ['50%', '50%'],
-                            data:[
-                                {value:535, name:'杭州'},
-                                {value:410, name:'宁波'},
-                                {value:474, name:'温州'},
-                                {value:235, name:'嘉兴'},
-                                {value:200, name:'湖州'},
-                                {value:354, name:'绍兴'},
-                                {value:259, name:'衢州'},
-                                {value:359, name:'金华'},
-                                {value:289, name:'舟山'},
-                                {value:179, name:'台州'},
-                                {value:159, name:'丽水'}
-                            ].sort(function(a,b){return a.value-b.value;}),
-                            roseType: 'radius',
-                            label:{
-                                normal:{
-                                    testStyle:{
-                                        color: 'rgba(255, 255, 255, 0.5)'
-                                    }
-                                }
-                            },
-                            labelLine: {
-                                 normal: {
-                                    smooth: 0.2,
-                                    length: 10,
-                                    length2: 20
-                                }
-                            
-                            },
-                            animationType: 'scale',
-                            animationEasing: 'elasticOut',
-                            animationDelay: function (idx) {
-                                return Math.random() * 200;
-                             }
-                        }
-                    ]
-
-                }
-                this.cityTypeEnergyPie.setOption(option);
+            getDataFromService(requestData){
+                console.log(requestData);
+                $.get(this.Constant.ajaxAddress+this.Constant.citenergyAjax,requestData).
+                done(function (res){
+                    setData(res);
+                    optionPi.legend.data = dataForCityEngAll[0];
+                    optionPi.series[0].data = dataForCityEngAll[1];
+                    cityTypeEnergyPie.clear();
+                    cityTypeEnergyPie.setOption(optionPi);
+                });
+                
             },
-            drawCharts(){
-                this.drawCityTypeEnergyPie()
+            selectOther(tr){
+                console.log(tr+'   before=' + beforTimeRange);
+                if(!tr||tr== '')
+                    return ;
+                requestData['timeRange']=tr;     
+                this.getDataFromService(requestData);
+                beforTimeRange = tr;
+            },
+            trafficSelectChange(tt){
+                console.log(tt+'   before=' + beforTran);
+                if(!tt||tt=='')
+                    return ;
+                requestData['tranType']=tt;
+                this.getDataFromService(requestData);
+                beforTran = tt;              
             }
         },
         mounted: function () {
-            this.drawCharts();
+            cityTypeEnergyPie = echarts.init(document.getElementById('cityTypeEnergyPie'));
+            cityTypeEnergyPie.setOption(optionPi);
+            this.getDataFromService(requestData);
         },
         updated: function () {
-            this.drawCharts()
+            console.log("update");
         }
     }
 </script>
@@ -166,10 +173,11 @@
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
-                margin-left: 20px;
+                //margin-bottom: 20px;
+                margin-right: 20px;
                 position: relative;
             }
             .chart-content{
@@ -185,5 +193,12 @@
 
     .el-col {
         padding: 20px 20px;
+    }
+
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
     }
 </style>

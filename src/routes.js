@@ -26,7 +26,7 @@ import relTimDatChart from './components/relTimDatChart.vue'
 import OceanFreight from './views/statisticalAnalysis/OceanFreight.vue'
 import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
 import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
-import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
+//import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
 import GuestCar from './views/datadetection/GuestCar.vue'//数据监测，客运车辆
 import goodsCar from './views/datadetection/GoodsCar.vue'//数据监测，货运车辆
@@ -139,13 +139,13 @@ let routes = [
             { path: '/OceanFreight', pri:['admin'],component: OceanFreight,  name: '海洋货运' },
             { path: '/OceanPgerTrans', pri:['admin'],component: OceanPgerTrans,  name: '海洋客运' },
             { path: '/PortProduction', pri:['admin'],component: PortProduction,  name: '港口生产' },
+            { path: '/traTypPreChgChart', pri:['admin'],component: traTypPreChgChart,  name: '能耗变化趋势' },
             { path: '/allTypChart', pri:['admin'],component: allTypChart,  name: '单位运距能耗指标' },
             { path: '/EnergyStruct', pri:['admin'],component: EnergyStruct,  name: '能耗结构' },
-            { path: '/engTypChgChart', pri:['admin'],component: engTypChgChart,  name: '能源类型分时趋势' },
-            { path: '/traTypPreChgChart', pri:['admin'],component: traTypPreChgChart,  name: '单位能耗变化趋势' },
-            { path: '/TotalEnergy', pri:['admin'],component: TotalEnergy,  name: '总能耗变化趋势' },
+            /*{ path: '/TotalEnergy', pri:['admin'],component: TotalEnergy,  name: '总能耗变化趋势' },*/
             { path: '/CityEnergy', pri:['admin'],component: CityEnergy,  name: '地市能耗构成图' },
-            { path: '/TrafficEnergy', pri:['admin'],component: TrafficEnergy,  name: '交通方式能耗构成图' },            
+            { path: '/TrafficEnergy', pri:['admin'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
+            { path: '/engTypChgChart', pri:['admin'],component: engTypChgChart,  name: '能源类型分时趋势' },           
             { path: '/unitInfo', pri:['admin'],component: unitInfo,  name: '年度数据对比' },
           /*  { path: '/unitInfo', component: unitInfo,  name: '分析结果发布' }*/
         ]

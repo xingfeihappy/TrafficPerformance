@@ -1,6 +1,7 @@
 export const ajaxAddress = 'http://localhost:8081'
 
 
+export const indexAjax = '/index.json'
 export const bustranAjax = '/bustranO.json'
 export const taxitranAjax = '/taxitranO.json'
 export const rivertranAjax ='/rivertranO.json'
@@ -11,4 +12,6 @@ export const roadgoodsAjax = '/roadgoodsO.json'
 export const roadpassAjax ='/roadpassO.json'
 export const perdisengAjax = '/perdisengO.json'
 export const engchangeAjax ='/tratypperyearO.json'
+export const citenergyAjax = '/citytrantypengO.json'
+export const trafficenergyAjax = '/tracitytypengO.json'
 // export const hideHeader = 'hideHeader' 
