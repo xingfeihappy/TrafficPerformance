@@ -74,7 +74,16 @@ var engClsChart;
 var beforTimeRange = '';
 var beforeYear = '';
 
-
+var requestData = 
+    {
+        username:'zwp',
+        roleName:'enterprice',
+        roleType:'R_TRA',
+        place1:'杭州',
+        place2:'江干',
+        timeRange:'2017-01-01:2017-12-30',
+        token : ''
+    }
 
 
 
@@ -450,16 +459,7 @@ export default {
   },
     methods: {
         getDataFromService(requestData){
-            var requestData = 
-                {
-                    username:this.$userInfo.username,
-                    roleName:'enterprice',
-                    roleType:'R_TRA',
-                    place1:'杭州',
-                    place2:'江干',
-                    timeRange:'2017-01-01:2017-12-30',
-                    token : this.$token
-                }
+
             console.log(requestData);
             $.get(this.Constant.ajaxAddress+this.Constant.bustranAjax,requestData).
             done(function (res){
