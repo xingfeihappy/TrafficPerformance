@@ -14,6 +14,7 @@ export const perdisengAjax = '/perdisengO.json'
 export const engchangeAjax ='/tratypperyearO.json'
 export const citenergyAjax = '/citytrantypengO.json'
 export const trafficenergyAjax = '/tracitytypengO.json'
+export const yearcompareAjax = '/engtyp3yearO.json'
 // export const hideHeader = 'hideHeader' 
 
 export const relTimeAjax = '/reltimedata.json'

@@ -14,20 +14,18 @@
              </el-col>
         </el-row>
         <el-row >
+            <el-col  class="chart-container">
+                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>
+        </el-row>
+        <el-row >
             <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
                 <div id="engPsChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
-
         <el-row >
             <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
                 <div id="engTypeChart" style="width:100%;height:400px;" class="chart-content"></div>
-            </el-col>
-        </el-row>
-
-        <el-row >
-            <el-col  class="chart-container">
-                   <div id="engTypeAllChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row>
@@ -73,12 +71,12 @@ var beforeYear = '';
 
 var requestData = 
 {
-    username:'zwp',
+    /*username:'zwp',
     roleName:'enterprice',
     roleType:'R_TRA',
     place1:'杭州',
     place2:'江干',
-    timeRange:'2017-01-01:2017-12-30'
+    timeRange:'2017-01-01:2017-12-30'*/
 }
 
 
@@ -463,10 +461,24 @@ export default {
   data(){
       return {
            timeRange:'',
-           year:''
+           year:(new Date).getFullYear().toString()
       }
   },
     methods: {
+        initRequestData(requestData){
+            var date = new Date;
+            var year = date.getFullYear().toString();
+            // var month = (date.getMonth()+1).toString();
+            requestData.username = this.$userInfo.name;
+            requestData.roleName = this.$userInfo.roleName;
+            requestData.roleType = this.$userInfo.roleType;
+            if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                requestData.place1 = this.$userInfo.place1;
+            if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                requestData.place2 = this.$userInfo.place2;          
+            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            requestData.token = this.$token;
+        },
         getDataFromService(requestData){
             console.log(requestData);
             $.get(this.Constant.ajaxAddress+this.Constant.taxitranAjax,requestData).
@@ -539,6 +551,7 @@ export default {
         engTypeAllChart.setOption(optionPi);
         engTypeChart.setOption(optionEng);
         engPsChart.setOption(optionClsEng);
+        this.initRequestData(requestData);
         this.getDataFromService(requestData);
     },
     updated: function () {
@@ -554,9 +567,10 @@ export default {
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
+                margin-right: 20px;
                 position: relative;
             }
             .chart-content{
@@ -565,12 +579,15 @@ export default {
         }
         
     }
-    /*.chart div {
-        height: 400px;
-        float: left;
-    }*/
 
     .el-col {
         padding: 20px 20px;
+    }
+
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
     }
 </style>

@@ -92,15 +92,7 @@
     var beforTimeRange = '';
     var beforeYear = '';
 
-    var requestData = 
-    {
-        username:'zwp',
-        roleName:'enterprice',
-        roleType:'R_TRA',
-        place1:'杭州',
-        place2:'江干',
-        timeRange:'2017-01-01:2017-12-30'
-    } 
+    var requestData = {}; 
 
     var colors = ['#5793f3', '#d14a61'];
     var option = {
@@ -575,10 +567,24 @@
         data() {
             return {
                 timeRange:'',
-                year:''
+                year:(new Date).getFullYear().toString()
             }
         },
         methods: {
+            initRequestData(requestData){
+                var date = new Date;
+                var year = date.getFullYear().toString();
+               // var month = (date.getMonth()+1).toString();
+                requestData.username = this.$userInfo.name;
+                requestData.roleName = this.$userInfo.roleName;
+                requestData.roleType = this.$userInfo.roleType;
+                if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                    requestData.place1 = this.$userInfo.place1;
+                if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                    requestData.place2 = this.$userInfo.place2;          
+                requestData.timeRange = year+'-01-01:'+year+'-12-31';
+                requestData.token = this.$token;
+            },
             getDataFromService(requestData){
                // console.log(requestData);
                 $.get(this.Constant.ajaxAddress+this.Constant.roadpassAjax,requestData).
@@ -663,7 +669,7 @@
             carTypeChart.setOption(optionCarType);
             guestChart.setOption(optionEngPsger);
             energyByYearChart.setOption(option);
-
+            this.initRequestData(requestData);
             this.getDataFromService(requestData);
 
         },
