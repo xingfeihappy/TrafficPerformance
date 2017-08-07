@@ -31,6 +31,7 @@
 
 <script>
   import { requestLogin } from '../api/api';
+  import vue from 'vue';
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -81,32 +82,22 @@
             // });
 
 
-            $.get(this.Constant.ajaxAddress+"/login.json?username="+loginParams.username+
-                                              "&password="+loginParams.password).done(function(data){
+            $.get(this.Constant.ajaxAddress+"/login.json",
+                                              { username:loginParams.username,
+                                                password:loginParams.password}).done(function(data){
+              _this.logining = false;
               console.log(data);
-            _this.$router.push({ path: '/index' });
+              if(data.errCode==10){
+                  _this.$router.push({ path: '/index' });
+                  vue.prototype.$token = data.token;
+                  vue.prototype.$userInfo = data.userInfo;
+                  
+                }else{
+                  window.alert("用户名或者密码错误");
+                  
+                }
             })
-             _this.$router.push({ path: '/index' });
-            // $.ajax({
-            //             type: "GET",
-            //             url: this.Constant.ajaxAddress+"/login.json",
-            //             data: {username:loginParams.username, password:loginParams.password},
-            //             dataType: "jsonp",
-            //             success: function(data){
-            //                 console.log(data);
-            //                 _this.$router.push({ path: '/index' }); 
-            //             }
-            //         });
-
-
-
-
-          //this.$router.push({ path: '/index' });
-
-
-          
-
-
+            
           } else {
             console.log('error submit!!');
             return false;

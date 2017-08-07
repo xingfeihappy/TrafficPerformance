@@ -91,12 +91,11 @@ let routes = [
         
         iconCls: 'fa fa-cogs',
         children: [
-            { path: '/table', pri:['admin'],component: Table, name: '用户管理' },
-            //{ path: '/form', pri:['admin'],component: Form, name: '权限管理' },
-            { path: '/user', pri:['admin'],component: user, name: '密码修改' },
-            { path: '/unitInfo', pri:['admin'],component: unitInfo, name: '技术支持' },
-            { path: '/unitScale', pri:['admin'],component: unitScale, name: '帮助文档' },
-            { path: '/dataDic',pri:['admin'], component: dataDic, name: '数据字典' }
+            { path: '/table', pri:['R_ADMIN'],component: Table, name: '用户管理' },
+            { path: '/user', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: user, name: '密码修改' },
+            { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo, name: '技术支持' },
+            { path: '/unitScale', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitScale, name: '帮助文档' },
+            { path: '/dataDic',pri:['R_ADMIN'], component: dataDic, name: '数据字典' }
         ]
     },
     // {
@@ -131,22 +130,22 @@ let routes = [
         name: '统计分析',
         iconCls: 'fa fa-bar-chart-o',
         children: [
-            { path: '/barChart', pri:['admin'],component: barChart,  name: '道路客运' },
-            { path: '/RoadGoods', pri:['admin'],component: RoadGoods,  name: '道路货运' },
-            { path: '/busChart', pri:['admin'],component: busChart,  name: '公交客运' },
-            { path: '/taxiChart', pri:['admin'],component: taxiChart,  name: '出租车运输' },
-            { path: '/rivTraChart', pri:['admin'],component: rivTraChart,  name: '内河运输' },
-            { path: '/OceanFreight', pri:['admin'],component: OceanFreight,  name: '海洋货运' },
-            { path: '/OceanPgerTrans', pri:['admin'],component: OceanPgerTrans,  name: '海洋客运' },
-            { path: '/PortProduction', pri:['admin'],component: PortProduction,  name: '港口生产' },
-            { path: '/traTypPreChgChart', pri:['admin'],component: traTypPreChgChart,  name: '能耗变化趋势' },
-            { path: '/allTypChart', pri:['admin'],component: allTypChart,  name: '单位运距能耗指标' },
-            { path: '/EnergyStruct', pri:['admin'],component: EnergyStruct,  name: '能耗结构' },
-            /*{ path: '/TotalEnergy', pri:['admin'],component: TotalEnergy,  name: '总能耗变化趋势' },*/
-            { path: '/CityEnergy', pri:['admin'],component: CityEnergy,  name: '地市能耗构成图' },
-            { path: '/TrafficEnergy', pri:['admin'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
-            { path: '/engTypChgChart', pri:['admin'],component: engTypChgChart,  name: '能源类型分时趋势' },           
-            { path: '/unitInfo', pri:['admin'],component: unitInfo,  name: '年度数据对比' },
+            { path: '/barChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: barChart,  name: '道路客运' },
+            { path: '/RoadGoods', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: RoadGoods,  name: '道路货运' },
+            { path: '/busChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: busChart,  name: '公交客运' },
+            { path: '/taxiChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: taxiChart,  name: '出租车运输' },
+            { path: '/rivTraChart', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: rivTraChart,  name: '内河运输' },
+            { path: '/OceanFreight', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: OceanFreight,  name: '海洋货运' },
+            { path: '/OceanPgerTrans', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: OceanPgerTrans,  name: '海洋客运' },
+            { path: '/PortProduction', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: PortProduction,  name: '港口生产' },
+            { path: '/traTypPreChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: traTypPreChgChart,  name: '能耗变化趋势' },
+            { path: '/allTypChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: allTypChart,  name: '单位运距能耗指标' },
+           // { path: '/EnergyStruct', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: EnergyStruct,  name: '能耗结构' },
+            /*{ path: '/TotalEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TotalEnergy,  name: '总能耗变化趋势' },*/
+            { path: '/CityEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: CityEnergy,  name: '地市能耗构成图' },
+            { path: '/TrafficEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
+            { path: '/engTypChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '能源类型分时趋势' },           
+            { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo,  name: '年度数据对比' },
           /*  { path: '/unitInfo', component: unitInfo,  name: '分析结果发布' }*/
         ]
     },
@@ -166,13 +165,13 @@ let routes = [
         name: '数据监测',
         iconCls: 'fa fa-eye',
         children: [
-            { path: '/relTimDatChart', pri:['admin'],component: relTimDatChart, name: '数据展示' },
-            { path: '/GuestCar', pri:['admin'],component: GuestCar, name: '客运车辆' },
-            { path: '/goodsCar', pri:['admin'],component: goodsCar, name: '货运车辆' },
-            { path: '/taxi', pri:['admin'],component: taxi, name: '出租车' },
-            { path: '/bus', pri:['admin'],component: bus, name: '公交车' },
-            { path: '/riverShip', pri:['admin'],component: riverShip, name: '内河船舶' },
-            { path: '/DataInMap', pri:['admin'],component: DataInMap, name: '专题图展示'}
+            { path: '/relTimDatChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: relTimDatChart, name: '数据展示' },
+            { path: '/GuestCar', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: GuestCar, name: '客运车辆' },
+            { path: '/goodsCar', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: goodsCar, name: '货运车辆' },
+            { path: '/taxi', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: taxi, name: '出租车' },
+            { path: '/bus', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: bus, name: '公交车' },
+            { path: '/riverShip', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: riverShip, name: '内河船舶' },
+            { path: '/DataInMap', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: DataInMap, name: '专题图展示'}
         ]
     },
     // {
