@@ -36,15 +36,7 @@ var unitEngChgChart;
 var allEngChgChart;
 
 var beforeYear = '';
-var requestData = 
-{
-    username:'zwp',
-    roleName:'enterprice',
-    roleType:'R_TRA',
-    place1:'杭州',
-    place2:'江干',
-    timeRange:'2017-01-01:2017-12-30'
-}
+var requestData = {};
 
 var optionMonEngUnit = {
     title: {
@@ -231,10 +223,24 @@ function setData(res){
 export default {
     data(){
         return {
-            year:''
+            year:(new Date).getFullYear().toString()
         }
     },
     methods:{
+        initRequestData(requestData){
+            var date = new Date;
+            var year = date.getFullYear().toString();
+            // var month = (date.getMonth()+1).toString();
+            requestData.username = this.$userInfo.name;
+            requestData.roleName = this.$userInfo.roleName;
+            requestData.roleType = this.$userInfo.roleType;
+            if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                requestData.place1 = this.$userInfo.place1;
+            if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                requestData.place2 = this.$userInfo.place2;          
+            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            requestData.token = this.$token;
+        },
         getDataFromService(requestData){
             $.get(this.Constant.ajaxAddress+this.Constant.engchangeAjax,requestData).
             done(function (res){
@@ -269,6 +275,7 @@ export default {
         unitEngChgChart.setOption(optionMonEngUnit);
         allEngChgChart = echarts.init(document.getElementById('allEngChgChart'));
         allEngChgChart.setOption(optionMonEngAll);
+        this.initRequestData(requestData);
         this.getDataFromService(requestData);
     },
     updated:function(){

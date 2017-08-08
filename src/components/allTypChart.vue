@@ -28,15 +28,7 @@ var allTypChart;
 
 var beforTimeRange = '';
 
-var requestData = 
-{
-    username:'zwp',
-    roleName:'enterprice',
-    roleType:'R_TRA',
-    place1:'杭州',
-    place2:'江干',
-    timeRange:'2017-01-01:2017-12-30'
-}
+var requestData = {};
 
 var optionTraEng = {
     title: {
@@ -91,7 +83,7 @@ var optionTraEng = {
 };
 
 function setData(res){
-    
+    console.log(res)
     var traEngMap={};
 
     var traEngSeries=[];
@@ -148,8 +140,21 @@ export default {
       }
     },
     methods:{
+        initRequestData(requestData){
+            var date = new Date;
+            var year = date.getFullYear().toString();
+            // var month = (date.getMonth()+1).toString();
+            requestData.username = this.$userInfo.name;
+            requestData.roleName = this.$userInfo.roleName;
+            requestData.roleType = this.$userInfo.roleType;
+            if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                requestData.place1 = this.$userInfo.place1;
+            if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                requestData.place2 = this.$userInfo.place2;          
+            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            requestData.token = this.$token;
+        },
         getDataFromService(requestData){
-            console.log(requestData);
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
                 setData(res);
@@ -173,6 +178,7 @@ export default {
     mounted:function(){
         allTypChart = echarts.init(document.getElementById('allTypChart'));
         allTypChart.setOption(optionTraEng);
+        this.initRequestData(requestData);
         this.getDataFromService(requestData);
         
     },

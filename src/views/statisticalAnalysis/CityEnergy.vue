@@ -16,7 +16,7 @@
                         <el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
                         <el-option key="道路货运" label="道路货运" value="道路货运"></el-option>
                         <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
-                        <el-option key="出租车运输" label="出租车运输" value="出租车运输"></el-option>
+                        <el-option key="出租客运" label="出租车运输" value="出租客运"></el-option>
                         <el-option key="内河运输" label="内河运输" value="内河运输"></el-option>
                         <el-option key="海洋货运" label="海洋货运" value="还有货运"></el-option>
                         <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>

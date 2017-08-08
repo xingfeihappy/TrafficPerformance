@@ -144,8 +144,8 @@ let routes = [
             /*{ path: '/TotalEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TotalEnergy,  name: '总能耗变化趋势' },*/
             { path: '/CityEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: CityEnergy,  name: '地市能耗构成图' },
             { path: '/TrafficEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
-            { path: '/engTypChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '能源类型分时趋势' },           
-            { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo,  name: '年度数据对比' },
+            { path: '/engTypChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '年度数据对比' },           
+           /* { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo,  name: '年度数据对比' },*/
           /*  { path: '/unitInfo', component: unitInfo,  name: '分析结果发布' }*/
         ]
     },

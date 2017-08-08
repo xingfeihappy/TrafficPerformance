@@ -75,15 +75,15 @@ var beforTimeRange = '';
 var beforeYear = '';
 
 var requestData = 
-    {
-        username:'zwp',
-        roleName:'enterprice',
-        roleType:'R_TRA',
-        place1:'杭州',
-        place2:'江干',
-        timeRange:'2017-01-01:2017-12-30',
-        token : ''
-    }
+{
+    /*username:this.$userInfo.username,
+    roleName:'enterprice',
+    roleType:'R_TRA',
+    place1:'杭州',
+    place2:'江干',
+    timeRange:'2017-01-01:2017-12-30',
+    token : this.$token*/
+}
 
 
 
@@ -340,8 +340,6 @@ function  setData(res){
     });
 
 
-    console.log(JSON.stringify(clsEngMap));
-    console.log(JSON.stringify(engerData));
 
     //准备能源类型数据
     res.xs[1].forEach(function(e1){
@@ -360,7 +358,7 @@ function  setData(res){
     //准备能源车长数据
     res.xs[2].forEach(function(i){
         var tmpEngDatas = [];
-        console.log('clsEngMap i = ');
+        //console.log('clsEngMap i = ');
         if(!clsEngMap[i])
         {
             var tmpSeriseObj = {
@@ -402,11 +400,7 @@ function  setData(res){
 
 
 
-
-
-    console.log(engClsSeries);
-
-    console.log('set data k = ' + k);
+   // console.log('set data k = ' + k);
     if( k == 1 ||k==3 )
     {
         dataForEngAll.splice(0,dataForEngAll.length);
@@ -427,7 +421,6 @@ function  setData(res){
         var t = monthData[e1];
         if(t) 
         {
-            console.log(t);
             month_all.push(t[0]);
             month_per.push((t[0]/t[1]).toFixed(2));
         }else
@@ -454,17 +447,32 @@ export default {
   data(){
       return {
            timeRange:'',
-           year:''
+           year:(new Date).getFullYear().toString()
       }
   },
     methods: {
-        getDataFromService(requestData){
 
-            console.log(requestData);
+        initRequestData(requestData){
+            var date = new Date;
+            var year = date.getFullYear().toString();
+           // var month = (date.getMonth()+1).toString();
+            requestData.username = this.$userInfo.name;
+            requestData.roleName = this.$userInfo.roleName;
+            requestData.roleType = this.$userInfo.roleType;
+            if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                requestData.place1 = this.$userInfo.place1;
+            if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                requestData.place2 = this.$userInfo.place2;          
+            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            requestData.token = this.$token;
+        },
+
+        getDataFromService(requestData){
+            
             $.get(this.Constant.ajaxAddress+this.Constant.bustranAjax,requestData).
             done(function (res){
                 setData(res);
-                console.log('show data k = ' + k);
+            //    console.log('show data k = ' + k);
                 if(k==1||k==3)
                 {
 
@@ -531,6 +539,7 @@ export default {
         engTypeAllChart.setOption(optionPi);
         engTypeChart.setOption(optionEng);
         engClsChart.setOption(optionClsEng);
+        this.initRequestData(requestData);
         this.getDataFromService(requestData);
     },
     updated: function () {
@@ -546,9 +555,10 @@ export default {
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
+                margin-right: 20px;
                 position: relative;
             }
             .chart-content{
@@ -557,13 +567,15 @@ export default {
         }
         
     }
-    /*.chart div {
-        height: 400px;
-        float: left;
-    }*/
 
     .el-col {
         padding: 20px 20px;
+    }
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
     }
 </style>
 

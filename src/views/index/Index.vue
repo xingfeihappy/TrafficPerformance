@@ -41,12 +41,12 @@
 
     var requestData = 
     {
-        username:'zwp',
+        /*username:'zwp',
         roleName:'enterprice',
         roleType:'R_WAT',
         place1:'杭州',
         place2:'江干',
-        timeRange:'2017-01-01:2017-12-30'
+        timeRange:'2017-01-01:2017-12-30'*/
     } 
 
     var optionPi = {
@@ -237,8 +237,23 @@
 　　　　　　 }
         },*/
         methods: {
+
+            initRequestData(requestData){
+                var date = new Date;
+                var year = date.getFullYear().toString();
+               // var month = (date.getMonth()+1).toString();
+                requestData.username = this.$userInfo.name;
+                requestData.roleName = this.$userInfo.roleName;
+                requestData.roleType = this.$userInfo.roleType;
+                if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
+                    requestData.place1 = this.$userInfo.place1;
+                if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
+                    requestData.place2 = this.$userInfo.place2;          
+                requestData.timeRange = year+'-01-01:'+year+'-12-31';
+                requestData.token = this.$token;
+            },
+
             getDataFromService(requestData){
-               // console.log(requestData);
                 $.get(this.Constant.ajaxAddress+this.Constant.indexAjax,requestData).
                 done(function (res){
                     setData(res);
@@ -260,10 +275,10 @@
                     return ;
                 if(tr=='本月'){
                     var date = new Date;
-                    var year = date.getFullYear();
-                    var month = date.getMonth()+1;
-                    requestData['timeRange'] = year.toString()+'-'+month.toString()+'-01:'
-                                               +year.toString()+'-'+month.toString()+'-01'
+                    var year = date.getFullYear().toString();
+                    var month = (date.getMonth()+1).toString();
+                    requestData['timeRange'] = year+'-'+month+'-01:'
+                                               +year+'-'+month+'-01'
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }
@@ -286,191 +301,13 @@
                     beforTimeRange = tr;
                 }
             },
-            EngBarTypeChange(){
-                
-            }
-            /*energyTypeSelectChange(){
-                let value= this.energyTypeSelectValue;
-                if(value === "本月"){
-                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeMonth';
-                }else if(value === "本季"){
-                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeQuater';
-                }else if(value === "本年"){
-                    this.energyTypeUrl = this.Constant.ajaxAddress+'/energyTypeYear';
-                }
-            },*/
-           
-            /*drawEnergyTypePie(){//饼图
-                 this.energyTypePie = echarts.init(document.getElementById('energyTypePie'));
-                var option={
-                    title : {
-                        text: '能源类型图',
-                        x:'center'
-                    },
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        x : 'center',
-                        y : 'bottom',
-                        data:['rose1','rose2','rose3','rose4','rose5','rose6','rose7','rose8']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType : {
-                                show: true,
-                                type: ['pie', 'funnel']
-                            },
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    series : [
-                       
-                        {
-                            name:'面积模式',
-                            type:'pie',
-                            radius : [40, 145],
-                            center : ['50%', '50%'],
-                            roseType : 'area',
-                            data:[]
-                        }
-                    ]
-                }
-                this.energyTypePie.setOption(option);
-                var _this = this;
-                console.log(this.energyTypeUrl);
-                $.get(this.energyTypeUrl).done(function (res) {
-                    if(res.errno ===  err_OK){
-                        console.log(res.data);
-                        var data = res.data;
-                        _this.energyTypePie.setOption({
-                            series : [
-                                {
-                                    data: data
-                                }
-                            ]
-                        });
-                    }
-                })
-                // 饼图的点击事件  获取当前点击是哪个能源
-                 this.energyTypePie.on('click',function(param) {
-                    var mes = '【' + param.type + '】';
-                   currentEnergy = param.dataIndex;
-                   // alert("饼图被点击"+currentEnergy);
-                   // currentEnergyChange();
-                   let value= currentEnergy;
-                   if(value == '0'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
-                   }else if(value == '1'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
-                   }else if(value == '2'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
-                   }else if(value == '3'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
-                   }else if(value == '4'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
-                   }else if(value == '5'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
-                   }else if(value == '6'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/electric';
-                   }else if(value == '7'){
-                    _this.energyUseUrl = _this.Constant.ajaxAddress+'/diesel';
-                   }
-                })
-            },*/
-             /*drawEnergyTypeBar(){//柱状图
-                // this.barChart = echarts.init(document.getElementById('barChart'));
-                 
-                var option = {
-                    title:{
-                        text:'能源分时图'
-                    },
-                    tooltip : {
-                        trigger: 'axis'
-                    },
-                    legend: {
-                        data:['能耗']
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {readOnly:false},
-                            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    calculable : true,
-                    dataZoom : {
-                        show : true,
-                        realtime : true,
-                        start : 0,
-                        end : 100
-                    },
-                    xAxis : {
-                        data:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]
-                    },
-                    yAxis :{},
-                    series : [
-                        {
-                            name:'能耗',
-                            type:'bar',
-                            data:[]
-                        }
-                    ]
-                };
-                this.barChart.setOption(option);
-                var _this = this;
-                $.get(this.energyUseUrl).done(function (res) {
-                    // alert("chushihua :"+_this.energyUseUrl)
-                    if(res.errno ===  err_OK){
-                        console.log(res.data);
-                        var data = res.data;
-                            _this.barChart.setOption({
-                            series : [
-                                {
-                                    data: data
-                                }
-                            ]
-                        });
-
-                        
-                    }
-                })
-                this.barChart.on('click',function(param) {
-                    var mes = '【' + param.type + '】';
-                    if (typeof param.seriesIndex != 'undefined') {
-                        mes += '  seriesIndex : ' + param.seriesIndex;
-                        mes += '  dataIndex : ' + param.dataIndex;
-                    }
-                    if (param.type == 'hover') {
-                        alert('Event Console : ' + mes);
-                    }
-                    else {
-                        alert(mes);
-                    }
-                    console.log(param);
-                })
-            },*/
-           
-            /*drawCharts() {
-                this.barChart = echarts.init(document.getElementById('barChart'));
-                this.drawEnergyTypePie()
-                this.drawEnergyTypeBar()
-            }*/
         },
         mounted: function () {
             energyTypePie = echarts.init(document.getElementById('energyTypePie'));
             barChart = echarts.init(document.getElementById('barChart'));
             energyTypePie.setOption(optionPi);
             barChart.setOption(optionMon);
+            this.initRequestData(requestData);
             this.getDataFromService(requestData);
             energyTypePie.on('click',function(params){
                 //  alert('click pie');
