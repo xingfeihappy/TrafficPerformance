@@ -88,10 +88,9 @@
               _this.logining = false;
               console.log(data);
               if(data.errCode==10){
-                  _this.$router.push({ path: '/index' });
                   vue.prototype.$token = data.token;
                   vue.prototype.$userInfo = data.userInfo;
-                  
+                  _this.$router.push({ path: '/index' });
                 }else{
                   window.alert("用户名或者密码错误");
                   

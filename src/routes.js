@@ -66,12 +66,22 @@ let routes = [
     {
         path: '/',
         hidden: true,
-        redirect: { path: '/login' }
+        redirect: { path: '/index' }
     },
     {
         path: '/index.html',
         hidden: true,
+        redirect: { path: '/index' }
+    },
+    {
+        path: '/enger/login',
+        hidden: true,
         redirect: { path: '/login' }
+    },
+    {
+        path: '/enger/index.html',
+        hidden: true,
+        redirect: { path: '/index' }
     },
     //{ path: '/main', component: Main },
     {
@@ -98,32 +108,7 @@ let routes = [
             { path: '/dataDic',pri:['R_ADMIN'], component: dataDic, name: '数据字典' }
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '基础信息',
-    //     iconCls: 'fa fa-file-text',
-    //     children: [
-    //         { path: '/unitInfo', component: unitInfo, name: '单位信息' },
-    //         { path: '/unitScale', component: unitScale, name: '单位规模' },
-    //         { path: '/carEquip', component: carEquip, name: '车辆设备' },
-    //         { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
-    //         { path: '/harbourEquip', component: harbourEquip, name: '港口设备' },
-    //         {
-    //             path:'/',
-    //             component:unitInfo,
-    //             name:'设备管理',
-    //             iconCls:'fa fa-file-text',
-    //             children:[
-    //                { path: '/carEquip', component: carEquip, name: '车辆设备' },
-    //                { path: '/shipEquip', component: shipEquip, name: '船舶设备' },
-    //                { path: '/harbourEquip', component: harbourEquip, name: '港口设备' }
-    //             ]
 
-    //         },
-    //         { path: '/unitInfo', component: unitInfo, name: '数据字典' }
-    //     ]
-    // },
     {
         path: '/',
         component: Home,
@@ -140,76 +125,27 @@ let routes = [
             { path: '/PortProduction', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: PortProduction,  name: '港口生产' },
             { path: '/traTypPreChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: traTypPreChgChart,  name: '能耗变化趋势' },
             { path: '/allTypChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: allTypChart,  name: '单位运距能耗指标' },
-           // { path: '/EnergyStruct', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: EnergyStruct,  name: '能耗结构' },
-            /*{ path: '/TotalEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TotalEnergy,  name: '总能耗变化趋势' },*/
             { path: '/CityEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: CityEnergy,  name: '地市能耗构成图' },
             { path: '/TrafficEnergy', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
             { path: '/engTypChgChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '年度数据对比' },           
-           /* { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo,  name: '年度数据对比' },*/
-          /*  { path: '/unitInfo', component: unitInfo,  name: '分析结果发布' }*/
         ]
     },
-    /*{
-        path: '/',
-        component: Home,
-        name: '能耗采集',
-        iconCls: 'fa fa-th-list',
-        children: [
-            { path: '/unitInfo', component: unitInfo, name: '实时采集' },
-            { path: '/unitInfo', component: unitInfo, name: '数据校验' }
-        ]
-    },*/
+
      {
         path: '/',
         component: Home,
         name: '数据监测',
         iconCls: 'fa fa-eye',
         children: [
-            { path: '/relTimDatChart', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: relTimDatChart, name: '数据展示' },
-            { path: '/GuestCar', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: GuestCar, name: '客运车辆' },
-            { path: '/goodsCar', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: goodsCar, name: '货运车辆' },
-            { path: '/taxi', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: taxi, name: '出租车' },
-            { path: '/bus', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: bus, name: '公交车' },
-            { path: '/riverShip', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: riverShip, name: '内河船舶' },
-            { path: '/DataInMap', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT'],component: DataInMap, name: '专题图展示'}
+            { path: '/relTimDatChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: relTimDatChart, name: '数据展示' },
+            { path: '/GuestCar', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: GuestCar, name: '客运车辆' },
+            { path: '/goodsCar', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: goodsCar, name: '货运车辆' },
+            { path: '/taxi', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: taxi, name: '出租车' },
+            { path: '/bus', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: bus, name: '公交车' },
+            { path: '/riverShip', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: riverShip, name: '内河船舶' },
+            { path: '/DataInMap', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: DataInMap, name: '专题图展示'}
         ]
     },
-    // {
-    //     path: '/',
-    //     component: Home,
-    //     name: '基础数据',
-    //     iconCls: 'fa fa-eye',
-    //     children: [
-    //         { path: '/unitInfo', component: unitInfo, name: '单位信息' },
-    //         { path: '/unitScale', component: unitScale, name: '单位规模' },
-    //         { path: '/unitManage', component: unitManage, name: '设备管理' ,children:[
-    //         { path: '/carEquip', component: carEquip, name: '车辆设备' }
-    //         ] },
-            
-    //     ]
-    // },
-    /* {
-        path: '/',
-        component: Home,
-        name: '导航一',
-        iconCls: 'el-icon-message',//图标样式class
-        children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/table', component: Table, name: 'Table' },
-            { path: '/form', component: Form, name: 'Form' },
-            { path: '/user', component: user, name: '列表' },
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '导航二',
-        iconCls: 'fa fa-id-card-o',
-        children: [
-            { path: '/unitInfo', component: unitInfo, name: '页面4' },
-            { path: '/unitScale', component: unitScale, name: '页面5' }
-        ]
-    },*/
     {
         path: '*',
         hidden: true,

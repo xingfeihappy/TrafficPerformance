@@ -34,27 +34,27 @@ const router = new VueRouter({
   routes
 })
 
-// router.beforeEach((to, from, next) => {
-//   //NProgress.start();
-//   if (to.path == '/login') {
-//     sessionStorage.removeItem('user');
-//   }
-//   let user = JSON.parse(sessionStorage.getItem('user'));
-//   let path = to.path;
-//   if (!user && path != '/login') {
-//     if(path =='/register'){
-//       next()
-//     }else{
-//       next({ path: '/login' })
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
 
-//router.afterEach(transition => {
-//NProgress.done();
-//});
+  console.log('main.js '+to.path);
+
+  if(to.path == '/login'){
+    delete Vue.prototype.$userInfo;
+    delete Vue.prototype.$token;
+  }
+
+
+  if(to.path =='/register'){
+    next()
+  }else if( to.path != '/login' && !Vue.prototype.$userInfo )
+      next({ path: '/login' })
+  else
+      next()
+})
+
+router.afterEach(transition => {
+// NProgress.done();
+});
 
 new Vue({
   //el: '#app',
