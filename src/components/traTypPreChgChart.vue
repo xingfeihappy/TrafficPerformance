@@ -240,6 +240,7 @@ export default {
                 requestData.place2 = this.$userInfo.place2;          
             requestData.timeRange = year+'-01-01:'+year+'-12-31';
             requestData.token = this.$token;
+           
         },
         getDataFromService(requestData){
             $.get(this.Constant.ajaxAddress+this.Constant.engchangeAjax,requestData).
