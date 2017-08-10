@@ -25,7 +25,7 @@
 </template>
 
 <script>
-
+    import {getCookie,delCookie,setCookie} from '../../common/js/Cookie.js';
     var year = (new Date).getFullYear().toString();
     var xAisMon = [year+'-01',year+'-02',year+'-03',year+'-04',year+'-05',year+'-06',
             year+'-07',year+'-08',year+'-09',year+'-10',year+'-11',year+'-12']
@@ -188,6 +188,8 @@
                 month_all.push(0);
             }
         });
+        console.log(res);
+        console.log(month_all);
 
         dataForEngAll.splice(0,dataForEngAll.length);
         dataForEngAll.push(res.xs[1]);
@@ -241,16 +243,18 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
-               // var month = (date.getMonth()+1).toString();
-                requestData.username = this.$userInfo.name;
-                requestData.roleName = this.$userInfo.roleName;
-                requestData.roleType = this.$userInfo.roleType;
-                if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
-                    requestData.place1 = this.$userInfo.place1;
-                if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
-                    requestData.place2 = this.$userInfo.place2;          
+                var token = getCookie('token');
+                var userInfo = JSON.parse(getCookie('userInfo'));
+                requestData.token = token;
+                requestData.username = userInfo.name;
+                if(userInfo.roleName!=null && userInfo.roleName!="")
+                    requestData.roleName = userInfo.roleName;
+                requestData.roleType = userInfo.roleType;
+                if(userInfo.place1!=null && userInfo.place1!="")
+                    requestData.place1 =userInfo.place1;
+                if(userInfo.place2!=null && userInfo.place2!="")
+                    requestData.place2 = userInfo.place2;          
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
-                requestData.token = this.$token;
             },
 
             getDataFromService(requestData){

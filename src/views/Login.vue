@@ -31,6 +31,7 @@
 
 <script>
   import { requestLogin } from '../api/api';
+  import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
   import vue from 'vue';
   //import NProgress from 'nprogress'
   export default {
@@ -59,6 +60,7 @@
         this.$refs.ruleForm2.resetFields();
       },
       handleSubmit2(ev) {
+        
         var _this = this;
         this.$refs.ruleForm2.validate((valid) => {
           if (valid) {
@@ -89,9 +91,9 @@
               console.log(data);
               if(data.errCode==10){
                   _this.$router.push({ path: '/index' });
-                  vue.prototype.$token = data.token;
-                  vue.prototype.$userInfo = data.userInfo;
-                  
+                  /*vue.prototype.$token = data.token;
+                  vue.prototype.$userInfo = data.userInfo;*/
+                  setCookie('token',data.token,'userInfo',JSON.stringify(data.userInfo));
                 }else{
                   window.alert("用户名或者密码错误");
                   
