@@ -37,7 +37,7 @@
         </el-col>
         <el-col >
             <div>
-               <el-input v-model="companyId" placeholder="公司编号号，留空为所有公司"></el-input>
+               <el-input v-model="companyId" placeholder="公司编号号，留空为所有公司" :disabled="$userInfo&&$userInfo.roleType=='R_ENT'"></el-input>
             </div>
         </el-col>
         <el-col >
@@ -364,6 +364,11 @@ export default {
         requestData.roleType = ui.roleType;
         requestData.tranType = tranTypeA;
         requestData.token = token;
+
+        if(requestData.roleType&&requestData.roleType==='R_ENT'){
+            console.log(ui);
+            this.companyId = ui.roleName;
+        }
 
         if(!ui.roleName) 
             delete requestData.roleName;
