@@ -23,6 +23,7 @@ Vue.prototype.Constant = Constant
 /*import VueResource from 'vue-resource'
 Vue.use(VueResource);
 */
+import {getCookie,delCookie,setCookie} from './common/js/Cookie.js';
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
@@ -39,15 +40,26 @@ router.beforeEach((to, from, next) => {
 
   console.log('main.js '+to.path);
 
-  if(to.path == '/login'){
-    delete Vue.prototype.$userInfo;
-    delete Vue.prototype.$token;
+  if(!Vue.prototype.$userInfo || !Vue.prototype.$token){
+    var c  = getCookie('userInfo');
+    var ct  =   getCookie('token');
+    if(c&&c!="")  Vue.prototype.$userInfo = JSON.parse(c);
+    if(ct&&ct!="")  Vue.prototype.$token = ct;
+
+    console.log('before route');
+    console.log(Vue.prototype.$userInfo);
+    console.log(Vue.prototype.$token);
   }
 
 
-  if(to.path =='/register'){
-    next()
-  }else if( to.path != '/login' && !Vue.prototype.$userInfo )
+  if(to.path == '/login'){
+    delete Vue.prototype.$userInfo;
+    delete Vue.prototype.$token;
+    delCookie('token','userInfo');
+  }
+
+  var token = getCookie('token');
+  if( to.path != '/login' && token=="")
       next({ path: '/login' })
   else
       next()

@@ -311,6 +311,7 @@
             barChart = echarts.init(document.getElementById('barChart'));
             energyTypePie.setOption(optionPi);
             barChart.setOption(optionMon);
+            console.log('index');
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
             energyTypePie.on('click',function(params){

@@ -1,8 +1,7 @@
-function setCookie(tname,token,uname,userInfo)
-{
+function setCookie(name,value){
     var exp = new Date();
     exp.setTime(exp.getTime() + 24*60*60*1000);
-    document.cookie = tname+"="+token+";"+uname+"="+userInfo+";expires="+exp.toGMTString();
+    document.cookie = name + "=" + value + ";expires=" + exp.toGMTString();
 }
 
 function getCookie(name)
@@ -17,14 +16,13 @@ function getCookie(name)
     return "";
 }
 
-function delCookie(tname,uname)
+function delCookie(name)
 {
     var exp = new Date();
     exp.setTime(exp.getTime() - 1);
-    var tval=getCookie(tname);
-    var uval=getCookie(uname);
-    if(tval!=null&&uval!=null)
-        document.cookie= tname + "="+tval+";"+uname+"="+uval+";expires="+exp.toGMTString();
+    var val=getCookie(name);
+    if(val!=null)
+        document.cookie= name + "="+val+";expires="+exp.toGMTString();
 }
 
 export {setCookie,getCookie,delCookie}

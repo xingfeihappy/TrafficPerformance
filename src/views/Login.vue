@@ -9,7 +9,7 @@
       <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
     <el-checkbox v-model="checked" checked class="remember" fill="#6bc5a4">记住密码</el-checkbox>
-    <span class="forgetPwd"  @click="">
+    <span class="forgetPwd" >
          忘记密码？
     </span>
    <!-- <input type="checkbox" name="rempwd" class="remember" v-model="checked" checked>记住密码 -->
@@ -74,10 +74,13 @@
               _this.logining = false;
               console.log(data);
               if(data.errCode==10){
-                  vue.prototype.$token = data.token;
-                  vue.prototype.$userInfo = data.userInfo;
+                  // vue.prototype.$token = data.token;
+                  // vue.prototype.$userInfo = data.userInfo;
+                  var c = JSON.stringify(data.userInfo);
+                  setCookie('token',data.token);
+                  setCookie('userInfo',c);
+                  console.log(document.cookie);
                   _this.$router.push({ path: '/index' });
-                  setCookie('token',data.token,'userInfo',JSON.stringify(data.userInfo));
                 }else{
                   window.alert("用户名或者密码错误");
                   

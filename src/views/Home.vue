@@ -81,7 +81,7 @@
 
 <script>
 
-
+import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 
 
 
@@ -101,9 +101,12 @@
 					type: [],
 					resource: '',
 					desc: ''
-				}
+				},
+
+
 			}
 		},
+
 		methods: {
 			onSubmit() {
 				console.log('submit!');
@@ -157,12 +160,12 @@
 
 
 			//获取用户信息
-			var user = sessionStorage.getItem('user');
-			if (user) {
-				user = JSON.parse(user);
-				this.sysUserName = user.name || '';
-				this.sysUserAvatar = user.avatar || '';
-			}
+			// var user = sessionStorage.getItem('user');
+			// if (user) {
+			// 	user = JSON.parse(user);
+			// 	this.sysUserName = user.name || '';
+			// 	this.sysUserAvatar = user.avatar || '';
+			// }
 			console.log($('#sidebar-hook'));
 			$('#sidebar-hook').niceScroll({
    					cursorcolor: "#6bc5a4",//#CC0071 光标颜色E4F1F1
