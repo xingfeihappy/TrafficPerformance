@@ -18,24 +18,24 @@
                         @change="selectEndYear">
                     </el-date-picker>
                 </div>
-                <div class = "chart-header2">
-                    <el-select v-model="engerType" placeholder="能源类型" @change="selectEngType">
-                    <el-option key="汽油" label="汽油" value="汽油"></el-option>
-                    <el-option key="柴油" label="柴油" value="柴油"></el-option>
-                    <el-option key="煤油" label="煤油" value="煤油"></el-option>
-                    <el-option key="电能" label="电能" value="电能"></el-option> 
-                   <!-- <el-option key="混合燃料" label="混合燃料" value="混合燃料"></el-option>
-                    <el-option key="液化石油气" label="液化石油气" value="液化石油气"></el-option>
-                    <el-option key="液化天然气" label="液化天然气" value="液化天然气"></el-option>-->
-                    <el-option key="其他" label="其他" value="其他"></el-option>
-                </el-select>
-                </div>
+                
             </el-col>
             
       </el-row>
       <el-row>
             <el-col class="chart-container">
+                <div class = "chart-header2">
+                    <el-select v-model="engerType" filterable placeholder="能源类型" @change="selectEngType">
+                        <el-option
+                            v-for="item in optionSelect"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
                 <div id="engYearChgChart"style="width:100%; height:400px;" class="chart-content"></div>
+                
             </el-col>
       </el-row>    
   </section>
@@ -44,11 +44,14 @@
 
 <script>
 
+    import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
+
     var dataForEngAll=[];
     var engYearChgChart;
 
     var requestData = {};
-    var engType = '汽油';
+    //var engType = '';
+    var engYearMon3Map = {};
 
     var option = {
         title : {
@@ -91,43 +94,53 @@
         series : []
     };
 
-    var _beginYear="";
-    var _endYear="";
-    var _engType="";
+    
+    var _endYear=(new Date).getFullYear();
+    var _beginYear=_endYear-1;
+    var _engType='汽油';
 
     function setData(res){
-        console.log(res)
-        var yearMonMap={};
+      
+        
+        
+        res.engTypOther.forEach(function(element){
+            element.engTypMo.forEach(function(e2){
+                if(!engYearMon3Map[element.baseTyp])
+                    engYearMon3Map[element.baseTyp]={};
+                var yearMon = new Array();
+                yearMon = e2.type.split('-');
+                if(!engYearMon3Map[element.baseTyp][yearMon[0]]){
+                    engYearMon3Map[element.baseTyp][yearMon[0]] = {};
+                }        
+                if(!engYearMon3Map[element.baseTyp][yearMon[0]][yearMon[1]])
+                    engYearMon3Map[element.baseTyp][yearMon[0]][yearMon[1]] = e2.typDatOfAllEng;
+            });     
+        });
+        console.log(engYearMon3Map)
+        setDataByEngType();
+        
+    };
+
+    function setDataByEngType(){
+        var yearArr =[];
         var yearMonSeries=[];
         var monthArr = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-        var yearArr =[];
-        res.engTypOther.forEach(function(element){
-            if(element.baseTyp==engType){
-                element.engTypMo.forEach(function(e2){
-                    var yearMon = new Array();
-                    yearMon = e2.type.split('-');
-                    if(!yearMonMap[yearMon[0]]){
-                        yearMonMap[yearMon[0]] = {};
-                        yearArr.push(yearMon[0]);
-                    }
-                    if(!yearMonMap[yearMon[0]][yearMon[1]])
-                        yearMonMap[yearMon[0]][yearMon[1]] = e2.typDatOfAllEng;
-                });
-            }     
-        });
-        console.log(yearMonMap);
+        for(var t = _beginYear;t<=_endYear;t++)
+            yearArr.push(t.toString());
+        if(!engYearMon3Map[_engType])
+            engYearMon3Map[_engType]={};
         yearArr.forEach(function(element){
             var tmpEngDatas = [];
-            if(!yearMonMap[element]){
+            if(!engYearMon3Map[_engType][element]){
                 var tmpSeriseObj = {
                     name:element,
-                    type:'bar',
-                    data:[]
+                    type:'line',
+                    data:[0,0,0,0,0,0,0,0,0,0,0,0]
                 };
                 yearMonSeries.push(tmpSeriseObj);
             }else{
                 monthArr.forEach(function(e2){
-                    var t = yearMonMap[element][e2];
+                    var t = engYearMon3Map[_engType][element][e2];
                     if(t){
                         tmpEngDatas.push(t);
                     }else{
@@ -143,68 +156,96 @@
             }
             
         });
-
+      //  console.log(yearMonSeries)
         dataForEngAll.splice(0,dataForEngAll.length);
         dataForEngAll.push(yearArr);
         dataForEngAll.push(monthArr);
-        dataForEngAll.push(yearMonSeries);
+        dataForEngAll.push(yearMonSeries);   
 
-        
+        option.legend.data = dataForEngAll[0];
+        // option.xAxis[0].data = dataForEngAll[1];
+        option.series = dataForEngAll[2];
+        engYearChgChart.clear();
+        engYearChgChart.setOption(option);
+    };
+
+    function chaEngType(){
+        setDataByEngType();
     };
 
     export default {
         data(){
             return {
-                beginYear:'',
-                engerType : '汽油',
-                endYear:''
+                endYear:_endYear.toString(),
+                beginYear:_beginYear.toString(),
+                optionSelect:[{
+                    value: '汽油',
+                    label: '汽油'
+                    }, {
+                    value: '煤油',
+                    label: '煤油'
+                }],
+                engerType : _engType,
+                
             }
         },
         methods:{
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
-                // var month = (date.getMonth()+1).toString();
-                requestData.username = this.$userInfo.name;
-                requestData.roleName = this.$userInfo.roleName;
-                requestData.roleType = this.$userInfo.roleType;
-                if(this.$userInfo.place1!=null&&this.$userInfo.place1!="")
-                    requestData.place1 = this.$userInfo.place1;
-                if(this.$userInfo.place2!=null&&this.$userInfo.place2!="")
-                    requestData.place2 = this.$userInfo.place2;          
-                requestData.timeRange = year+'-01-01:'+year+'-12-31';
-                requestData.token = this.$token;
-                requestData.engerType='汽油';
+                var token = getCookie('token');
+                var userInfo = JSON.parse(getCookie('userInfo'));
+                requestData.token = token;
+                requestData.username = userInfo.name;
+                if(userInfo.roleName!=null && userInfo.roleName!="")
+                    requestData.roleName = userInfo.roleName;
+                requestData.roleType = userInfo.roleType;
+                if(userInfo.place1!=null && userInfo.place1!="")
+                    requestData.place1 =userInfo.place1;
+                if(userInfo.place2!=null && userInfo.place2!="")
+                    requestData.place2 = userInfo.place2;          
+                requestData.timeRange = (year-1)+'-01-01:'+year+'-12-31';
             },
+             
             getDataFromService(requestData){
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.yearcompareAjax,requestData).
                 done(function (res){
-                    setData(res);
-                    option.legend.data = dataForEngAll[0];
-                   // option.xAxis[0].data = dataForEngAll[1];
-                    option.series = dataForEngAll[2];
-                    engYearChgChart.clear();
-                    engYearChgChart.setOption(option);
+                    console.log(res)
+                    _this.optionSelect  = res.xs[1].map(item => {
+                        return { value: item, label: item };
+                    });
+                    setData(res);                
                 });
-                
             },
             selectBeginYear(by){
                 _beginYear = by;
-                if(_endYear!=""||_engType!=""){
-
+                if(_endYear==''){    
+                }else{
+                    if(_endYear<_beginYear){
+                        alert("起始年份应该小于结束年份");
+                    }else{
+                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
+                        this.getDataFromService(requestData);
+                    }         
                 }
+                
             },
             selectEndYear(ey){
                 _endYear = ey;
-                if(_beginYear!=""||_engType!=""){
-
+                if(_beginYear==''){
+                }else{
+                    if(_endYear<_beginYear){
+                        alert("起始年份应该小于结束年份");
+                    }else{
+                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
+                        this.getDataFromService(requestData);
+                    }         
                 }
             },
             selectEngType(et){
                 _engType = et;
-                if(_beginYear!=""||_beginYear!=""){
-                    
-                }
+                 chaEngType();
             }
         },
         mounted:function(){
@@ -212,6 +253,7 @@
             engYearChgChart.setOption(option);
             this.initRequestData(requestData)
             this.getDataFromService(requestData);
+            
         },
         updated:function(){
             console.log("update");
@@ -233,8 +275,8 @@
             }
             .chart-header2{
                 float: right;
-                margin-right: 20px;
-                position: relative;
+                margin-bottom: 10px;
+               
             }
             .chart-content{
                 overflow: hidden;
