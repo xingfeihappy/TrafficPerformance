@@ -18,6 +18,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import $ from 'jquery'
 import 'jquery.nicescroll'
 import * as Constant from './common/js/constant.js'
+import * as md5 from './common/js/jquery.md5.js'
 Vue.prototype.Constant = Constant
 /*import VueResource from 'vue-resource'
 Vue.use(VueResource);

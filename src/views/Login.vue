@@ -32,6 +32,7 @@
 <script>
   import { requestLogin } from '../api/api';
   import vue from 'vue';
+  
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -65,26 +66,9 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            //验证用户名密码
-            // requestLogin(loginParams).then(data => {
-            //   this.logining = false;
-            //   //NProgress.done();
-            //   let { msg, code, user } = data;
-            //   if (code !== 200) {
-            //     this.$message({
-            //       message: msg,
-            //       type: 'error'
-            //     });
-            //   } else {
-            //     sessionStorage.setItem('user', JSON.stringify(user));
-            //     this.$router.push({ path: '/index' });
-            //   }
-            // });
-
-
             $.get(this.Constant.ajaxAddress+"/login.json",
                                               { username:loginParams.username,
-                                                password:loginParams.password}).done(function(data){
+                                                password:$.md5(loginParams.password)}).done(function(data){
               _this.logining = false;
               console.log(data);
               if(data.errCode==10){
