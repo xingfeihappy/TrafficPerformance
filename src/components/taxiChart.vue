@@ -20,14 +20,15 @@
         </el-row>
         <el-row >
             <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
-                <div id="engPsChart" style="width:100%;height:400px;" class="chart-content"></div>
+                <div id="engTypeChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
         <el-row >
             <el-col :xs="24" :sm="24" :md="24" :lg="24" class="chart-container">
-                <div id="engTypeChart" style="width:100%;height:400px;" class="chart-content"></div>
+                <div id="engPsChart" style="width:100%;height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
+        
         <el-row>
              <el-col  class="chart-container">
                 <div  class="chart-header">
@@ -99,10 +100,11 @@ var option = {
     toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            saveAsImage : {show: true},
-            dataView : {readOnly:false}
-            }
+                mark : {show: true},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}               
+            },
+            right:'3%'
         },
     legend: {
         data:['月使用能耗','单位能耗'],
@@ -114,7 +116,9 @@ var option = {
             axisPointer: {
                 type: 'shadow'
             },
-            data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+            name:'月份',
+            nameGap:'20',
+            data: []
         }
     ],
     yAxis: [
@@ -178,7 +182,8 @@ let optionPi={
             mark : {show: true},                 
             dataView : {show: true, readOnly: false},
             saveAsImage : {show: true},
-        }
+        },
+        right:'4%'
     },
     series : [
         {
@@ -212,16 +217,17 @@ var optionEng = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        dataView : {readOnly:false},
-        saveAsImage : {show: true}
+            mark : {show: true},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
                             
-        }
+        },
+        right:'3%'
     },
     xAxis: {
         data: [],
         name:'燃料类型',
-        nameGap:'10'
+        nameGap:'5'
     },
     yAxis: {
         name:'单位能耗(万吨标煤/亿人公里)',
@@ -230,8 +236,9 @@ var optionEng = {
     },
     series : [
         {
-            name:'一吨位',
+            name:'单耗',
             type:'bar',
+            barMaxWidth:'60%',
             data:[]
         }
     ]
@@ -264,16 +271,19 @@ let optionClsEng = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        saveAsImage : {show: true},
-        dataView : {readOnly:false},
-        magicType : {show: true, type: ['line', 'bar']}
-        }
+            mark : {show: true},
+            magicType : {show: true, type: ['line', 'bar']},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
+        },
+        right:'3%'
     },
     xAxis : [
         {
             type : 'category',
-            data : []
+            data : [],
+            name:'燃料类型',
+            nameGap:'5'
         }
     ],
     yAxis : [

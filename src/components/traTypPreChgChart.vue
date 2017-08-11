@@ -64,18 +64,19 @@ var optionMonEngUnit = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        saveAsImage : {show: true},
-        dataView : {readOnly:false},
-        magicType : {show: true, type: ['line', 'bar']}
-        }
+            mark : {show: true},
+            magicType : {show: true, type: ['line', 'bar']},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
+        },
+        right:'3%'
     },
     xAxis : [
         {
             type : 'category',
             data : [],
             name :'月份',
-            nameGap : 10
+            nameGap : 5
         }
     ],
     yAxis : [
@@ -122,18 +123,19 @@ var optionMonEngAll = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        saveAsImage : {show: true},
-        dataView : {readOnly:false},
-        magicType : {show: true, type: ['line', 'bar']}
-        }
+            mark : {show: true},
+            magicType : {show: true, type: ['line', 'bar']},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
+        },
+        right:'3%'
     },
     xAxis : [
         {
             type : 'category',
             data : [],
             name :'月份',
-            nameGap : 10
+            nameGap : 5
         }
     ],
     yAxis : [

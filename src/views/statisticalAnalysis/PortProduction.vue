@@ -74,10 +74,12 @@
         toolbox: {
                 show : true,
                 feature : {
-                mark : {show: true},
-                saveAsImage : {show: true},
-                dataView : {readOnly:false}
-                }
+                    mark : {show: true},
+                    dataView : {readOnly:false},
+                    saveAsImage : {show: true},
+                
+                },
+                right:'3%'
             },
         legend: {
             data:['月使用能耗','单位能耗'],
@@ -89,7 +91,9 @@
                 axisPointer: {
                     type: 'shadow'
                 },
-                data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                name:'月份',
+                nameGap:'20',
+                data: []
             }
         ],
         yAxis: [
@@ -153,7 +157,8 @@
                 mark : {show: true},                 
                 dataView : {show: true, readOnly: false},
                 saveAsImage : {show: true},
-            }
+            },
+            right:'4%'
         },
         series : [
             {
@@ -183,16 +188,17 @@
         toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            dataView : {readOnly:false},
-            saveAsImage : {show: true}
+                mark : {show: true},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}
                                 
-            }
+            },
+            right:'4%'
         },
         xAxis: {
             data: [],
             name:'企业规模',
-            nameGap:'10'
+            nameGap:'2'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -203,6 +209,7 @@
             {
                 name:'单耗',
                 type:'bar',
+                barMaxWidth:'60%',
                 data:[]
             }
         ]

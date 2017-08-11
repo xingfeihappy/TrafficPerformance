@@ -105,10 +105,12 @@ var option = {
     toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            saveAsImage : {show: true},
-            dataView : {readOnly:false}
-            }
+                mark : {show: true},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}
+                
+            },
+            right:'3%'
         },
     legend: {
         data:['月使用能耗','单位能耗'],
@@ -120,6 +122,8 @@ var option = {
             axisPointer: {
                 type: 'shadow'
             },
+            name:'月份',
+            nameGap:'20',
             data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
         }
     ],
@@ -184,7 +188,8 @@ let optionPi={
             mark : {show: true},                 
             dataView : {show: true, readOnly: false},
             saveAsImage : {show: true},
-        }
+        },
+        right:'4%'
     },
     series : [
         {
@@ -218,16 +223,17 @@ var optionEng = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        dataView : {readOnly:false},
-        saveAsImage : {show: true}
+            mark : {show: true},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
                             
-        }
+        },
+        right:'3%'
     },
     xAxis: {
         data: [],
         name:'燃料类型',
-        nameGap:'10'
+        nameGap:'5'
     },
     yAxis: {
         name:'单位能耗(万吨标煤/亿人公里)',
@@ -236,8 +242,9 @@ var optionEng = {
     },
     series : [
         {
-            name:'一吨位',
+            name:'单耗',
             type:'bar',
+            barMaxWidth:'60%',
             data:[]
         }
     ]
@@ -270,16 +277,19 @@ let optionClsEng = {
     toolbox: {
         show : true,
         feature : {
-        mark : {show: true},
-        saveAsImage : {show: true},
-        dataView : {readOnly:false},
-        magicType : {show: true, type: ['line', 'bar']}
-        }
+            mark : {show: true},
+            magicType : {show: true, type: ['line', 'bar']},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
+        },
+        right:'3%'
     },
     xAxis : [
         {
             type : 'category',
-            data : []
+            data : [],
+            name:'燃料类型',
+            nameGap:'5'
         }
     ],
     yAxis : [
