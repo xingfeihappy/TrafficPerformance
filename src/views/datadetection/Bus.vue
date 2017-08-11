@@ -63,6 +63,9 @@
 
 <script>
 
+import {getCookie,delCookie,setCookie} from '../../common/js/Cookie.js';
+
+
 var titleName = '数据监测'
 var titleNameCo = '数据监测2'
 var tranTypeA = '公交客运';
