@@ -34,10 +34,24 @@
                         </el-option>
                     </el-select>
                 </div>
-                <div id="engYearChgChart"style="width:100%; height:400px;" class="chart-content"></div>
-                
+                <div id="engYearChgChart"style="width:100%; height:400px;" class="chart-content"></div>   
             </el-col>
-      </el-row>    
+      </el-row>
+      <el-row>
+            <el-col class="chart-container">
+                <div class = "chart-header2">
+                    <el-select v-model="currentYear" filterable placeholder="选择年" @change="selectYear">
+                        <el-option
+                            v-for="item in optionSY"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+                <div id="engYearSortChart"style="width:100%; height:400px;" class="chart-content"></div>   
+            </el-col>
+      </el-row>       
   </section>
 </template>
 
@@ -47,7 +61,10 @@
     import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 
     var dataForEngAll=[];
+    var dataForEngSort = [];
     var engYearChgChart;
+    var engYearSortChart;
+
 
     var requestData = {};
     //var engType = '';
@@ -55,7 +72,7 @@
 
     var option = {
         title : {
-            text: '',
+            text: '能耗数据年度环比图'
         },
         tooltip: {
             trigger: 'axis',
@@ -94,15 +111,45 @@
         series : []
     };
 
+    var optionSort = {
+        title : {
+            text: '分季度各燃料消耗对比'
+        },
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend:{
+            data:[]
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis:  {
+            type: 'value'
+        },
+        yAxis: {
+            type: 'category',
+            data: []
+        },
+        series:[]
+    };
+
     
     var _endYear=(new Date).getFullYear();
     var _beginYear=_endYear-1;
-    var _engType='汽油';
+    var _currentYear = _endYear;
+    var _engType='所有能源';
+    var allEnergys = [];
 
     function setData(res){
-      
-        
-        
+          
+        var allYearMon2Map = {};
         res.engTypOther.forEach(function(element){
             element.engTypMo.forEach(function(e2){
                 if(!engYearMon3Map[element.baseTyp])
@@ -113,12 +160,25 @@
                     engYearMon3Map[element.baseTyp][yearMon[0]] = {};
                 }        
                 if(!engYearMon3Map[element.baseTyp][yearMon[0]][yearMon[1]])
-                    engYearMon3Map[element.baseTyp][yearMon[0]][yearMon[1]] = e2.typDatOfAllEng;
+                    engYearMon3Map[element.baseTyp][yearMon[0]][yearMon[1]] =e2.typDatOfAllEng;
+                /* --------所有燃料----------- */                    
+                if(!allYearMon2Map[yearMon[0]])
+                    allYearMon2Map[yearMon[0]] = {};
+                if(!allYearMon2Map[yearMon[0]][yearMon[1]])
+                    allYearMon2Map[yearMon[0]][yearMon[1]] = 0;
+                var t = allYearMon2Map[yearMon[0]][yearMon[1]];
+                t += allYearMon2Map[yearMon[0]][yearMon[1]] = e2.typDatOfAllEng;
+                allYearMon2Map[yearMon[0]][yearMon[1]] = t;
             });     
         });
+        engYearMon3Map['所有能源'] = allYearMon2Map;
+        allEnergys.forEach(function(element){
+            if(!engYearMon3Map[element])
+                engYearMon3Map[element] = {};   
+        })
         console.log(engYearMon3Map)
         setDataByEngType();
-        
+        engYearSort();
     };
 
     function setDataByEngType(){
@@ -127,8 +187,8 @@
         var monthArr = ['01','02','03','04','05','06','07','08','09','10','11','12'];
         for(var t = _beginYear;t<=_endYear;t++)
             yearArr.push(t.toString());
-        if(!engYearMon3Map[_engType])
-            engYearMon3Map[_engType]={};
+        /*if(!engYearMon3Map[_engType])
+            engYearMon3Map[_engType]={};*/
         yearArr.forEach(function(element){
             var tmpEngDatas = [];
             if(!engYearMon3Map[_engType][element]){
@@ -172,20 +232,70 @@
     function chaEngType(){
         setDataByEngType();
     };
+    
+    function engYearSort(){
+        var engYearSortSeries = [];
+        var quarterName = ['一季度','二季度','三季度','四季度']
+        var monthArr = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+        var qrtcount = 1;
+        quarterName.forEach(function(element){
+            var quaters = monthArr.slice(qrtcount*3-3,qrtcount*3);
+            var tmpEngDatas = [];
+            allEnergys.forEach(function(e2){
+                if(!engYearMon3Map[e2][_currentYear]){
+                    tmpEngDatas.push(0);
+                }else{
+                    var quarterData = 0;
+                    quaters.forEach(function(e3){                   
+                        var t =engYearMon3Map[e2][_currentYear][e3];
+                        if(t)
+                            quarterData += t;
+                        else
+                            quarterData +=0; 
+                    });
+                    tmpEngDatas.push(quarterData);
+                }                                             
+            });
+            var tmpSeriseObj = {
+                name:element,
+                type:'bar',
+                stack:'总量',
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'insideLeft'
+                    }
+                },
+                data:tmpEngDatas
+            };
+            engYearSortSeries.push(tmpSeriseObj);
+            qrtcount++;
+        });
+        console.log(engYearSortSeries);
+        
+        
+        dataForEngSort.splice(0,dataForEngSort.length);
+        dataForEngSort.push(quarterName);
+        dataForEngSort.push(allEnergys);
+        dataForEngSort.push(engYearSortSeries);
+
+        optionSort.legend.data = dataForEngSort[0];
+        optionSort.yAxis.data = dataForEngSort[1];
+        optionSort.series = dataForEngSort[2];
+
+        engYearSortChart.clear();
+        engYearSortChart.setOption(optionSort);
+    }
 
     export default {
         data(){
             return {
                 endYear:_endYear.toString(),
                 beginYear:_beginYear.toString(),
-                optionSelect:[{
-                    value: '汽油',
-                    label: '汽油'
-                    }, {
-                    value: '煤油',
-                    label: '煤油'
-                }],
+                optionSelect:[],
+                optionSY:[],
                 engerType : _engType,
+                currentYear:_currentYear.toString()
                 
             }
         },
@@ -212,10 +322,15 @@
                 $.get(this.Constant.ajaxAddress+this.Constant.yearcompareAjax,requestData).
                 done(function (res){
                     console.log(res)
-                    _this.optionSelect  = res.xs[1].map(item => {
+                    allEnergys = res.xs[1];
+                    _this.optionSelect  = allEnergys.map(item => {
                         return { value: item, label: item };
                     });
-                    setData(res);                
+                    _this.optionSelect.push({value:'所有能源',label:'所有能源'});
+                    for(var crtyear = _beginYear;crtyear<=_endYear;crtyear++){
+                        _this.optionSY.push({value:crtyear,label:crtyear});
+                    }
+                    setData(res);              
                 });
             },
             selectBeginYear(by){
@@ -228,8 +343,7 @@
                         requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
                         this.getDataFromService(requestData);
                     }         
-                }
-                
+                }    
             },
             selectEndYear(ey){
                 _endYear = ey;
@@ -246,11 +360,17 @@
             selectEngType(et){
                 _engType = et;
                  chaEngType();
+            },
+            selectYear(cy){
+                _currentYear = cy;
+                 engYearSort();
             }
         },
         mounted:function(){
             engYearChgChart = echarts.init(document.getElementById('engYearChgChart'));
+            engYearSortChart = echarts.init(document.getElementById('engYearSortChart'));
             engYearChgChart.setOption(option);
+            engYearSortChart.setOption(optionSort);
             this.initRequestData(requestData)
             this.getDataFromService(requestData);
             
