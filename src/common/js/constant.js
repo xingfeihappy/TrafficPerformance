@@ -19,4 +19,6 @@ export const yearcompareAjax = '/engtyp3yearO.json'
 
 export const relTimeAjax = '/reltimedata.json'
 
+export const getDataDictAjax = '/getdictlist.json'
+export const setDataDictAjax = '/setdict.json'
 
