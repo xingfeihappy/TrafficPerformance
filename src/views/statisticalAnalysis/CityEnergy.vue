@@ -135,14 +135,20 @@
                 requestData.tranType = "道路客运";
             },
             getDataFromService(requestData){
-                console.log(requestData);
+               var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.citenergyAjax,requestData).
                 done(function (res){
-                    setData(res);
-                    optionPi.legend.data = dataForCityEngAll[0];
-                    optionPi.series[0].data = dataForCityEngAll[1];
-                    cityTypeEnergyPie.clear();
-                    cityTypeEnergyPie.setOption(optionPi);
+                        if(res.errCode==30){//data ok
+                        setData(res);
+                        optionPi.legend.data = dataForCityEngAll[0];
+                        optionPi.series[0].data = dataForCityEngAll[1];
+                        cityTypeEnergyPie.clear();
+                        cityTypeEnergyPie.setOption(optionPi);
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }
                 });
                 
             },

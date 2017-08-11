@@ -326,25 +326,30 @@ export default {
             var _this = this;
             $.get(this.Constant.ajaxAddress+this.Constant.relTimeAjax,requestData).
             done(function (res){
-                console.log(res);
-                _this.setData(res);
+                if(res.errCode==30){//data ok
+                    _this.setData(res);
 
-                var c = res.cityType;
-                if(!c) c = '所有地市'
-                
-                option.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+'实时油电百公里消耗';
-                option.legend.data = relTimeData[0];
-                option.xAxis.data = relTimeData[1];
-                option.series = relTimeData[2];
-                relTimeChart.clear();
-                relTimeChart.setOption(option);
+                    var c = res.cityType;
+                    if(!c) c = '所有地市'
+                    
+                    option.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+'实时油电百公里消耗';
+                    option.legend.data = relTimeData[0];
+                    option.xAxis.data = relTimeData[1];
+                    option.series = relTimeData[2];
+                    relTimeChart.clear();
+                    relTimeChart.setOption(option);
 
-                optionCo.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+' 实时标煤百公里消耗';
-                optionCo.legend.data = relTimeDataCo[0];
-                optionCo.xAxis.data = relTimeDataCo[1];
-                optionCo.series = relTimeDataCo[2];
-                relTimeChartCo.clear();
-                relTimeChartCo.setOption(optionCo);
+                    optionCo.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+' 实时标煤百公里消耗';
+                    optionCo.legend.data = relTimeDataCo[0];
+                    optionCo.xAxis.data = relTimeDataCo[1];
+                    optionCo.series = relTimeDataCo[2];
+                    relTimeChartCo.clear();
+                    relTimeChartCo.setOption(optionCo);
+                }else if(res.errCode==31){ // data err
+                    window.log('unknow err');
+                }else if(res.errCode==44){ // auth 
+                    _this.$router.push('/login');
+                }
 
             });
         }

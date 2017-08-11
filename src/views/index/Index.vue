@@ -217,27 +217,7 @@
                 barChart:null*/
             }
         },
-        /*watch:{
-            energyUseUrl:function(curVal,oldVal){
- 　　　　　　　　alert(curVal+"---"+oldVal);
-                var _this = this;
-                $.get(_this.energyUseUrl).done(function (res) {
-                    // alert("饼图点击后，电力数据changed" + _this.energyUseUrl);
-                    if(res.errno ===  err_OK){
-                        // alert("res.data: "+res.data);
-                        var data = res.data;
-                        // alert("234"+_this.barChart)
-                        _this.barChart.setOption({
-                            series : [
-                                {
-                                    data: data
-                                }
-                            ]
-                        });
-                    }
-                })
-　　　　　　 }
-        },*/
+       
         methods: {
 
             initRequestData(requestData){
@@ -258,18 +238,26 @@
             },
 
             getDataFromService(requestData){
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.indexAjax,requestData).
                 done(function (res){
-                    setData(res);
-                    optionPi.legend.data = dataForEngAll[0];
-                    optionPi.series[0].data = dataForEngAll[1];
-                    energyTypePie.clear();
-                    energyTypePie.setOption(optionPi);
 
-                    //optionMon.xAxis.data = dataForMon[0];
-                    optionMon.series[0].data = dataForMon[1];
-                    barChart.clear();
-                    barChart.setOption(optionMon);                 
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                        optionPi.legend.data = dataForEngAll[0];
+                        optionPi.series[0].data = dataForEngAll[1];
+                        energyTypePie.clear();
+                        energyTypePie.setOption(optionPi);
+
+                        //optionMon.xAxis.data = dataForMon[0];
+                        optionMon.series[0].data = dataForMon[1];
+                        barChart.clear();
+                        barChart.setOption(optionMon); 
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }
                 });
 
                 

@@ -589,49 +589,54 @@
             },
             getDataFromService(requestData){
                // console.log(requestData);
+               var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.roadpassAjax,requestData).
                 done(function (res){
-                    setData(res);
 
-                  //  console.log('show data k = ' + k);
-                    if(k==1||k==3)
-                    {
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                        if(k==1||k==3)
+                        {
 
-                        optionPi.legend.data = dataForEngAll[0];
-                        optionPi.series[0].data = dataForEngAll[1];
-                        energyPieChart.clear();
-                        energyPieChart.setOption(optionPi);
+                            optionPi.legend.data = dataForEngAll[0];
+                            optionPi.series[0].data = dataForEngAll[1];
+                            energyPieChart.clear();
+                            energyPieChart.setOption(optionPi);
 
-                        optionScale.xAxis.data = dataForScalePer[0];
-                        optionScale.series[0].data = dataForScalePer[1];
-                        companyChart.clear();
-                        companyChart.setOption(optionScale);
+                            optionScale.xAxis.data = dataForScalePer[0];
+                            optionScale.series[0].data = dataForScalePer[1];
+                            companyChart.clear();
+                            companyChart.setOption(optionScale);
 
-                        optionDistance.xAxis.data = dataForDisPer[0];
-                        optionDistance.series[0].data = dataForDisPer[1];
-                        distanceChart.clear();
-                        distanceChart.setOption(optionDistance);
+                            optionDistance.xAxis.data = dataForDisPer[0];
+                            optionDistance.series[0].data = dataForDisPer[1];
+                            distanceChart.clear();
+                            distanceChart.setOption(optionDistance);
 
-                        optionCarType.xAxis.data = dataForCarPer[0];
-                        optionCarType.series[0].data = dataForCarPer[1];
-                        carTypeChart.clear();
-                        carTypeChart.setOption(optionCarType);
+                            optionCarType.xAxis.data = dataForCarPer[0];
+                            optionCarType.series[0].data = dataForCarPer[1];
+                            carTypeChart.clear();
+                            carTypeChart.setOption(optionCarType);
 
-                        optionEngPsger.legend.data = dataForEngPsger[0];
-                        optionEngPsger.xAxis[0].data = dataForEngPsger[1];
-                        optionEngPsger.series = dataForEngPsger[2];
-                        guestChart.clear();
-                        guestChart.setOption(optionEngPsger);
-                    }
-                    if(k ==2 || k==3){
-                        option.xAxis[0].data =  dataForMon[0];
-                        option.series[1].data = dataForMon[2];
-                        option.series[0].data = dataForMon[1];
-                        energyByYearChart.clear();
-                        energyByYearChart.setOption(option);
-                    }
+                            optionEngPsger.legend.data = dataForEngPsger[0];
+                            optionEngPsger.xAxis[0].data = dataForEngPsger[1];
+                            optionEngPsger.series = dataForEngPsger[2];
+                            guestChart.clear();
+                            guestChart.setOption(optionEngPsger);
+                        }
+                        if(k ==2 || k==3){
+                            option.xAxis[0].data =  dataForMon[0];
+                            option.series[1].data = dataForMon[2];
+                            option.series[0].data = dataForMon[1];
+                            energyByYearChart.clear();
+                            energyByYearChart.setOption(option);
+                        }
 
-                    
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }  
                 });
                 
             },

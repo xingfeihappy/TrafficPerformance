@@ -565,51 +565,53 @@
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
             },
             getDataFromService(requestData){
-               // console.log(requestData);
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.oceanpassAjax,requestData).
                 done(function (res){
-                    setData(res);
 
-                  //  console.log('show data k = ' + k);
-                    if(k==1||k==3)
-                    {
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                        if(k==1||k==3)
+                        {
+                            optionPi.legend.data = dataForEngAll[0];
+                            optionPi.series[0].data = dataForEngAll[1];
+                            energyPieChart.clear();
+                            energyPieChart.setOption(optionPi);
 
-                        optionPi.legend.data = dataForEngAll[0];
-                        optionPi.series[0].data = dataForEngAll[1];
-                        energyPieChart.clear();
-                        energyPieChart.setOption(optionPi);
+                            optionEng.xAxis.data =  dataForEngPer[0];
+                            optionEng.series[0].data = dataForEngPer[1];
+                            unitEnergyChart.clear();
+                            unitEnergyChart.setOption(optionEng);
 
-                        optionEng.xAxis.data =  dataForEngPer[0];
-                        optionEng.series[0].data = dataForEngPer[1];
-                        unitEnergyChart.clear();
-                        unitEnergyChart.setOption(optionEng);
+                            optionDistance.xAxis.data = dataForDisPer[0];
+                            optionDistance.series[0].data = dataForDisPer[1];
+                            distanceShipChart.clear();
+                            distanceShipChart.setOption(optionDistance);
 
-                        optionDistance.xAxis.data = dataForDisPer[0];
-                        optionDistance.series[0].data = dataForDisPer[1];
-                        distanceShipChart.clear();
-                        distanceShipChart.setOption(optionDistance);
-
-                        optionScale.xAxis.data = dataForScalePer[0];
-                        optionScale.series[0].data = dataForScalePer[1];
-                        companyChart.clear();
-                        companyChart.setOption(optionScale);
+                            optionScale.xAxis.data = dataForScalePer[0];
+                            optionScale.series[0].data = dataForScalePer[1];
+                            companyChart.clear();
+                            companyChart.setOption(optionScale);
 
 
-                        optionEngPsger.legend.data = dataForEngPsger[0];
-                        optionEngPsger.xAxis[0].data = dataForEngPsger[1];
-                        optionEngPsger.series = dataForEngPsger[2];
-                        guestChart.clear();
-                        guestChart.setOption(optionEngPsger);
-                    }
-                    if(k ==2 || k==3){
-                        option.xAxis[0].data =  dataForMoth[0];
-                        option.series[1].data = dataForMoth[2];
-                        option.series[0].data = dataForMoth[1];
-                        energyByYearChart.clear();
-                        energyByYearChart.setOption(option);
-                    }
-
-                    
+                            optionEngPsger.legend.data = dataForEngPsger[0];
+                            optionEngPsger.xAxis[0].data = dataForEngPsger[1];
+                            optionEngPsger.series = dataForEngPsger[2];
+                            guestChart.clear();
+                            guestChart.setOption(optionEngPsger);
+                        }
+                        if(k ==2 || k==3){
+                            option.xAxis[0].data =  dataForMoth[0];
+                            option.series[1].data = dataForMoth[2];
+                            option.series[0].data = dataForMoth[1];
+                            energyByYearChart.clear();
+                            energyByYearChart.setOption(option);
+                        }
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }         
                 });
                 
             },

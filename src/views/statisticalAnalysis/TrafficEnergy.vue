@@ -136,14 +136,21 @@
                 requestData.cityType = "杭州";
             },
             getDataFromService(requestData){
-                console.log(requestData);
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.trafficenergyAjax,requestData).
                 done(function (res){
-                    setData(res);
-                    optionPi.legend.data = dataForTranEngAll[0];
-                    optionPi.series[0].data = dataForTranEngAll[1];
-                    trafficTypeEnergyPie.clear();
-                    trafficTypeEnergyPie.setOption(optionPi);
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                        optionPi.legend.data = dataForTranEngAll[0];
+                        optionPi.series[0].data = dataForTranEngAll[1];
+                        trafficTypeEnergyPie.clear();
+                        trafficTypeEnergyPie.setOption(optionPi);
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }
+
                 });
                 
             },

@@ -245,20 +245,28 @@ export default {
            
         },
         getDataFromService(requestData){
+            var _this = this;
             $.get(this.Constant.ajaxAddress+this.Constant.engchangeAjax,requestData).
             done(function (res){
-                setData(res);
-                optionMonEngUnit.legend.data = dataForMonEngUnit[0];
-                optionMonEngUnit.xAxis[0].data = dataForMonEngUnit[1];
-                optionMonEngUnit.series = dataForMonEngUnit[2];
-                unitEngChgChart.clear();
-                unitEngChgChart.setOption(optionMonEngUnit);
+                if(res.errCode==30){//data ok
+                    setData(res);
+                    optionMonEngUnit.legend.data = dataForMonEngUnit[0];
+                    optionMonEngUnit.xAxis[0].data = dataForMonEngUnit[1];
+                    optionMonEngUnit.series = dataForMonEngUnit[2];
+                    unitEngChgChart.clear();
+                    unitEngChgChart.setOption(optionMonEngUnit);
 
-                optionMonEngAll.legend.data = dataForMonEngAll[0];
-                optionMonEngAll.xAxis[0].data = dataForMonEngAll[1];
-                optionMonEngAll.series = dataForMonEngAll[2];
-                allEngChgChart.clear();
-                allEngChgChart.setOption(optionMonEngAll);
+                    optionMonEngAll.legend.data = dataForMonEngAll[0];
+                    optionMonEngAll.xAxis[0].data = dataForMonEngAll[1];
+                    optionMonEngAll.series = dataForMonEngAll[2];
+                    allEngChgChart.clear();
+                    allEngChgChart.setOption(optionMonEngAll);
+                }else if(res.errCode==31){ // data err
+                    window.log('unknow err');
+                }else if(res.errCode==44){ // auth 
+                    _this.$router.push('/login');
+                }
+
             });
 
         },

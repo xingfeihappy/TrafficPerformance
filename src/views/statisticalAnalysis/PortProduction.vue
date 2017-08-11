@@ -329,35 +329,37 @@
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
             },
             getDataFromService(requestData){
-               // console.log(requestData);
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.portproAjax,requestData).
                 done(function (res){
-                    setData(res);
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                            if(k==1||k==3)
+                            {
 
-                  //  console.log('show data k = ' + k);
-                    if(k==1||k==3)
-                    {
+                                optionPi.legend.data = dataForEngAll[0];
+                                optionPi.series[0].data = dataForEngAll[1];
+                                energyPieChart.clear();
+                                energyPieChart.setOption(optionPi);
 
-                        optionPi.legend.data = dataForEngAll[0];
-                        optionPi.series[0].data = dataForEngAll[1];
-                        energyPieChart.clear();
-                        energyPieChart.setOption(optionPi);
+                                optionScale.xAxis.data = dataForScalePer[0];
+                                optionScale.series[0].data = dataForScalePer[1];
+                                companyChart.clear();
+                                companyChart.setOption(optionScale);
 
-                        optionScale.xAxis.data = dataForScalePer[0];
-                        optionScale.series[0].data = dataForScalePer[1];
-                        companyChart.clear();
-                        companyChart.setOption(optionScale);
-
-                    }
-                    if(k ==2 || k==3){
-                        option.xAxis[0].data =  dataForMoth[0];
-                        option.series[1].data = dataForMoth[2];
-                        option.series[0].data = dataForMoth[1];
-                        energyByYearChart.clear();
-                        energyByYearChart.setOption(option);
-                    }
-
-                    
+                            }
+                            if(k ==2 || k==3){
+                                option.xAxis[0].data =  dataForMoth[0];
+                                option.series[1].data = dataForMoth[2];
+                                option.series[0].data = dataForMoth[1];
+                                energyByYearChart.clear();
+                                energyByYearChart.setOption(option);
+                            }
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }         
                 });
                 
             },

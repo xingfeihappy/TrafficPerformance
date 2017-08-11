@@ -643,50 +643,55 @@
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
             },
             getDataFromService(requestData){
-               // console.log(requestData);
+                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.roadgoodsAjax,requestData).
                 done(function (res){
-                    setData(res);
 
-                  //  console.log('show data k = ' + k);
-                    if(k==1||k==3)
-                    {
+                    if(res.errCode==30){//data ok
+                        setData(res);
+                        if(k==1||k==3)
+                        {
 
-                        optionPi.legend.data = dataForEngAll[0];
-                        optionPi.series[0].data = dataForEngAll[1];
-                        energyPieChart.clear();
-                        energyPieChart.setOption(optionPi);
+                            optionPi.legend.data = dataForEngAll[0];
+                            optionPi.series[0].data = dataForEngAll[1];
+                            energyPieChart.clear();
+                            energyPieChart.setOption(optionPi);
 
-                        optionScale.xAxis.data =  dataForScalePer[0];
-                        optionScale.series[0].data = dataForScalePer[1];
-                        companyChart.clear();
-                        companyChart.setOption(optionScale);
+                            optionScale.xAxis.data =  dataForScalePer[0];
+                            optionScale.series[0].data = dataForScalePer[1];
+                            companyChart.clear();
+                            companyChart.setOption(optionScale);
 
-                        optionTon.xAxis.data = dataForTonPer[0];
-                        optionTon.series[0].data = dataForTonPer[1];
-                        tonnageChart.clear();
-                        tonnageChart.setOption(optionTon);
+                            optionTon.xAxis.data = dataForTonPer[0];
+                            optionTon.series[0].data = dataForTonPer[1];
+                            tonnageChart.clear();
+                            tonnageChart.setOption(optionTon);
 
-                        optionEngTon.legend.data = dataForEngTon[0];
-                        optionEngTon.xAxis[0].data = dataForEngTon[1];
-                        optionEngTon.series = dataForEngTon[2];
-                        engTonChart.clear();
-                        engTonChart.setOption(optionEngTon);
+                            optionEngTon.legend.data = dataForEngTon[0];
+                            optionEngTon.xAxis[0].data = dataForEngTon[1];
+                            optionEngTon.series = dataForEngTon[2];
+                            engTonChart.clear();
+                            engTonChart.setOption(optionEngTon);
 
-                        optionCarTon.legend.data = dataForCarTon[0];
-                        optionCarTon.xAxis[0].data = dataForCarTon[1];
-                        optionCarTon.series = dataForCarTon[2];
-                        carTonChart.clear();
-                        carTonChart.setOption(optionCarTon);
-                        
+                            optionCarTon.legend.data = dataForCarTon[0];
+                            optionCarTon.xAxis[0].data = dataForCarTon[1];
+                            optionCarTon.series = dataForCarTon[2];
+                            carTonChart.clear();
+                            carTonChart.setOption(optionCarTon);
+                        }
+                        if(k ==2 || k==3){
+                            option.xAxis[0].data =  dataForMon[0];
+                            option.series[1].data = dataForMon[2];
+                            option.series[0].data = dataForMon[1];
+                            energyByYearChart.clear();
+                            energyByYearChart.setOption(option);
+                        }
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
                     }
-                    if(k ==2 || k==3){
-                        option.xAxis[0].data =  dataForMon[0];
-                        option.series[1].data = dataForMon[2];
-                        option.series[0].data = dataForMon[1];
-                        energyByYearChart.clear();
-                        energyByYearChart.setOption(option);
-                    }
+
 
                     
                 });

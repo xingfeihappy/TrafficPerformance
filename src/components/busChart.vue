@@ -470,40 +470,47 @@ export default {
         },
 
         getDataFromService(requestData){
-            
+            var _this = this;
             $.get(this.Constant.ajaxAddress+this.Constant.bustranAjax,requestData).
             done(function (res){
-                setData(res);
-            //    console.log('show data k = ' + k);
-                if(k==1||k==3)
-                {
 
-                    optionPi.legend.data = dataForEngAll[0];
-                    optionPi.series[0].data = dataForEngAll[1];
-                    engTypeAllChart.clear();
-                    engTypeAllChart.setOption(optionPi);
+                if(res.errCode==30){//data ok
+                    setData(res);
+                    if(k==1||k==3)
+                    {
 
-                    optionClsEng.legend.data = dataForEngCls[0];
-                    optionClsEng.xAxis[0].data = dataForEngCls[1];
-                    optionClsEng.series = dataForEngCls[2];
-                    engClsChart.clear();
-                    engClsChart.setOption(optionClsEng);
+                        optionPi.legend.data = dataForEngAll[0];
+                        optionPi.series[0].data = dataForEngAll[1];
+                        engTypeAllChart.clear();
+                        engTypeAllChart.setOption(optionPi);
 
-                    //optionEng.legend.data = res.xs[1];
-                    optionEng.xAxis.data =  dataForEngPer[0];
-                    optionEng.series[0].data = dataForEngPer[1];
-                    engTypeChart.clear();
-                    engTypeChart.setOption(optionEng);
+                        optionClsEng.legend.data = dataForEngCls[0];
+                        optionClsEng.xAxis[0].data = dataForEngCls[1];
+                        optionClsEng.series = dataForEngCls[2];
+                        engClsChart.clear();
+                        engClsChart.setOption(optionClsEng);
 
+                        //optionEng.legend.data = res.xs[1];
+                        optionEng.xAxis.data =  dataForEngPer[0];
+                        optionEng.series[0].data = dataForEngPer[1];
+                        engTypeChart.clear();
+                        engTypeChart.setOption(optionEng);
+
+                    }
+                    if(k ==2 || k==3){
+                        option.xAxis[0].data =  dataForMoth[0];
+                        option.series[1].data = dataForMoth[2];
+                        option.series[0].data = dataForMoth[1];
+                        perAllRelChart.clear();
+                        perAllRelChart.setOption(option);
+                    }
+                }else if(res.errCode==31){ // data err
+                    window.log('unknow err');
+                }else if(res.errCode==44){ // auth 
+                    _this.$router.push('/login');
                 }
-                if(k ==2 || k==3){
-                    option.xAxis[0].data =  dataForMoth[0];
-                    option.series[1].data = dataForMoth[2];
-                    option.series[0].data = dataForMoth[1];
-                    perAllRelChart.clear();
-                    perAllRelChart.setOption(option);
-                }
 
+                
                 
             });
             

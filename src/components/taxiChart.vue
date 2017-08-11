@@ -351,26 +351,6 @@ function  setData(res){
     });
 
 
-    //准备能源车长数据
-    // for(var i in psEngMap){
-    //     var tmpEngDatas = [];
-    //     res.xs[1].forEach(function(e1){
-    //         var t = psEngMap[i][e1];
-    //         if(t)
-    //         {
-    //             tmpEngDatas.push((t[0]/t[1]).toFixed(2))
-    //         }else{
-    //             //eng_all_for_PI.push({name:e1,value:0})
-    //             tmpEngDatas.push(0);
-    //         }
-    //     });
-    //     var tmpSeriseObj = {
-    //                             name:i,
-    //                             type:'bar',
-    //                             data:tmpEngDatas
-    //                     };
-    //     engClsSeries.push(tmpSeriseObj);
-    // }
 
     res.xs[2].forEach(function(i){
         var tmpEngDatas = [];
@@ -483,40 +463,43 @@ export default {
             requestData.timeRange = year+'-01-01:'+year+'-12-31';
         },
         getDataFromService(requestData){
-            console.log(requestData);
+            var _this = this;
             $.get(this.Constant.ajaxAddress+this.Constant.taxitranAjax,requestData).
             done(function (res){
-                setData(res);
-                console.log('show data k = ' + k);
-                if(k==1||k==3)
-                {
+                if(res.errCode==30){//data ok
+                    setData(res);
+                    if(k==1||k==3)
+                    {
+                        optionPi.legend.data = dataForEngAll[0];
+                        optionPi.series[0].data = dataForEngAll[1];
+                        engTypeAllChart.clear();
+                        engTypeAllChart.setOption(optionPi);
 
-                    optionPi.legend.data = dataForEngAll[0];
-                    optionPi.series[0].data = dataForEngAll[1];
-                    engTypeAllChart.clear();
-                    engTypeAllChart.setOption(optionPi);
+                        optionClsEng.legend.data = dataForEngPs[0];
+                        optionClsEng.xAxis[0].data = dataForEngPs[1];
+                        optionClsEng.series = dataForEngPs[2];
+                        engPsChart.clear();
+                        engPsChart.setOption(optionClsEng);
 
-                    optionClsEng.legend.data = dataForEngPs[0];
-                    optionClsEng.xAxis[0].data = dataForEngPs[1];
-                    optionClsEng.series = dataForEngPs[2];
-                    engPsChart.clear();
-                    engPsChart.setOption(optionClsEng);
-
-                    //optionEng.legend.data = res.xs[1];
-                    optionEng.xAxis.data =  dataForEngPer[0];
-                    optionEng.series[0].data = dataForEngPer[1];
-                    engTypeChart.clear();
-                    engTypeChart.setOption(optionEng);
-
+                        //optionEng.legend.data = res.xs[1];
+                        optionEng.xAxis.data =  dataForEngPer[0];
+                        optionEng.series[0].data = dataForEngPer[1];
+                        engTypeChart.clear();
+                        engTypeChart.setOption(optionEng);
+                    }
+                    if(k ==2 || k==3){
+                        option.xAxis[0].data =  dataForMoth[0];
+                        option.series[1].data = dataForMoth[2];
+                        option.series[0].data = dataForMoth[1];
+                        perAllRelChart.clear();
+                        perAllRelChart.setOption(option);
+                    }
+                }else if(res.errCode==31){ // data err
+                    window.log('unknow err');
+                }else if(res.errCode==44){ // auth 
+                    _this.$router.push('/login');
                 }
-                if(k ==2 || k==3){
-                    option.xAxis[0].data =  dataForMoth[0];
-                    option.series[1].data = dataForMoth[2];
-                    option.series[0].data = dataForMoth[1];
-                    perAllRelChart.clear();
-                    perAllRelChart.setOption(option);
-                }
-
+               
                 
             });
             

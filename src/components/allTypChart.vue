@@ -157,14 +157,22 @@ export default {
             requestData.timeRange = year+'-01-01:'+year+'-12-31';
         },
         getDataFromService(requestData){
+            var _this = this;
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
-                setData(res);
-                optionTraEng.legend.data = dataForTraEng[0];
-                optionTraEng.xAxis[0].data = dataForTraEng[1];
-                optionTraEng.series = dataForTraEng[2];
-                allTypChart.clear();
-                allTypChart.setOption(optionTraEng);
+                    if(res.errCode==30){//data ok
+                    setData(res);
+                    optionTraEng.legend.data = dataForTraEng[0];
+                    optionTraEng.xAxis[0].data = dataForTraEng[1];
+                    optionTraEng.series = dataForTraEng[2];
+                    allTypChart.clear();
+                    allTypChart.setOption(optionTraEng);
+                }else if(res.errCode==31){ // data err
+                    window.log('unknow err');
+                }else if(res.errCode==44){ // auth 
+                    _this.$router.push('/login');
+                }                
+
             });
             
         },

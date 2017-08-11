@@ -137,7 +137,7 @@ let routes = [
         name: '数据监测',
         iconCls: 'fa fa-eye',
         children: [
-            { path: '/relTimDatChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: relTimDatChart, name: '数据展示' },
+            //{ path: '/relTimDatChart', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: relTimDatChart, name: '数据展示' },
             { path: '/rtRoadPass', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: GuestCar, name: '道路客运' },
             { path: '/rtRoadGoods', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: goodsCar, name: '道路货运货运' },
             { path: '/rtTaxi', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: taxi, name: '出租车运输' },
