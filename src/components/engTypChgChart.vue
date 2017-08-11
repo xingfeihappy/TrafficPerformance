@@ -321,16 +321,25 @@
                 var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.yearcompareAjax,requestData).
                 done(function (res){
-                    console.log(res)
-                    allEnergys = res.xs[1];
-                    _this.optionSelect  = allEnergys.map(item => {
-                        return { value: item, label: item };
-                    });
-                    _this.optionSelect.push({value:'所有能源',label:'所有能源'});
-                    for(var crtyear = _beginYear;crtyear<=_endYear;crtyear++){
-                        _this.optionSY.push({value:crtyear,label:crtyear});
-                    }
-                    setData(res);              
+
+                    if(res.errCode==30){//data ok
+                        console.log(res)
+                        allEnergys = res.xs[1];
+                        _this.optionSelect  = allEnergys.map(item => {
+                            return { value: item, label: item };
+                        });
+                        _this.optionSelect.push({value:'所有能源',label:'所有能源'});
+                        for(var crtyear = _beginYear;crtyear<=_endYear;crtyear++){
+                            _this.optionSY.push({value:crtyear,label:crtyear});
+                        }
+                        setData(res);  
+                    }else if(res.errCode==31){ // data err
+                        window.log('unknow err');
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    } 
+
+             
                 });
             },
             selectBeginYear(by){
