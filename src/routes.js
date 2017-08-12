@@ -8,8 +8,8 @@ import Table from './views/systemSetting/Table.vue'
 import Form from './views/systemSetting/Form.vue'
 import passset from './views/systemSetting/passset.vue'
 import dataDic from './views/systemSetting/dataDic.vue'
-import unitInfo from './views/basicInfo/unitInfo.vue'
-import unitScale from './views/basicInfo/unitScale.vue'
+import support from './views/systemSetting/support.vue'
+import helpdoc from './views/systemSetting/helpDoc.vue'
 import carEquip from './views/basicInfo/carEquip.vue'
 import shipEquip from './views/basicInfo/shipEquip.vue'
 import harbourEquip from './views/basicInfo/harbourEquip.vue'
@@ -103,8 +103,8 @@ let routes = [
         children: [
             { path: '/userSetting', pri:['R_ADMIN'],component: Table, name: '用户管理' },
             { path: '/passSetting', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: passset, name: '密码修改' },
-            { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo, name: '技术支持' },
-            { path: '/unitScale', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitScale, name: '帮助文档' },
+            { path: '/support', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: support, name: '技术支持' },
+            { path: '/helpDoc', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: helpdoc, name: '帮助文档' },
             { path: '/dictSetting',pri:['R_ADMIN'], component: dataDic, name: '数据字典' }
         ]
     },

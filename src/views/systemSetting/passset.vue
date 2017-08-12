@@ -65,7 +65,7 @@ export default {
                     .done(function(data){
                         console.log(data);
                         if(data.errCode==20){//成功
-                            _this.$message.message('修改成功！');
+                            _this.$message('修改成功！');
                             _this.form.password = '';
                             _this.form.passwordN = '';
                             _this.form.passwordR = '';

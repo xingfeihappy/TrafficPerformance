@@ -23,6 +23,9 @@ export const getDataDictAjax = '/getdictlist.json'
 export const setDataDictAjax = '/setdict.json'
 
 export const getUserListAjax = '/getusers.json'
+export const setUserInfoAjax = '/edituser.json'
+export const regUserAjax = '/reguser.json'
+export const deleteUserAjax = '/deluser.json'
 export const setPasswordAjax = '/passsetting.json'
 
 
