@@ -2,13 +2,7 @@
 	<section>
 		<!--工具条-->
 		<el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-			<el-form :inline="true" :model="filters">
-				<el-form-item>
-					<el-input v-model="filters.name" placeholder="姓名"></el-input>
-				</el-form-item>
-				<el-form-item>
-					<el-button type="primary" v-on:click="getUsers" class="colorPrimary">查询</el-button>
-				</el-form-item>
+			<el-form :inline="true" >
 				<el-form-item>
 					<el-button type="primary" @click="handleAdd" class="colorPrimary">新增</el-button>
 				</el-form-item>
@@ -23,14 +17,13 @@
 			</el-table-column>
 			<el-table-column prop="name" label="姓名" width="120" sortable>
 			</el-table-column>
+			<el-table-column prop="roleName" label="所属单位编号" width="200" sortable>
 			</el-table-column>
-			<el-table-column prop="age" label="密码" width="100" sortable>
+			<el-table-column prop="roleTypeName" label="角色" width="100" sortable>
 			</el-table-column>
-			<el-table-column prop="options" label="角色" width="100" sortable>
+			<el-table-column prop="upAhth" label="注册日期" width="120" sortable>
 			</el-table-column>
-			<el-table-column prop="birth" label="注册日期" width="120" sortable>
-			</el-table-column>
-			<el-table-column prop="addr" label="地址" min-width="180" sortable>
+			<el-table-column prop="p1_p2" label="权限范围" min-width="180" sortable>
 			</el-table-column>
 			<el-table-column label="操作" width="150">
 				<template scope="scope">
@@ -41,11 +34,6 @@
 		</el-table>
 
 		<!--工具条-->
-		<el-col :span="24" class="toolbar">
-			<el-button type="danger" @click="batchRemove" :disabled="this.sels.length===0">批量删除</el-button>
-			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total" style="float:right;">
-			</el-pagination>
-		</el-col>
 
 		<!--编辑界面-->
 		<el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
@@ -173,14 +161,8 @@
 	export default {
 		data() {
 			return {
-				filters: {
-					name: ''
-				},
 				users: [],
-				total: 0,
-				page: 1,
 				listLoading: false,
-				sels: [],//列表选中列
 
 				editFormVisible: false,//编辑界面是否显示
 				editLoading: false,
@@ -275,24 +257,39 @@
 			}
 		},
 		methods: {
-			handleCurrentChange(val) {
-				this.page = val;
-				this.getUsers();
+			decoRoleType(roleType){
+				if(!roleType) return '';
+				if(roleType==='R_TRA') return '交通厅';
+				else if(roleType==='R_LAN')  return '运管';
+				else if(roleType==='R_WAT')  return '港行';
+				else if(roleType==='R_ENT')  return '企业';
+				else return roleType;
+			},
+			decoPlace(place1,place2){
+				if((!place1||place1=='')&&(!place2||place2=='')) return '浙江省';
+				else if(place1&&place2!=''&&(!place2||place2=='')) return place1;
+				else if(place1&&place2&&place1!=''&&place2!='') return place1+'市'+place2;
+			},
+			setUserList(res){
+				var usersre = res.users;
+				var _this = this;
+				usersre.forEach(function(user) {
+					user.roleTypeName = _this.decoRoleType(user.roleType);
+					user.p1_p2 = _this.decoPlace(user.place1,user.place2);
+					_this.users.push(user);
+				});
 			},
 			//获取用户列表
 			getUsers() {
-				let para = {
-					page: this.page,
-					name: this.filters.name
-				};
 				this.listLoading = true;
-				//NProgress.start();
-				getUserListPage(para).then((res) => {
-					this.total = res.data.total;
-					this.users = res.data.users;
-					this.listLoading = false;
-					//NProgress.done();
-				});
+				var _this = this;
+				$.get(this.Constant.ajaxAddress+this.Constant.getUserListAjax,
+					{token:_this.$token}).done(function(data){
+						_this.listLoading = false;
+						console.log(data);
+						_this.setUserList(data);
+					});
+				
 			},
 			//删除
 			handleDel: function (index, row) {
@@ -389,28 +386,6 @@
 			selsChange: function (sels) {
 				this.sels = sels;
 			},
-			//批量删除
-			batchRemove: function () {
-				var ids = this.sels.map(item => item.id).toString();
-				this.$confirm('确认删除选中记录吗？', '提示', {
-					type: 'warning'
-				}).then(() => {
-					this.listLoading = true;
-					//NProgress.start();
-					let para = { ids: ids };
-					batchRemoveUser(para).then((res) => {
-						this.listLoading = false;
-						//NProgress.done();
-						this.$message({
-							message: '删除成功',
-							type: 'success'
-						});
-						this.getUsers();
-					});
-				}).catch(() => {
-
-				});
-			}
 		},
 		mounted() {
 			this.getUsers();

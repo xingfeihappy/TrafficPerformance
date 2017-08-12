@@ -6,7 +6,7 @@ import Home from './views/Home.vue'
 import barChart from './views/systemSetting/barChart.vue'
 import Table from './views/systemSetting/Table.vue'
 import Form from './views/systemSetting/Form.vue'
-import user from './views/systemSetting/user.vue'
+import passset from './views/systemSetting/passset.vue'
 import dataDic from './views/systemSetting/dataDic.vue'
 import unitInfo from './views/basicInfo/unitInfo.vue'
 import unitScale from './views/basicInfo/unitScale.vue'
@@ -102,7 +102,7 @@ let routes = [
         iconCls: 'fa fa-cogs',
         children: [
             { path: '/userSetting', pri:['R_ADMIN'],component: Table, name: '用户管理' },
-            { path: '/passSetting', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: user, name: '密码修改' },
+            { path: '/passSetting', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: passset, name: '密码修改' },
             { path: '/unitInfo', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitInfo, name: '技术支持' },
             { path: '/unitScale', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: unitScale, name: '帮助文档' },
             { path: '/dictSetting',pri:['R_ADMIN'], component: dataDic, name: '数据字典' }

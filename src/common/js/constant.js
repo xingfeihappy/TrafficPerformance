@@ -22,3 +22,7 @@ export const relTimeAjax = '/reltimedata.json'
 export const getDataDictAjax = '/getdictlist.json'
 export const setDataDictAjax = '/setdict.json'
 
+export const getUserListAjax = '/getusers.json'
+export const setPasswordAjax = '/passsetting.json'
+
+
