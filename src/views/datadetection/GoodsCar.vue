@@ -1,48 +1,25 @@
 <template>
 <section class ="chart">
     <el-row>
-        <el-col >
-            <div >
+        
+        <el-col class="chart-container" >
+            <div class="chart-header" >
+                <el-input placeholder="请输入市名/企业经营许可证号/车牌号" v-model="inputCode" style="width:450px" >
+                    <el-select v-model="inputRank" slot="prepend" placeholder="请选择监测项" @change="selectInputRank">
+                        <el-option label="车辆" value="车辆"></el-option>
+                        <el-option label="企业" value="企业"></el-option>
+                        <el-option label="地市" value="地市"></el-option>
+                    </el-select>
+                    <el-button slot="append" icon="search" @click="getData"></el-button>
+                </el-input>
+            </div>
+            <div class="chart-header" >
                 <el-date-picker
-                v-model="datTimRange"
-                type="date"
-                placeholder="选择查询时间"
-                @change="selectDate"
-                >
+                    v-model="datTimRange"
+                    type="date"
+                    placeholder="请选择日期"
+                    @change="selectDate">
                 </el-date-picker>
-            </div>
-        </el-col>
-        <el-col >
-            <div >
-                <el-select v-model="cityType" placeholder="请选择地市"  @change="selectCity" >
-                    <el-option key="所有地市" label="所有地市" value="所有地市"></el-option>
-                    <el-option key="杭州" label="杭州" value="杭州"></el-option>
-                    <el-option key="宁波" label="宁波" value="宁波"></el-option>
-                    <el-option key="温州" label="温州" value="温州"></el-option>
-                    <el-option key="嘉兴" label="嘉兴" value="嘉兴"></el-option>
-                    <el-option key="湖州" label="湖州" value="湖州"></el-option>
-                    <el-option key="绍兴" label="绍兴" value="绍兴"></el-option>
-                    <el-option key="金华" label="金华" value="金华"></el-option>
-                    <el-option key="衢州" label="衢州" value="衢州"></el-option>
-                    <el-option key="舟山" label="舟山" value="舟山"></el-option>
-                    <el-option key="台州" label="台州" value="台州"></el-option>
-                    <el-option key="丽水" label="丽水" value="丽水"></el-option>
-                </el-select>
-            </div>
-        </el-col>
-        <el-col >
-            <div>
-               <el-input v-model="tId" placeholder="车牌号，留空为所有车"></el-input>
-            </div>
-        </el-col>
-        <el-col >
-            <div>
-               <el-input v-model="companyId" placeholder="公司编号号，留空为所有公司" :disabled="$userInfo&&$userInfo.roleType=='R_ENT'"></el-input>
-            </div>
-        </el-col>
-        <el-col >
-            <div>
-              <el-button type="primary" @click="getData">查询</el-button>
             </div>
         </el-col>
     </el-row>
@@ -110,14 +87,14 @@ var option = {
     toolbox: {
         // y: 'bottom',
         feature: {
-            magicType: {
-                type: ['bar', 'line']
+            dataZoom: {
+                yAxisIndex: 'none'
             },
+            restore: {},
             dataView: {},
-            saveAsImage: {
-                pixelRatio: 2
-            }
-        }
+            saveAsImage: {}
+        },
+        right:'3%'
     },
     xAxis: {
         name:'时间',
@@ -166,8 +143,10 @@ var optionCo = {
                 yAxisIndex: 'none'
             },
             restore: {},
+            dataView: {},
             saveAsImage: {}
-        }
+        },
+        right:'3%'
     },
     xAxis: {
         type: 'category',
@@ -205,10 +184,9 @@ var optionCo = {
 export default {
     data(){
             return {
-                datTimRange:'',
-                tId:'',
-                cityType:'',
-                companyId:''
+                datTimRange:(new Date()).toLocaleDateString(),
+                inputRank:'',
+                inputCode:''
             }
     },
     methods:{
@@ -290,34 +268,64 @@ export default {
             else
                 requestData['timeRange']=tr+' 00:00:00&' +tr +' 23:59:59';   
         },
-        selectCity(ct){
-            console.log('cityType ct ='+ct);
-            if(ct==null||ct===''||ct==='所有地市')
-                delete requestData.cityType;
-            else
-               requestData['cityType']=ct;
-
-        },
         getData(){
 
             if(!requestData.timeRange||requestData.timeRange===''){
-                window.alert('请输入查询时间');
+                this.$message({
+                    message: '日期不能为空，请选择日期',
+                    type: 'warning',
+                    showClose:true,
+                    duration:2500
+                });
                 return ;
             }
 
-            if(this.tId==='') {
-                delete requestData.carId;
-                delete requestData.shipId;
-            }else
-            {
-                    requestData.carId = this.tId;
-                    requestData.shipId = this.tId;
+            if(this.inputCode==''){
+                this.$alert('未输入监测项（城市/企业/车辆）名称，默认查询浙江省全部地区的实时能耗数据，是否继续？','提示', {
+                    showCancelButton:true,
+                    type: 'warning'
+                }).then(() => {
+                    delete requestData.carId;
+                    delete requestData.shipId;
+                    delete requestData.companyId;
+                    delete requestData.cityType;
+                    this.getDataFromService(requestData);
+                }).catch(() => {
+                    return;         
+                });
+            }else{
+                if(this.inputRank==''){
+                    this.$message({
+                        message: '监测项不能为空，请选择监测项',
+                        type: 'warning',
+                        showClose:true,
+                        duration:2500
+                    });
+                    return ;
+                }else{
+                    if(this.inputRank=='地市'){
+                        delete requestData.carId;
+                        delete requestData.shipId;
+                        delete requestData.companyId;
+                        requestData.cityType = this.inputCode;
+                    }
+                    if(this.inputRank=='企业'){
+                        delete requestData.carId;
+                        delete requestData.shipId;
+                        delete requestData.cityType;
+                        requestData.companyId = this.inputCode;
+                    }
+                    if(this.inputRank=='车辆'){
+                        delete requestData.cityType;
+                        delete requestData.cityType;
+                        requestData.carId = this.inputCode;
+                        requestData.shipId = this.inputCode;
+                    }
+                    this.getDataFromService(requestData);
+                }
+                
             }
-            if(this.companyId === '')
-                delete requestData.companyId;
-            else
-                requestData.companyId = this.companyId;
-            this.getDataFromService(requestData);
+            
         },
 
 
@@ -329,8 +337,13 @@ export default {
                 if(res.errCode==30){//data ok
                     _this.setData(res);
 
-                    var c = res.cityType;
-                    if(!c) c = '所有地市'
+                    var c = '浙江省';
+                    if(_inputRank=='地市')
+                        c = res.cityType+"市";
+                    if(_inputRank=='车辆')
+                        c = '车辆:'+res.carId;
+                    if(_inputRank=='企业')
+                        c = '企业:' + res.companyId;
                     
                     option.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+'实时油电百公里消耗';
                     option.legend.data = relTimeData[0];
@@ -419,9 +432,10 @@ export default {
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
+             border-radius: 8px;
             .chart-header{
                 float: right;
-                margin-bottom: 20px;
+                margin-left: 30px;
                 position: relative;
             }
             .chart-content{
@@ -430,11 +444,15 @@ export default {
         }
         
     }
-    /*.chart div {
-        height: 400px;
-        float: left;
-    }*/
-
+    .el-row {
+        margin-bottom: 15px;
+        &:last-child {
+        margin-bottom: 0;
+        }
+    }
+    .el-select {
+        width: 130px;
+    }
     .el-col {
         padding: 20px 20px;
     }
