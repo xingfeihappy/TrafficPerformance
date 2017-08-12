@@ -51,7 +51,7 @@ var relTimeChart;//油气柱状图
 var relTimeChartCo;//标煤曲线图
 
 var selectDs = [];
-
+var _inputRank = '';
 
 var requestData = 
 {
@@ -365,7 +365,12 @@ export default {
                 }
 
             });
-        }
+        },
+        selectInputRank(ir){
+           // if(rank==)
+           _inputRank = ir;
+
+        },
     },
     mounted:function(){
         relTimeChart =  echarts.init(document.getElementById('relTimeChart'));
