@@ -30,7 +30,7 @@
     var xAisMon = [year+'-01',year+'-02',year+'-03',year+'-04',year+'-05',year+'-06',
             year+'-07',year+'-08',year+'-09',year+'-10',year+'-11',year+'-12']
     var dataForEngAll=[];
-    var dataForMon=[];
+  //  var dataForMon=[];
     var dataFor
     var MonengMap = {};
 
@@ -69,7 +69,8 @@
                 mark : {show: true},                 
                 dataView : {show: true, readOnly: false},
                 saveAsImage : {show: true},
-            }
+            },
+            right:'4%'
         },
         series : [
             {
@@ -102,16 +103,17 @@
             }
         },
         legend: {
-            data:[]
+            data:[],
+            left:'left'
         },
         toolbox: {
             show : true,
             feature : {
             mark : {show: true},
             dataView : {readOnly:false},
-            saveAsImage : {show: true}
-                                
-            }
+            saveAsImage : {show: true}              
+            },
+            right:'4%'
         },
         xAxis: {
             data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
@@ -125,7 +127,7 @@
         },
         series : [
             {
-                name:'单耗',
+                //name:'单耗',
                 type:'bar',
                 data:[]
             }
@@ -165,7 +167,8 @@
                // t[1] += e2.typDatOfAllLen;
                 MonengMap[element.baseTyp][e2.type] = t;
             });
-        })
+        });
+        MonengMap['所有能源'] = monthData;
 
         //准备能源饼图数据
         res.xs[1].forEach(function(e1){
@@ -178,7 +181,7 @@
         });
 
         //准备柱状图数据
-        res.xs[0].forEach(function(e1){
+       /* xAisMon.forEach(function(e1){
             var t = monthData[e1];
             if(t) 
             {
@@ -187,20 +190,37 @@
             {
                 month_all.push(0);
             }
-        });
-        console.log(res);
-        console.log(month_all);
+        });*/
 
         dataForEngAll.splice(0,dataForEngAll.length);
         dataForEngAll.push(res.xs[1]);
         dataForEngAll.push(eng_all_for_PI);
 
-        dataForMon.splice(0,dataForMon.length);
-        dataForMon.push(res.xs[0]);
-        dataForMon.push(month_all);
+        /*dataForMon.splice(0,dataForMon.length);
+        dataForMon.push('所有能源');
+        dataForMon.push(month_all);*/
+
+        setDataWhenEngChg('所有能源','#3398DB');
 
     }
 
+    function setDataWhenEngChg(engType,barColor){
+        var tmpEngDatas = [];
+        xAisMon.forEach(function(e1){
+            var t = MonengMap[engType][e1];
+            if(t){
+                tmpEngDatas.push((t[0]));
+            }else{
+                tmpEngDatas.push(0);
+            }
+        });
+        optionMon.series[0].data = tmpEngDatas;
+        optionMon.legend.data = [engType];
+        optionMon.series[0].name = engType;
+        optionMon.color = [barColor];
+        barChart.clear();
+        barChart.setOption(optionMon);
+    }
    
      
     
@@ -250,9 +270,12 @@
                         energyTypePie.setOption(optionPi);
 
                         //optionMon.xAxis.data = dataForMon[0];
+                       /* optionMon.legend.data=[dataForMon[0]];
+                        optionMon.color = ['#3398DB'];
+                        optionMon.series[0].name = dataForMon[0];
                         optionMon.series[0].data = dataForMon[1];
                         barChart.clear();
-                        barChart.setOption(optionMon); 
+                        barChart.setOption(optionMon); */
                     }else if(res.errCode==31){ // data err
                         window.log('unknow err');
                     }else if(res.errCode==44){ // auth 
@@ -293,30 +316,41 @@
                     beforTimeRange = tr;
                 }
             },
+            EngTypeChange(){
+                energyTypePie.on('click',function(params){
+                    //  alert('click pie');
+                    var engType = params.name;
+                    var barColor = params.color;
+                    /*var tmpEngDatas = [];
+                    xAisMon.forEach(function(e1){
+                        var t = MonengMap[engType][e1];
+                        if(t){
+                            tmpEngDatas.push((t[0]));
+                        }else{
+                            tmpEngDatas.push(0);
+                        }
+                    });
+                    optionMon.series[0].data = tmpEngDatas;
+                    optionMon.legend.data = [engType];
+                    optionMon.series[0].name = engType;
+                    optionMon.color = [barColor];
+                    barChart.setOption(optionMon);*/
+                    setDataWhenEngChg(engType,barColor);
+                });
+                barChart.on('dblclick',function(params){
+                    setDataWhenEngChg('所有能源','#3398DB');
+                });
+            }
         },
         mounted: function () {
             energyTypePie = echarts.init(document.getElementById('energyTypePie'));
             barChart = echarts.init(document.getElementById('barChart'));
             energyTypePie.setOption(optionPi);
             barChart.setOption(optionMon);
-            console.log('index');
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
-            energyTypePie.on('click',function(params){
-                //  alert('click pie');
-                var engType = params.name;
-                var tmpEngDatas = [];
-                xAisMon.forEach(function(e1){
-                    var t = MonengMap[engType][e1];
-                    if(t){
-                        tmpEngDatas.push((t[0]));
-                    }else{
-                        tmpEngDatas.push(0);
-                    }
-                });
-                optionMon.series[0].data = tmpEngDatas;
-                barChart.setOption(optionMon);
-            });
+            this.EngTypeChange();
+            
         },
         updated: function () {
             console.log("update");

@@ -25,7 +25,7 @@
       <el-row>
             <el-col class="chart-container">
                 <div class = "chart-header2">
-                    <el-select v-model="engerType" filterable placeholder="能源类型" @change="selectEngType">
+                    <el-select v-model="engerType" filterable placeholder="燃料类型" @change="selectEngType">
                         <el-option
                             v-for="item in optionSelect"
                             :key="item.value"
@@ -86,8 +86,10 @@
         toolbox: {
             show : true,
             feature : {
-                dataView : {show: true, readOnly: false}
-            }
+                dataView : {show: true, readOnly: false},
+                saveAsImage : {show: true},
+            },
+            right:'3%'
         },
         xAxis : [
             {
@@ -113,13 +115,21 @@
 
     var optionSort = {
         title : {
-            text: '分季度各燃料消耗对比'
+            text: '各燃料分季度消耗对比'
         },
         tooltip : {
             trigger: 'axis',
             axisPointer : {            // 坐标轴指示器，坐标轴触发有效
                 type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
             }
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                dataView : {show: true, readOnly: false},
+                saveAsImage : {show: true},
+            },
+            right:'3%'
         },
         legend:{
             data:[]
@@ -144,7 +154,7 @@
     var _endYear=(new Date).getFullYear();
     var _beginYear=_endYear-1;
     var _currentYear = _endYear;
-    var _engType='所有能源';
+    var _engType='所有燃料';
     var allEnergys = [];
 
     function setData(res){
@@ -171,7 +181,7 @@
                 allYearMon2Map[yearMon[0]][yearMon[1]] = t;
             });     
         });
-        engYearMon3Map['所有能源'] = allYearMon2Map;
+        engYearMon3Map['所有燃料'] = allYearMon2Map;
         allEnergys.forEach(function(element){
             if(!engYearMon3Map[element])
                 engYearMon3Map[element] = {};   
@@ -328,7 +338,7 @@
                         _this.optionSelect  = allEnergys.map(item => {
                             return { value: item, label: item };
                         });
-                        _this.optionSelect.push({value:'所有能源',label:'所有能源'});
+                        _this.optionSelect.push({value:'所有燃料',label:'所有燃料'});
                         for(var crtyear = _beginYear;crtyear<=_endYear;crtyear++){
                             _this.optionSY.push({value:crtyear,label:crtyear});
                         }

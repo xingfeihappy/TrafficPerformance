@@ -12,7 +12,7 @@
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
-                    <el-select v-model="cityType" placeholder="请选择城市" @change="citySelectChange">
+                    <el-select v-model="cityType" filterable placeholder="请选择城市" @change="citySelectChange">
                         <el-option key="杭州" label="杭州" value="杭州"></el-option>
                         <el-option key="宁波" label="宁波" value="宁波"></el-option>
                         <el-option key="温州" label="温州" value="温州"></el-option>
@@ -67,7 +67,8 @@
                 mark : {show: true},                 
                 dataView : {show: true, readOnly: false},
                 saveAsImage : {show: true},
-            }
+            },
+            right:'3%'
         },
         series : [
             {

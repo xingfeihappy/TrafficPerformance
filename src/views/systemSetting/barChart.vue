@@ -111,10 +111,11 @@
         toolbox: {
                 show : true,
                 feature : {
-                mark : {show: true},
-                saveAsImage : {show: true},
-                dataView : {readOnly:false}
-                }
+                    mark : {show: true},
+                    dataView : {readOnly:false},
+                    saveAsImage : {show: true}
+                },
+                right:'3%'
             },
         legend: {
             data:['月使用能耗','单位能耗'],
@@ -126,7 +127,9 @@
                 axisPointer: {
                     type: 'shadow'
                 },
-                data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                data: [],
+                name:'月份',
+                nameGap:'20'
             }
         ],
         yAxis: [
@@ -190,7 +193,8 @@
                 mark : {show: true},                 
                 dataView : {show: true, readOnly: false},
                 saveAsImage : {show: true},
-            }
+            },
+            right:'4%'
         },
         series : [
             {
@@ -220,16 +224,17 @@
         toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            dataView : {readOnly:false},
-            saveAsImage : {show: true}
+                mark : {show: true},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}
                                 
-            }
+            },
+            right:'4%'
         },
         xAxis: {
             data: [],
             name:'企业规模',
-            nameGap:'5'
+            nameGap:'2'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -240,6 +245,7 @@
             {
                 name:'单耗',
                 type:'bar',
+                barMaxWidth:'60%',
                 data:[]
             }
         ]
@@ -261,16 +267,17 @@
         toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            dataView : {readOnly:false},
-            saveAsImage : {show: true}
+                mark : {show: true},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}
                                 
-            }
+            },
+            right:'4%'
         },
         xAxis: {
             data: [],
             name:'车辆类型',
-            nameGap:'5'
+            nameGap:'2'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -281,6 +288,7 @@
             {
                 name:'单耗',
                 type:'bar',
+                barMaxWidth:'60%',
                 data:[]
             }
         ]
@@ -311,7 +319,7 @@
         xAxis: {
             data: [],
             name:'运输距离',
-            nameGap:'10'
+            nameGap:'2'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -322,6 +330,7 @@
             {
                 name:'单耗',
                 type:'bar',
+                barMaxWidth:'60%',
                 data:[]
             }
         ]
@@ -352,16 +361,19 @@
         toolbox: {
             show : true,
             feature : {
-            mark : {show: true},
-            saveAsImage : {show: true},
-            dataView : {readOnly:false},
-            magicType : {show: true, type: ['line', 'bar']}
-            }
+                mark : {show: true},
+                magicType : {show: true, type: ['line', 'bar']},
+                dataView : {readOnly:false},
+                saveAsImage : {show: true}
+            },
+            right:'3%'
         },
         xAxis : [
             {
                 type : 'category',
-                data : []
+                data : [],
+                name :'燃料类型',
+                nameGap:5
             }
         ],
         yAxis : [
@@ -543,7 +555,6 @@
             var t = monthData[e1];
             if(t) 
             {
-               // console.log(t);
                 month_all.push(t[0]);
                 month_per.push((t[0]/t[1]).toFixed(2));
             }else
@@ -588,7 +599,6 @@
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
             },
             getDataFromService(requestData){
-               // console.log(requestData);
                var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.roadpassAjax,requestData).
                 done(function (res){
@@ -642,7 +652,6 @@
             },
             selectOther(tr){
                 k = 1;
-               // console.log(tr+'   before=' + beforTimeRange);
                 if(!tr||tr== '')
                     return ;
                 requestData['timeRange']=tr;     
@@ -651,7 +660,7 @@
             },
             selectYearMonth(y){
                 k =2;
-               // console.log(y+'   before=' + beforeYear);
+
                 if(!y||y=='')
                     return ;
                 

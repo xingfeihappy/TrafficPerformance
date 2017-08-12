@@ -12,7 +12,7 @@
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
-                    <el-select v-model="tranType" placeholder="请选择交通工具" @change="trafficSelectChange">
+                    <el-select v-model="tranType" filterable placeholder="请选择交通工具" @change="trafficSelectChange">
                         <el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
                         <el-option key="道路货运" label="道路货运" value="道路货运"></el-option>
                         <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
@@ -63,7 +63,8 @@
                 mark : {show: true},                 
                 dataView : {show: true, readOnly: false},
                 saveAsImage : {show: true},
-            }
+            },
+            right:'3%'
         },
         series : [
             {
