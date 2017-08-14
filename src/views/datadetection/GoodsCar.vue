@@ -51,7 +51,7 @@ var relTimeChart;//油气柱状图
 var relTimeChartCo;//标煤曲线图
 
 var selectDs = [];
-var _inputRank = '';
+
 
 var requestData = 
 {
@@ -338,11 +338,11 @@ export default {
                     _this.setData(res);
 
                     var c = '浙江省';
-                    if(_inputRank=='地市')
+                    if(_this.inputRank=='地市'&&_this.inputCode!="")
                         c = res.cityType+"市";
-                    if(_inputRank=='车辆')
+                    if(_this.inputRank=='车辆'&&_this.inputCode!="")
                         c = '车辆:'+res.carId;
-                    if(_inputRank=='企业')
+                    if(_this.inputRank=='企业'&&_this.inputCode!="")
                         c = '企业:' + res.companyId;
                     
                     option.title.text = c +' '+ res.timeRange.substring(0,10)+' '+res.tranType+'实时油电百公里消耗';
@@ -367,8 +367,7 @@ export default {
             });
         },
         selectInputRank(ir){
-           // if(rank==)
-           _inputRank = ir;
+           
 
         },
     },
