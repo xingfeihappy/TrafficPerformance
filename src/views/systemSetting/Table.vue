@@ -54,10 +54,10 @@
 				</el-form-item>
 				<el-form-item label="角色类型" prop="roleTypeName">
 					<el-select v-model="editForm.roleTypeName" placeholder = "请选择"  class = "itemWidth">
-						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
+						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 					</el-select>
 				</el-form-item>
 				
@@ -67,7 +67,7 @@
 						<el-cascader
 						@change="onCityChange"
 						:options="cityOption"
-						:value = "editForm.p1_p2_arr"
+						v-model="editForm.p1_p2_arr"
 						:props="props"></el-cascader>
 			    	</el-tooltip>
 		    	</div>
@@ -99,10 +99,10 @@
 				</el-form-item>
 				<el-form-item label="角色类型">
 					<el-select v-model="addForm.roleType" placeholder = "请选择"  class = "itemWidth">
-						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
+						<el-option key = "企业" label = "企业" value = "企业"></el-option>
 					</el-select>
 				</el-form-item>
 				
@@ -112,6 +112,7 @@
 						<el-cascader
 						@change="onCityChangeAdd"
 						:options="cityOption"
+						v-model="addForm.p1_p2_arr"
 						:props="props"></el-cascader>
 			    	</el-tooltip>
 		    	</div>
@@ -166,7 +167,7 @@
 					place2:'',
 					rolyType:'',
 					p1_p2:'',
-					p1_p2_arr:[],
+					p1_p2_arr:['',''],
 					roleTypeName:''
 				},
 
@@ -199,7 +200,8 @@
 					roleName:'',
 					place1:'',
 					place2:'',
-					roleType:''
+					roleType:'',
+					p1_p2_arr:[]
 
 				}
 			}
@@ -240,8 +242,9 @@
 					var tmpc = {};
 					var tmpl = [];
 					tmpc.label = cities[i];
+					tmpc.value = cities[i];
 					for(var j =0;j<counties[i].length;j++)
-						tmpl.push({label:counties[i][j]});
+						tmpl.push({label:counties[i][j],value:counties[i][j]});
 					tmpc.cities = tmpl;	
 					this.cityOption.push(tmpc);
 				}
@@ -267,6 +270,18 @@
 				if((!place1||place1=='')&&(!place2||place2=='')) return '全省 / 全市';
 				else if(place1&&place2!=''&&(!place2||place2=='')) return place1 + ' / 全市';
 				else if(place1&&place2&&place1!=''&&place2!='') return place1+' / '+place2;
+			},
+			encoPlaceArr(place1,place2){
+				var placearr = [];
+				if(!place1||place1=='')
+					placearr[0] = '全省';
+				else 
+					placearr[0] = this.editForm.place1;
+				if(!place2||place2=='')
+					placearr[1] = '全市';
+				else 
+					placearr[1] = this.editForm.place2;
+				return placearr;
 			},
 			setUserList(res){
 				this.users.splice(0,this.users.length);
@@ -318,8 +333,11 @@
 			handleEdit(index, row) {
 				this.editFormVisible = true;
 				this.editForm = Object.assign({}, row);
-				//this.setTest();
+				this.editForm.p1_p2_arr = 
+						this.encoPlaceArr(this.editForm.place1,this.editForm.place2);
 				console.log('before edit editForm ',this.editForm);
+				//this.setTest();
+				
 			},
 			//显示新增界面
 			handleAdd () {
@@ -332,7 +350,8 @@
 					roleName:'',
 					place1:'',
 					place2:'',
-					roleType:''
+					roleType:'交通厅',
+					p1_p2_arr:['全省','全市']
 				}
 			},
 			//编辑
