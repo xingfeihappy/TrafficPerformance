@@ -80,12 +80,13 @@
 					$.get(this.Constant.ajaxAddress+this.Constant.setDataDictAjax,
 					{ token:_this.$token,typeName:_this.editForm.typeName,
 					  name:_this.editForm.name,typeS:_this.editForm.typeS}).done(function(data){
+						  _this.$message('修改成功！');
 						  _this.editLoading = false;
 						if(data.errCode==20){
 							_this.editFormVisible = false;
 							_this.getDataFromService();
 						}else if(data.errCode==21){
-							window.alert("提交失败");
+							_this.$message.err('修改失败！');
 						}else if(data.errCode==44)
 							_this.$router.push('/login');
 					})

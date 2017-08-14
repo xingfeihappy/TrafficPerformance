@@ -658,10 +658,11 @@
                 requestData.timeRange = year+'-01-01:'+year+'-12-31';
             },
             getDataFromService(requestData){
+                console.log(requestData);
                 var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.oceangoodsAjax,requestData).
                 done(function (res){
-
+                    console.log(res);
                     if(res.errCode==30){//data ok
                         setData(res);
                         if(k==1||k==3)
