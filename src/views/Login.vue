@@ -18,12 +18,12 @@
         <i class="fa fa-check"></i></el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
-     <div class="registration">
+     <!-- <div class="registration">
         还没有账号?
           <span class="signup"  @click="handleRegister">
               点击注册
           </span>
-    </div>
+    </div> -->
   </el-form>
  
   </div>

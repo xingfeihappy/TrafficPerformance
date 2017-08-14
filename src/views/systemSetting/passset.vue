@@ -3,19 +3,19 @@
         <el-form ref="form" :model="form" label-width="100px" >
             <el-form-item label="原密码" 
             prop="password"
-            :rules="[{ required: true, message: '请输入密码', trigger: 'blur' },
+            :rules="[{ required: true, message: '请原输入密码', trigger: 'blur' },
                     { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }]">
                 <el-input type="password" v-model="form.password" :maxlength = "16" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="新密码"
             prop="passwordN"
-             :rules="[{ required: true, message: '请输入密码', trigger: 'blur' },
+             :rules="[{ required: true, message: '请新输入密码', trigger: 'blur' },
              { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }]">
                 <el-input  type="password" v-model="form.passwordN" :maxlength = "16" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="重复新密码"
             prop="passwordR"
-             :rules="[{ required: true, message: '请原输入密码', trigger: 'blur' },
+             :rules="[{ required: true, message: '重新输入新密码', trigger: 'blur' },
              { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }]">
                 <el-input type="password" v-model="form.passwordR" :maxlength = "16" auto-complete="off"></el-input>
             </el-form-item>
