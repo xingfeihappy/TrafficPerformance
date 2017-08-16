@@ -83,6 +83,9 @@ var option = {
         text: titleName
     },
     tooltip: {
+        axisPointer: {
+            type: 'shadow'
+        },
         trigger: 'axis'
     },
     legend: {
@@ -99,7 +102,7 @@ var option = {
             dataView: {},
             saveAsImage: {}
         },
-        right:'3%'
+        right:'20%'
     },
     xAxis: {
         name:'时间',
@@ -109,8 +112,32 @@ var option = {
             show: false
         }
     },
-    yAxis: {
-    },
+    yAxis: [
+        {
+            type: 'value',
+            name: '油耗（升/百公里）',
+            axisLine: {
+                lineStyle: {
+                    color: '#c23531'
+                }
+            },
+            axisLabel: {
+                formatter: '{value} '
+            }
+        },
+        {
+            type: 'value',
+            name: '电耗（度/百公里）',
+            axisLine: {
+                lineStyle: {
+                    color: '#2f4554'
+                }
+            },
+            axisLabel: {
+                formatter: '{value} '
+            }
+        }
+    ],
     
     dataZoom: [
         {
@@ -120,7 +147,8 @@ var option = {
         }
     ],
     
-    series: [],
+    series: [
+    ],
     animationEasing: 'elasticOut',
     animationDelayUpdate: function (idx) {
         return idx ;
@@ -133,6 +161,7 @@ var optionCo = {
         position: function (pt) {
             return [pt[0], '10%'];
         }
+        
     },
     title: {
         left: 'left',
@@ -151,17 +180,40 @@ var optionCo = {
             dataView: {},
             saveAsImage: {}
         },
-        right:'3%'
+        right:'20%'
     },
     xAxis: {
         type: 'category',
         boundaryGap: false,
+        
         data: []
     },
-    yAxis: {
-        // type: 'value',
-        // boundaryGap: [0, '100%']
-    },
+    yAxis: [
+        {
+            type: 'value',
+            name: '油耗（吨标准煤/百公里）',
+            axisLine: {
+                lineStyle: {
+                    color: '#c23531'
+                }
+            },
+            axisLabel: {
+                formatter: '{value} '
+            }
+        },
+        {
+            type: 'value',
+            name: '电耗（吨标准煤/百公里）',
+            axisLine: {
+                lineStyle: {
+                    color: '#2f4554'
+                }
+            },
+            axisLabel: {
+                formatter: '{value} '
+            }
+        }
+    ],
     dataZoom: [
         {
             show: true,
@@ -198,17 +250,17 @@ export default {
         setData(res){
             var dataFulCa = [];
             var dataFulCo = [];
-
+            var time = [];
             var engTMuMap = {};
             res.engTypOther.forEach(function(eng) {
                 eng.engTypTMu.forEach(function(TMu) {
                     if(!engTMuMap[eng.baseTyp]) 
                         engTMuMap[eng.baseTyp] = {};
                     if(!engTMuMap[eng.baseTyp][TMu.type]) 
-                            engTMuMap[eng.baseTyp][TMu.type] = [0,0];
+                        engTMuMap[eng.baseTyp][TMu.type] = [0,0];
                     var t = engTMuMap[eng.baseTyp][TMu.type];
-                    t[0] = (TMu.typDatOfAllEng / TMu.typDatOfAllLen).toFixed(2);
-                    t[1] = (TMu.typDatOfAllCo / TMu.typDatOfAllLen).toFixed(2);
+                    t[0] = (TMu.typDatOfAllEng / TMu.typDatOfAllLen*100).toFixed(2);
+                    t[1] = (TMu.typDatOfAllCo / TMu.typDatOfAllLen*100).toFixed(2);
                     engTMuMap[eng.baseTyp][TMu.type] = t;              
                 });
             });
@@ -247,20 +299,26 @@ export default {
                             tmpS.data.push(t1[0]);
                             tmpSCo.data.push(t1[1]);
                         }
+                        
                     });
                 }
                 relTimeSerise.push(tmpS);
                 relTimeCoSerise.push(tmpSCo);
             });
-            
+            res.xs[0].forEach(function(e){
+                var dateTime = e.split(" ",2);
+                time.push(dateTime[1]);
+            });
+            relTimeSerise[1].yAxisIndex =1;
             relTimeData.splice(0,relTimeData.length);
             relTimeData.push(res.xs[1]);
-            relTimeData.push(res.xs[0]);
+            relTimeData.push(time);
             relTimeData.push(relTimeSerise);
 
+            relTimeCoSerise[1].yAxisIndex=1;
             relTimeDataCo.splice(0,relTimeDataCo.length);
             relTimeDataCo.push(res.xs[1]);
-            relTimeDataCo.push(res.xs[0]);
+            relTimeDataCo.push(time);
             relTimeDataCo.push(relTimeCoSerise);
 
 

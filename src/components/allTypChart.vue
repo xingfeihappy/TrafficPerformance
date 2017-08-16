@@ -76,7 +76,7 @@ var optionTraEng = {
         {
             type : 'value',
             //nameLocation : 'middle',
-            name : '单位运距能耗(单位：万吨标准煤/公里)',
+            name : '单位运距能耗(单位：吨标准煤/公里)',
             //nameGap : 35
         }
     ],
@@ -144,6 +144,9 @@ export default {
         initRequestData(requestData){
             var date = new Date;
             var year = date.getFullYear().toString();
+            var month = date.getMonth();
+            if(month>=1 && month<=9)
+                month = '0'+month;
             var token = getCookie('token');
             var userInfo = JSON.parse(getCookie('userInfo'));
             requestData.token = token;
@@ -155,7 +158,7 @@ export default {
                 requestData.place1 =userInfo.place1;
             if(userInfo.place2!=null && userInfo.place2!="")
                 requestData.place2 = userInfo.place2;          
-            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
         },
         getDataFromService(requestData){
             var _this = this;

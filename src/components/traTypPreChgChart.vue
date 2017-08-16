@@ -141,7 +141,7 @@ var optionMonEngAll = {
     yAxis : [
         {
             type : 'value',
-            name: '总使用能耗(单位：万吨标准煤)',
+            name: '能耗(单位：万吨标准煤)',
             axisLabel: {
                 formatter: '{value}'
             },
@@ -187,7 +187,7 @@ function setData(res){
                 var t = monEngMap[element][e2];   
                 if(t){
                     tmpUnitEngDatas.push((t[0]/t[1]).toFixed(2))
-                    tmpAllEngDatas.push(t[0]);
+                    tmpAllEngDatas.push((t[0]/10000).toFixed(2));
                 }else{
                     tmpUnitEngDatas.push(0);
                     tmpAllEngDatas.push(0);

@@ -13,17 +13,13 @@
                 </div>
                 <div class="chart-header">
                     <el-select v-model="cityType" filterable placeholder="请选择城市" @change="citySelectChange">
-                        <el-option key="杭州" label="杭州" value="杭州"></el-option>
-                        <el-option key="宁波" label="宁波" value="宁波"></el-option>
-                        <el-option key="温州" label="温州" value="温州"></el-option>
-                        <el-option key="嘉兴" label="嘉兴" value="嘉兴"></el-option>
-                        <el-option key="湖州" label="湖州" value="湖州"></el-option>
-                        <el-option key="绍兴" label="绍兴" value="绍兴"></el-option>
-                        <el-option key="金华" label="金华" value="金华"></el-option>
-                        <el-option key="衢州" label="衢州" value="衢州"></el-option>
-                        <el-option key="舟山" label="舟山" value="舟山"></el-option>
-                        <el-option key="台州" label="台州" value="台州"></el-option>
-                        <el-option key="丽水" label="丽水" value="丽水"></el-option>
+                        <el-option
+                            v-for="item in optionCity"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                            :disabled="item.disabled">
+                        </el-option>
                     </el-select>
                 </div>
             </el-col>
@@ -43,13 +39,14 @@
     var trafficTypeEnergyPie;
 
     var beforTimeRange = '';
-    var beforCity ='';
+    //var beforCity ='';
 
     var requestData = {};
 
     var optionPi={
         title:{
-            text: '各运输类型能耗构成图',
+            //text: '各运输类型能耗构成图',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -97,7 +94,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:t[0]})
+                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
                // eng_per.push((t[0]/t[1]).toFixed(2))
             }else{
                 //eng_all_for_PI.push({name:e1,value:0})
@@ -115,7 +112,8 @@
         data(){
             return{
                 timeRange:'',
-                cityType:'杭州',
+                cityType:'',
+                optionCity:[]
             }
         },
         methods:{
@@ -123,25 +121,51 @@
                 var date = new Date;
                 var year = date.getFullYear().toString();
                 var token = getCookie('token');
+                var month = date.getMonth();
+                if(month>=1 && month<=9)
+                    month = '0'+month;
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
                 requestData.username = userInfo.name;
                 if(userInfo.roleName!=null && userInfo.roleName!="")
                     requestData.roleName = userInfo.roleName;
                 requestData.roleType = userInfo.roleType;
-                if(userInfo.place1!=null && userInfo.place1!="")
+                if(userInfo.place1!=null && userInfo.place1!=""){
                     requestData.place1 =userInfo.place1;
+                    requestData.cityType = userInfo.place1;
+                }else{
+                    requestData.cityType = "杭州";
+                }
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = year+'-01-01:'+year+'-12-31';
-                requestData.cityType = "杭州";
+                requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
+
+                
+            },
+            initSelectBox(){
+                var userInfo = JSON.parse(getCookie('userInfo'));
+                var city = ['杭州','宁波','温州','金华','湖州','绍兴','嘉兴','台州','舟山','衢州','丽水'];
+                var isDisabled;
+                this.optionCity= city.map(item => {
+                    isDisabled = false
+                    if(userInfo.place1!=null && userInfo.place1!="" && userInfo.place1!=item)
+                        isDisabled = true;
+                    return { value: item, label: item ,disabled: isDisabled};
+                });
+                console.log(this.optionCity)
             },
             getDataFromService(requestData){
                 var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.trafficenergyAjax,requestData).
                 done(function (res){
                     if(res.errCode==30){//data ok
+                        if(requestData.place2)
+                            var _title = requestData.cityType+'市'+requestData.place2+' 交通方式能耗构成图'
+                        else
+                            var _title = requestData.cityType+'市'+' 交通方式能耗构成图'
+                        optionPi.title.text = _title;
                         setData(res);
+                        //console.log(res); //
                         optionPi.legend.data = dataForTranEngAll[0];
                         optionPi.series[0].data = dataForTranEngAll[1];
                         trafficTypeEnergyPie.clear();
@@ -156,7 +180,7 @@
                 
             },
             selectOther(tr){
-                console.log(tr+'   before=' + beforTimeRange);
+               //console.log(tr+'   before=' + beforTimeRange);
                 if(!tr||tr== '')
                     return ;
                 requestData['timeRange']=tr;     
@@ -164,7 +188,7 @@
                 beforTimeRange = tr;
             },
             citySelectChange(ct){
-                console.log(ct+'   before=' + beforCity);
+                //console.log(ct+'   before=' + beforCity);
                 if(!ct||ct=='')
                     return ;
                 requestData['cityType']=ct;
@@ -176,6 +200,7 @@
         mounted: function () {
             trafficTypeEnergyPie = echarts.init(document.getElementById('trafficTypeEnergyPie'));
             trafficTypeEnergyPie.setOption(optionPi);
+            this.initSelectBox();
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
         },
