@@ -18,7 +18,7 @@
                         <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
                         <el-option key="出租客运" label="出租车运输" value="出租客运"></el-option>
                         <el-option key="内河运输" label="内河运输" value="内河运输"></el-option>
-                        <el-option key="海洋货运" label="海洋货运" value="还有货运"></el-option>
+                        <el-option key="海洋货运" label="海洋货运" value="海洋货运"></el-option>
                         <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>
                     </el-select>
                 </div>
@@ -46,6 +46,7 @@
     var optionPi={
         title:{
             text: '各地市能耗构成图',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -94,7 +95,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:t[0]})
+                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
                // eng_per.push((t[0]/t[1]).toFixed(2))
             }else{
                 //eng_all_for_PI.push({name:e1,value:0})
@@ -121,6 +122,9 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
+                var month = date.getMonth();
+                if(month>=1 && month<=9)
+                    month = '0'+month;
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -132,7 +136,7 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = year+'-01-01:'+year+'-12-31';
+                requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
                 requestData.tranType = "道路客运";
             },
             getDataFromService(requestData){

@@ -95,6 +95,7 @@
             {
                 type : 'category',
                 boundaryGap: false,
+                name:'月份',
                 data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
             }
         ],
@@ -137,15 +138,20 @@
         grid: {
             left: '3%',
             right: '4%',
-            bottom: '3%',
+            bottom: '6%',
             containLabel: true
         },
         xAxis:  {
-            type: 'value'
+            type: 'value',
+            name:'能耗(单位：万吨标准煤)',
+            nameLocation:'middle',
+            nameGap:25
+            
         },
         yAxis: {
             type: 'category',
-            data: []
+            data: [],
+            name:'燃料类型'
         },
         series:[]
     };
@@ -212,7 +218,7 @@
                 monthArr.forEach(function(e2){
                     var t = engYearMon3Map[_engType][element][e2];
                     if(t){
-                        tmpEngDatas.push(t);
+                        tmpEngDatas.push((t/10000).toFixed(2));
                     }else{
                         tmpEngDatas.push(0);
                     }
@@ -263,7 +269,7 @@
                         else
                             quarterData +=0; 
                     });
-                    tmpEngDatas.push(quarterData);
+                    tmpEngDatas.push((quarterData/10000).toFixed(2));
                 }                                             
             });
             var tmpSeriseObj = {

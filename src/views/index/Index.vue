@@ -13,11 +13,11 @@
         </el-row
         <el-row> 
         <!-- 能源类型图 -->
-            <el-col :span="10" class="chart-container">                
+            <el-col :span="11" class="chart-container">                
                 <div id="energyTypePie" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
             <!-- 能源分时图 -->
-             <el-col :span="14" class="chart-container">                
+             <el-col :span="13" class="chart-container">                
                 <div id="barChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
@@ -41,12 +41,6 @@
 
     var requestData = 
     {
-        /*username:'zwp',
-        roleName:'enterprice',
-        roleType:'R_WAT',
-        place1:'杭州',
-        place2:'江干',
-        timeRange:'2017-01-01:2017-12-30'*/
     } 
 
     var optionPi = {
@@ -77,8 +71,9 @@
                 name: '能耗',
                 type: 'pie',
                 radius : '70%',
-                center: ['50%', '60%'],
+                center: ['50%', '55%'],
                 data:[],
+                
             }
         ]
 
@@ -87,6 +82,10 @@
         title:{
             text: '能源分时图',
             left:'center'
+        },
+        grid: {
+            left: '10%',
+            right: '15%',
         },
         dataZoom: [
             {
@@ -122,8 +121,8 @@
         },
         yAxis: {
             name:'能耗(万吨标准煤)',
-            nameLocation:'middle',
-            nameGap:'40'
+            /*nameLocation:'middle',
+            nameGap:'40'*/
         },
         series : [
             {
@@ -175,30 +174,16 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:t[0]})
+                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
             }else{
             }
         });
 
-        //准备柱状图数据
-       /* xAisMon.forEach(function(e1){
-            var t = monthData[e1];
-            if(t) 
-            {
-                month_all.push(t[0]);
-            }else
-            {
-                month_all.push(0);
-            }
-        });*/
 
         dataForEngAll.splice(0,dataForEngAll.length);
         dataForEngAll.push(res.xs[1]);
         dataForEngAll.push(eng_all_for_PI);
 
-        /*dataForMon.splice(0,dataForMon.length);
-        dataForMon.push('所有能源');
-        dataForMon.push(month_all);*/
 
         setDataWhenEngChg('所有能源','#3398DB');
 
@@ -209,7 +194,7 @@
         xAisMon.forEach(function(e1){
             var t = MonengMap[engType][e1];
             if(t){
-                tmpEngDatas.push((t[0]));
+                tmpEngDatas.push((t[0]/10000).toFixed(2));
             }else{
                 tmpEngDatas.push(0);
             }
@@ -231,18 +216,16 @@
     export default {
         data() {
             return {
-                timeRange: '本年',
-                /*energyTypeUrl : this.Constant.ajaxAddress+'/energyTypeMonth',
-                energyUseUrl:this.Constant.ajaxAddress+'/energyTotalUse',
-                barChart:null*/
+                timeRange: '本月',
             }
         },
        
         methods: {
 
             initRequestData(requestData){
-                var date = new Date;
+                var date = new Date();
                 var year = date.getFullYear().toString();
+                var mon = (date.getMonth()+1).toString();
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -254,7 +237,7 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = year+'-01-01:'+year+'-12-31';
+                requestData.timeRange = year+'-'+mon+'-01:'+year+'-'+mon+'-31';
             },
 
             getDataFromService(requestData){
@@ -264,7 +247,7 @@
 
                     if(res.errCode==30){//data ok
                         setData(res);
-                        optionPi.legend.data = dataForEngAll[0];
+                      //  optionPi.legend.data = dataForEngAll[0];
                         optionPi.series[0].data = dataForEngAll[1];
                         energyTypePie.clear();
                         energyTypePie.setOption(optionPi);
@@ -293,7 +276,7 @@
                     var year = date.getFullYear().toString();
                     var month = (date.getMonth()+1).toString();
                     requestData['timeRange'] = year+'-'+month+'-01:'
-                                               +year+'-'+month+'-01'
+                                               +year+'-'+month+'-31'
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }

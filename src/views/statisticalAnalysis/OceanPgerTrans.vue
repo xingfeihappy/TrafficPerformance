@@ -122,7 +122,6 @@
             {
                 type: 'value',
                 name: '月使用能耗(万吨标准煤)',
-                interval: 50,
                 axisLine: {
                     lineStyle: {
                         color: '#5793f3'
@@ -446,7 +445,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:t[0]})
+                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
                 eng_per_for_BAR.push((t[0]/t[1]).toFixed(2))
             }else{
                 eng_per_for_BAR.push(0);
@@ -537,7 +536,7 @@
             if(t) 
             {
                // console.log(t);
-                month_all.push(t[0]);
+                month_all.push((t[0]/10000).toFixed(2));
                 month_per.push((t[0]/t[1]).toFixed(2));
             }else
             {
@@ -559,13 +558,16 @@
         data() {
             return {
                 timeRange:'',
-                year:(new Date).getFullYear().toString()
+                year:''//(new Date).getFullYear().toString()
             }
         },
         methods: {
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
+                var month = date.getMonth();
+                if(month>=1 && month<=9)
+                    month = '0'+month;
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -577,7 +579,7 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = year+'-01-01:'+year+'-12-31';
+                requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
             },
             getDataFromService(requestData){
                 var _this = this;
@@ -588,7 +590,7 @@
                         setData(res);
                         if(k==1||k==3)
                         {
-                            optionPi.legend.data = dataForEngAll[0];
+                            //optionPi.legend.data = dataForEngAll[0];
                             optionPi.series[0].data = dataForEngAll[1];
                             energyPieChart.clear();
                             energyPieChart.setOption(optionPi);
@@ -615,7 +617,7 @@
                             guestChart.clear();
                             guestChart.setOption(optionEngPsger);
                         }
-                        if(k ==2 || k==3){
+                        if(k ==2 ){
                             option.xAxis[0].data =  dataForMoth[0];
                             option.series[1].data = dataForMoth[2];
                             option.series[0].data = dataForMoth[1];
