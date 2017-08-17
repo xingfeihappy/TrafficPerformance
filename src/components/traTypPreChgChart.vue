@@ -8,7 +8,8 @@
                         align="right"
                         type="year"
                         placeholder="选择年"
-                        @change="selectYearMonth">
+                        @change="selectYearMonth"
+                        :picker-options="pickerOptions0">
                     </el-date-picker>
                 </div> 
             </el-col>
@@ -37,6 +38,7 @@ var allEngChgChart;
 
 var beforeYear = '';
 var requestData = {};
+var _year = (new Date).getFullYear().toString();
 
 var optionMonEngUnit = {
     title: {
@@ -74,7 +76,7 @@ var optionMonEngUnit = {
     xAxis : [
         {
             type : 'category',
-            data : [],
+            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
             name :'月份',
             nameGap : 5
         }
@@ -133,7 +135,7 @@ var optionMonEngAll = {
     xAxis : [
         {
             type : 'category',
-            data : [],
+            data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],
             name :'月份',
             nameGap : 5
         }
@@ -158,6 +160,9 @@ function setData(res){
     var monEngMap ={};
     var monEngUnitSeries =[];
     var monEngAllSeries =[];
+
+    var xAisMon = [_year+'-01',_year+'-02',_year+'-03',_year+'-04',_year+'-05',_year+'-06',
+            _year+'-07',_year+'-08',_year+'-09',_year+'-10',_year+'-11',_year+'-12']
     
     res.traTypOther.forEach(function(element){ 
         element.traTypMo.forEach(function(e2){
@@ -183,7 +188,7 @@ function setData(res){
             monEngUnitSeries.push(tmpSeriseObj);
             monEngAllSeries.push(tmpSeriseObj);
         }else{
-            res.xs[0].forEach(function(e2){
+            xAisMon.forEach(function(e2){
                 var t = monEngMap[element][e2];   
                 if(t){
                     tmpUnitEngDatas.push((t[0]/t[1]).toFixed(2))
@@ -225,7 +230,15 @@ function setData(res){
 export default {
     data(){
         return {
-            year:(new Date).getFullYear().toString()
+            year:'',
+            pickerOptions0: {
+                disabledDate(time) {
+                    if(new Date().getMonth==0)
+                        return time.getTime() > Date.now() - 8.64e7;
+                    else
+                        return time.getTime() > Date.now() + 8.64e7;
+                }
+            }
         }
     },
     methods:{
@@ -248,18 +261,22 @@ export default {
         },
         getDataFromService(requestData){
             var _this = this;
+            unitEngChgChart.showLoading({text:'加载中'});
+            allEngChgChart.showLoading({text:'加载中'});
             $.get(this.Constant.ajaxAddress+this.Constant.engchangeAjax,requestData).
             done(function (res){
+                unitEngChgChart.hideLoading();
+                allEngChgChart.hideLoading();
                 if(res.errCode==30){//data ok
                     setData(res);
                     optionMonEngUnit.legend.data = dataForMonEngUnit[0];
-                    optionMonEngUnit.xAxis[0].data = dataForMonEngUnit[1];
+                   // optionMonEngUnit.xAxis[0].data = dataForMonEngUnit[1];
                     optionMonEngUnit.series = dataForMonEngUnit[2];
                     unitEngChgChart.clear();
                     unitEngChgChart.setOption(optionMonEngUnit);
 
                     optionMonEngAll.legend.data = dataForMonEngAll[0];
-                    optionMonEngAll.xAxis[0].data = dataForMonEngAll[1];
+                   // optionMonEngAll.xAxis[0].data = dataForMonEngAll[1];
                     optionMonEngAll.series = dataForMonEngAll[2];
                     allEngChgChart.clear();
                     allEngChgChart.setOption(optionMonEngAll);
@@ -273,15 +290,23 @@ export default {
 
         },
         selectYearMonth(y){
-            console.log(y+'   before=' + beforeYear);
+
             if(!y||y=='')
                 return ;
             
-            y = y+'-01-01:'+y+'-12-31';
+            _year = y;
+            var date = new Date();
+            var year = date.getFullYear();
+            if(year==y){
+                var month = date.getMonth().toString();
+                y = y+'-01-01:'+y+'-'+month+'-31';
+            }else{
+                y = y +'-01-01:'+y+'-12-31';
+            }
             requestData['timeRange']=y;
+            
             this.getDataFromService(requestData);
-            beforeYear = y;
-        }  
+        }    
     },
     mounted:function(){
         unitEngChgChart = echarts.init(document.getElementById('unitEngChgChart'));
@@ -289,7 +314,7 @@ export default {
         allEngChgChart = echarts.init(document.getElementById('allEngChgChart'));
         allEngChgChart.setOption(optionMonEngAll);
         this.initRequestData(requestData);
-        this.getDataFromService(requestData);
+        //this.getDataFromService(requestData);
     },
     updated:function(){
         console.log("update");

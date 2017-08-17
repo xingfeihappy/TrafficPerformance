@@ -18,7 +18,8 @@
                     v-model="datTimRange"
                     type="date"
                     placeholder="请选择日期"
-                    @change="selectDate">
+                    @change="selectDate"
+                    :picker-options="pickerOptions0">
                 </el-date-picker>
             </div>
         </el-col>
@@ -78,6 +79,9 @@ var option = {
         text: titleName
     },
     tooltip: {
+        axisPointer: {
+            type: 'shadow'
+        },
         trigger: 'axis'
     },
     legend: {
@@ -232,7 +236,12 @@ export default {
             return {
                 datTimRange:(new Date()).toLocaleDateString(),
                 inputRank:'',
-                inputCode:''
+                inputCode:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now() ;
+                    }
+                },
             }
     },
     methods:{
@@ -463,13 +472,16 @@ export default {
         var d = new Date();
         var tm = d.getMonth()+1;
         var td = d.getDate();
+        var th = d.getHours();
         if(tm>=1 && tm <= 9)
             tm = '0' + tm;
         if(td>=1 && td<=9)
             td = '0'+td;
+        if(th>=0 && th<=9)
+            th = '0'+th;
 
         var t = d.getFullYear()+'-'+tm+'-'+td;
-        requestData.timeRange = t+' 00:00:00&'+t+' 23:59:59';
+        requestData.timeRange = t+' 00:00:00&'+t+' '+th+':59:59';
         this.timeRange =  t;
         this.getDataFromService(requestData);
     },

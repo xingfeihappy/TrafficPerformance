@@ -1,18 +1,31 @@
 <template>
   <section class = "chart">
-      <el-row>
+      <el-row> 
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-date-picker
-                        v-model="timeRange"
-                        type="daterange"
-                        placeholder="选择日期范围"
-                        range-separator = ':'
-                        @change="selectOther">
-                    </el-date-picker>                 
-                </div> 
+                        v-model="endDate"
+                        type="month"
+                        placeholder="结束年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="beginDate"
+                        type="month"
+                        placeholder="起始年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions1">
+                    </el-date-picker>
+                </div>
+                
+                <div class="chart-header2">
+                    统计期：{{ countDate }}
+                </div>
             </el-col>
-      </el-row>
+        </el-row>
       <el-row>
             <el-col class="chart-container">
                 <div id="allTypChart"style="width:100%; height:400px;" class="chart-content"></div>
@@ -137,7 +150,19 @@ function setData(res){
 export default {
     data(){
       return {
-            timeRange:''
+            countDate: '',
+            beginDate:'',
+            endDate:'',
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now() - 8.64e7;
+                }
+            },
+            pickerOptions1: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now() - 8.64e7;
+                }
+            }
       }
     },
     methods:{
@@ -159,11 +184,15 @@ export default {
             if(userInfo.place2!=null && userInfo.place2!="")
                 requestData.place2 = userInfo.place2;          
             requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
+
+            this.countDate = year+'年'+month+'月';
         },
         getDataFromService(requestData){
             var _this = this;
+            allTypChart.showLoading({text:'加载中'});
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
+                    allTypChart.hideLoading();
                     if(res.errCode==30){//data ok
                     setData(res);
                     optionTraEng.legend.data = dataForTraEng[0];
@@ -180,13 +209,34 @@ export default {
             });
             
         },
-        selectOther(tr){
-            console.log(tr+'   before=' + beforTimeRange);
-            if(!tr||tr== '')
-                 return ;
-            requestData['timeRange']=tr;     
-            this.getDataFromService(requestData);
-            beforTimeRange = tr;
+        selectOther(){  
+            if(this.beginDate!='' && this.endDate!=''){
+                if(this.beginDate > this.endDate){
+                    this.$message({
+                        showClose: true,
+                        message: '起始年月不能大于结束年月',
+                        type: 'warning',
+                        duration:2500
+                    });
+                    return;
+                }
+                var by = this.beginDate.getFullYear();
+                var bm = this.beginDate.getMonth()+1;
+                if(bm>=1 && bm <=9)
+                    bm = '0'+bm;
+                if(this.beginDate == this.endDate){
+                    requestData['timeRange'] = by + '-' + bm +'-01:' + by + '-' +bm + '-31';
+                    this.countDate = by+'年'+bm+'月';
+                }else{
+                    var ey = this.endDate.getFullYear();
+                    var em = this.endDate.getMonth()+1;
+                    if(em>=1 && em <=9)
+                        em = '0'+em;
+                    requestData['timeRange'] = by + '-' + bm +'-01:' + ey + '-' + em + '-31';
+                    this.countDate = by+'年'+bm+'月 至 '+ey+'年'+em+'月';
+                }
+                this.getDataFromService(requestData);
+            }
         },
     },
     mounted:function(){
@@ -214,9 +264,17 @@ export default {
                 margin-right: 20px;
                 position: relative;
             }
+            .chart-header2{
+                float: left;
+                font-weight:500;
+                margin-left: 20px;
+                top:10px;
+                position: relative;
+            }
             .chart-content{
                 overflow: hidden;
             }
+            
         }
         
     }

@@ -78,6 +78,9 @@ var option = {
         text: titleName
     },
     tooltip: {
+        axisPointer: {
+            type: 'shadow'
+        },
         trigger: 'axis'
     },
     legend: {
@@ -148,6 +151,7 @@ var option = {
 
 var optionCo = {
     tooltip: {
+        
         trigger: 'axis',
         position: function (pt) {
             return [pt[0], '10%'];

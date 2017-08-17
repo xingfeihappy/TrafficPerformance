@@ -64,6 +64,9 @@ var option = {
         text: titleName
     },
     tooltip: {
+        axisPointer: {
+            type: 'shadow'
+        },
         trigger: 'axis'
     },
     legend: {
@@ -134,6 +137,7 @@ var option = {
 
 var optionCo = {
     tooltip: {
+        
         trigger: 'axis',
         position: function (pt) {
             return [pt[0], '10%'];
@@ -284,13 +288,11 @@ export default {
                 relTimeSerise.push(tmpS);
                 relTimeCoSerise.push(tmpSCo);
             });
-            relTimeSerise[1].yAxisIndex =1;
             relTimeData.splice(0,relTimeData.length);
             relTimeData.push(res.xs[1]);
             relTimeData.push(time);
             relTimeData.push(relTimeSerise);
 
-            relTimeCoSerise[1].yAxisIndex=1;
             relTimeDataCo.splice(0,relTimeDataCo.length);
             relTimeDataCo.push(res.xs[1]);
             relTimeDataCo.push(time);

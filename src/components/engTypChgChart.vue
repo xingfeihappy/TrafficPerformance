@@ -337,7 +337,7 @@
                 var _this = this;
                 $.get(this.Constant.ajaxAddress+this.Constant.yearcompareAjax,requestData).
                 done(function (res){
-
+                    console.log(res)
                     if(res.errCode==30){//data ok
                         console.log(res)
                         allEnergys = res.xs[1];

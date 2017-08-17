@@ -242,9 +242,12 @@
 
             getDataFromService(requestData){
                 var _this = this;
+                energyTypePie.showLoading({text:'加载中'});
+                barChart.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.indexAjax,requestData).
                 done(function (res){
-
+                    energyTypePie.hideLoading();
+                    barChart.hideLoading();
                     if(res.errCode==30){//data ok
                         setData(res);
                       //  optionPi.legend.data = dataForEngAll[0];
@@ -275,8 +278,15 @@
                     var date = new Date;
                     var year = date.getFullYear().toString();
                     var month = (date.getMonth()+1).toString();
+                    var day = (date.getDate()-1).toString();
+                    
+                    if(month>=1&&month<=9)
+                        month = '0' + month;
+                    
+                    if(day>=1&&day<=9)
+                        day = '0' + day;
                     requestData['timeRange'] = year+'-'+month+'-01:'
-                                               +year+'-'+month+'-31'
+                                               +year+'-'+month+'-'+day
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }
@@ -284,17 +294,27 @@
                     var date = new Date;
                     var year = date.getFullYear().toString();
                     var month = date.getMonth()+1;
-                    var endMon = 3*Math.ceil(month/3);
-                    var startMon = endMon-2;
+                    var day = (date.getDate()-1).toString();
+                    var startMon = 3*Math.ceil(month/3)-2;
+                    if(month>=1&&month<=9)
+                        month = '0' + month;
+                    if(day>=1&&day<=9)
+                        day = '0' + day;
                     requestData['timeRange'] = year+'-'+startMon.toString()+'-01:'
-                                               +year+'-'+endMon.toString()+'-01'
+                                               +year+'-'+month.toString()+'-'+day;
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }
                 if(tr=='本年'){
                     var date = new Date;
                     var year = date.getFullYear().toString();
-                    requestData['timeRange'] = year+'-01-01:'+year+'-12-01';
+                    var month = date.getMonth()+1;
+                    var day = (date.getDate()-1).toString();
+                    if(month>=1&&month<=9)
+                        month = '0' + month;
+                    if(day>=1&&day<=9)
+                        day = '0' + day;
+                    requestData['timeRange'] = year+'-01-01:'+year+'-'+month+'-'+day;
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }

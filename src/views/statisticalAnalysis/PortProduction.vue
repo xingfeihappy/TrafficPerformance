@@ -4,12 +4,25 @@
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-date-picker
-                        v-model="timeRange"
-                        type="daterange"
-                        placeholder="选择日期范围"
-                        range-separator = ':'
-                        @change="selectOther">
+                        v-model="endDate"
+                        type="month"
+                        placeholder="结束年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions0">
                     </el-date-picker>
+                </div>
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="beginDate"
+                        type="month"
+                        placeholder="起始年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions1">
+                    </el-date-picker>
+                </div>
+                
+                <div class="chart-header2">
+                    统计期：{{ countDate }}
                 </div>
             </el-col>
         </el-row>
@@ -30,7 +43,8 @@
                         align="right"
                         type="year"
                         placeholder="选择年"
-                        @change="selectYearMonth">
+                        @change="selectYearMonth"
+                        :picker-options="pickerOptions2">
                     </el-date-picker>
                 </div>
                 <div id="energyByYearChart" style="width:100%; height:400px;" class="chart-content"></div>
@@ -52,8 +66,7 @@
 
     var k=3; //标志
 
-    var beforTimeRange = '';
-    var beforeYear = '';
+    var _year = (new Date).getFullYear().toString();
 
     var requestData = {};
 
@@ -93,7 +106,7 @@
                 },
                 name:'月份',
                 nameGap:'20',
-                data: []
+                data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
             }
         ],
         yAxis: [
@@ -224,6 +237,9 @@
         var eng_all_for_PI = []; //饼图填充数据
         var eng_per_for_scale =[];
 
+        var xAisMon = [_year+'-01',_year+'-02',_year+'-03',_year+'-04',_year+'-05',_year+'-06',
+            _year+'-07',_year+'-08',_year+'-09',_year+'-10',_year+'-11',_year+'-12']
+
         res.engTypOther.forEach(function(element) {
 
             element.engTypMo.forEach(function(e2){
@@ -284,7 +300,7 @@
         }
         console.log(monthData)
         //准备年度数据
-        res.xs[0].forEach(function(e1){
+        xAisMon.forEach(function(e1){
             var t = monthData[e1];
             if(t) 
             {
@@ -298,7 +314,7 @@
             }
         });
 
-        if (k==2||k==3) {
+        if (k==2) {
             dataForMoth.splice(0,dataForMoth.length);
             dataForMoth.push(res.xs[0]);
             dataForMoth.push(month_all);
@@ -313,8 +329,28 @@
     export default {
         data() {
             return {
-                timeRange:'',
-                year:''//(new Date).getFullYear().toString()
+                year:'',
+                countDate: '',
+                beginDate:'',
+                endDate:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now() - 8.64e7;
+                    }
+                },
+                pickerOptions1: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now() - 8.64e7;
+                    }
+                },
+                pickerOptions2: {
+                    disabledDate(time) {
+                        if(new Date().getMonth==0)
+                            return time.getTime() > Date.now() - 8.64e7;
+                        else
+                            return time.getTime() > Date.now() + 8.64e7;
+                    }
+                }
             }
         },
         methods: {
@@ -336,9 +372,18 @@
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
                 requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
+
+                this.countDate = year+'年'+month+'月';
             },
             getDataFromService(requestData){
                 var _this = this;
+                if(k==1||k==3){
+                    energyPieChart.showLoading({text:'加载中'});
+                    companyChart.showLoading({text:'加载中'});
+                }
+                if(k==2){
+                    energyByYearChart.showLoading({text:'加载中'});
+                }
                 $.get(this.Constant.ajaxAddress+this.Constant.portproAjax,requestData).
                 done(function (res){
                     if(res.errCode==30){//data ok
@@ -346,6 +391,8 @@
                             if(k==1||k==3)
                             {
 
+                                energyPieChart.hideLoading();
+                                companyChart.hideLoading();
                                // optionPi.legend.data = dataForEngAll[0];
                                 optionPi.series[0].data = dataForEngAll[1];
                                 energyPieChart.clear();
@@ -358,7 +405,10 @@
 
                             }
                             if(k ==2 ){
-                                option.xAxis[0].data =  dataForMoth[0];
+
+                                energyByYearChart.hideLoading();
+
+                                //option.xAxis[0].data =  dataForMoth[0];
                                 option.series[1].data = dataForMoth[2];
                                 option.series[0].data = dataForMoth[1];
                                 energyByYearChart.clear();
@@ -372,26 +422,55 @@
                 });
                 
             },
-            selectOther(tr){
+            selectOther(){
                 k = 1;
-               // console.log(tr+'   before=' + beforTimeRange);
-                if(!tr||tr== '')
-                    return ;
-                requestData['timeRange']=tr;     
-                this.getDataFromService(requestData);
-                beforTimeRange = tr;
+                if(this.beginDate!='' && this.endDate!=''){
+                    if(this.beginDate > this.endDate){
+                        this.$message({
+                            showClose: true,
+                            message: '起始年月不能大于结束年月',
+                            type: 'warning',
+                            duration:2500
+                        });
+                        return;
+                    }
+                    var by = this.beginDate.getFullYear();
+                    var bm = this.beginDate.getMonth()+1;
+                    if(bm>=1 && bm <=9)
+                        bm = '0'+bm;
+                    if(this.beginDate == this.endDate){
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + by + '-' +bm + '-31';
+                        this.countDate = by+'年'+bm+'月';
+                    }else{
+                        var ey = this.endDate.getFullYear();
+                        var em = this.endDate.getMonth()+1;
+                        if(em>=1 && em <=9)
+                            em = '0'+em;
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + ey + '-' + em + '-31';
+                        this.countDate = by+'年'+bm+'月 至 '+ey+'年'+em+'月';
+                    }
+                    this.getDataFromService(requestData);
+                }
             },
             selectYearMonth(y){
                 k =2;
-               // console.log(y+'   before=' + beforeYear);
+
                 if(!y||y=='')
                     return ;
                 
-                y = y+'-01-01:'+y+'-12-31';
+                _year = y;
+                var date = new Date();
+                var year = date.getFullYear();
+                if(year==y){
+                    var month = date.getMonth().toString();
+                    y = y+'-01-01:'+y+'-'+month+'-31';
+                }else{
+                    y = y +'-01-01:'+y+'-12-31';
+                }
                 requestData['timeRange']=y;
+                
                 this.getDataFromService(requestData);
-                beforeYear = y;
-            }  
+            } 
         },
         mounted: function () {
             energyPieChart = echarts.init(document.getElementById('energyPieChart'));
@@ -422,6 +501,13 @@
                 float: right;
                // margin-bottom: 10px;
                 margin-right: 20px;
+                position: relative;
+            }
+            .chart-header2{
+                float: left;
+                font-weight:500;
+                margin-left: 20px;
+                top:10px;
                 position: relative;
             }
             .chart-content{
