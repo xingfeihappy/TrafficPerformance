@@ -1,4 +1,4 @@
-export const ajaxAddress = 'http://121.196.212.181:8081'
+export const ajaxAddress = 'http://192.168.1.99:8081'
 
 
 export const indexAjax = '/index.json'
