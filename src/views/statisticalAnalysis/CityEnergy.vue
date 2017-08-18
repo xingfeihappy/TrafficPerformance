@@ -2,13 +2,32 @@
     <section class="chart">
         <el-row>
             <el-col class="chart-container">
-                <div class="chart-header">
+                <!--<div class="chart-header">
                     <el-date-picker
                         v-model="timeRange"
                         type="daterange"
                         placeholder="选择日期范围"
                         range-separator = ':'
                         @change="selectOther">
+                    </el-date-picker>
+                </div>-->
+                
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="endDate"
+                        type="month"
+                        placeholder="结束年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="beginDate"
+                        type="month"
+                        placeholder="起始年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions1">
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
@@ -22,6 +41,11 @@
                         <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>
                     </el-select>
                 </div>
+            
+                <div class="chart-header2">
+                    统计期：{{ countDate }}
+                </div>
+                
             </el-col>
         </el-row>
         <el-row> 
@@ -115,16 +139,44 @@
         data(){
             return{
                 timeRange:'',
-                tranType:'道路客运'        
+                tranType:'道路客运',
+                countDate: '',
+                beginDate:'',
+                endDate:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
+                    }
+                },
+                pickerOptions1: {
+                    disabledDate(time) {
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
+                    }
+                },
             }
         },
         methods:{
             initRequestData(requestData){
                 var date = new Date;
-                var year = date.getFullYear().toString();
+                var year = date.getFullYear();
                 var month = date.getMonth();
-                if(month>=1 && month<=9)
-                    month = '0'+month;
+                if(month==0){
+                    year = year -1;
+                    month = 12;
+                }else{
+                    if(month>=1 && month<=9)
+                        month = '0'+month;
+                }
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -138,11 +190,15 @@
                     requestData.place2 = userInfo.place2;          
                 requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
                 requestData.tranType = "道路客运";
+
+                this.countDate = year+'年'+month+'月';
             },
             getDataFromService(requestData){
                var _this = this;
+               cityTypeEnergyPie.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.citenergyAjax,requestData).
                 done(function (res){
+                        cityTypeEnergyPie.hideLoading();
                         if(res.errCode==30){//data ok
                         setData(res);
                         optionPi.legend.data = dataForCityEngAll[0];
@@ -157,18 +213,43 @@
                 });
                 
             },
-            selectOther(tr){
-                console.log(tr+'   before=' + beforTimeRange);
-                if(!tr||tr== '')
-                    return ;
-                requestData['timeRange']=tr;     
-                this.getDataFromService(requestData);
-                beforTimeRange = tr;
+            selectOther(){  
+                if(this.beginDate!='' && this.endDate!=''){
+                    if(this.beginDate > this.endDate){
+                        this.$message({
+                            showClose: true,
+                            message: '起始年月不能大于结束年月',
+                            type: 'warning',
+                            duration:2500
+                        });
+                        return;
+                    }
+                    if(this.tranType==''||!this.tranType)
+                        return;
+                    var by = this.beginDate.getFullYear();
+                    var bm = this.beginDate.getMonth()+1;
+                    if(bm>=1 && bm <=9)
+                        bm = '0'+bm;
+                    if(this.beginDate == this.endDate){
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + by + '-' +bm + '-31';
+                        this.countDate = by+'年'+bm+'月';
+                    }else{
+                        var ey = this.endDate.getFullYear();
+                        var em = this.endDate.getMonth()+1;
+                        if(em>=1 && em <=9)
+                            em = '0'+em;
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + ey + '-' + em + '-31';
+                        this.countDate = by+'年'+bm+'月 至 '+ey+'年'+em+'月';
+                    }
+                    this.getDataFromService(requestData);
+                }
             },
             trafficSelectChange(tt){
                 console.log(tt+'   before=' + beforTran);
                 if(!tt||tt=='')
                     return ;
+                if(this.beginDate==''||this.endDate=='')
+                    return;
                 requestData['tranType']=tt;
                 this.getDataFromService(requestData);
                 beforTran = tt;              
@@ -198,6 +279,13 @@
                 float: right;
                 //margin-bottom: 20px;
                 margin-right: 20px;
+                position: relative;
+            }
+            .chart-header2{
+                float: left;
+                font-weight:500;
+                margin-left: 20px;
+                top:10px;
                 position: relative;
             }
             .chart-content{

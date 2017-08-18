@@ -4,11 +4,20 @@
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-date-picker
-                        v-model="timeRange"
-                        type="daterange"
-                        placeholder="选择日期范围"
-                        range-separator = ':'
-                        @change="selectOther">
+                        v-model="endDate"
+                        type="month"
+                        placeholder="结束年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions0">
+                    </el-date-picker>
+                </div>
+                <div class="chart-header">
+                    <el-date-picker
+                        v-model="beginDate"
+                        type="month"
+                        placeholder="起始年月"
+                        @change="selectOther"
+                        :picker-options="pickerOptions1">
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
@@ -21,6 +30,9 @@
                             :disabled="item.disabled">
                         </el-option>
                     </el-select>
+                </div>
+                <div class="chart-header2">
+                    统计期：{{ countDate }}
                 </div>
             </el-col>
         </el-row>
@@ -38,8 +50,7 @@
     var dataForTranEngAll = [];
     var trafficTypeEnergyPie;
 
-    var beforTimeRange = '';
-    //var beforCity ='';
+    
 
     var requestData = {};
 
@@ -111,9 +122,31 @@
     export default{
         data(){
             return{
-                timeRange:'',
                 cityType:'',
-                optionCity:[]
+                optionCity:[],
+                countDate: '',
+                beginDate:'',
+                endDate:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
+                    }
+                },
+                pickerOptions1: {
+                    disabledDate(time) {
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
+                    }
+                },
             }
         },
         methods:{
@@ -140,7 +173,7 @@
                     requestData.place2 = userInfo.place2;          
                 requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
 
-                
+                this.countDate = year+'年'+month+'月';
             },
             initSelectBox(){
                 var userInfo = JSON.parse(getCookie('userInfo'));
@@ -152,12 +185,13 @@
                         isDisabled = true;
                     return { value: item, label: item ,disabled: isDisabled};
                 });
-                console.log(this.optionCity)
             },
             getDataFromService(requestData){
                 var _this = this;
+                trafficTypeEnergyPie.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.trafficenergyAjax,requestData).
                 done(function (res){
+                    trafficTypeEnergyPie.hideLoading();
                     if(res.errCode==30){//data ok
                         if(requestData.place2)
                             var _title = requestData.cityType+'市'+requestData.place2+' 交通方式能耗构成图'
@@ -179,21 +213,45 @@
                 });
                 
             },
-            selectOther(tr){
-               //console.log(tr+'   before=' + beforTimeRange);
-                if(!tr||tr== '')
-                    return ;
-                requestData['timeRange']=tr;     
-                this.getDataFromService(requestData);
-                beforTimeRange = tr;
+            selectOther(){  
+                if(this.beginDate!='' && this.endDate!='' ){
+                    if(this.beginDate > this.endDate){
+                        this.$message({
+                            showClose: true,
+                            message: '起始年月不能大于结束年月',
+                            type: 'warning',
+                            duration:2500
+                        });
+                        return;
+                    }
+                    if(this.cityType==''||!this.cityType)
+                        return;
+                    var by = this.beginDate.getFullYear();
+                    var bm = this.beginDate.getMonth()+1;
+                    if(bm>=1 && bm <=9)
+                        bm = '0'+bm;
+                    if(this.beginDate == this.endDate){
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + by + '-' +bm + '-31';
+                        this.countDate = by+'年'+bm+'月';
+                    }else{
+                        var ey = this.endDate.getFullYear();
+                        var em = this.endDate.getMonth()+1;
+                        if(em>=1 && em <=9)
+                            em = '0'+em;
+                        requestData['timeRange'] = by + '-' + bm +'-01:' + ey + '-' + em + '-31';
+                        this.countDate = by+'年'+bm+'月 至 '+ey+'年'+em+'月';
+                    }
+                    this.getDataFromService(requestData);
+                }
             },
             citySelectChange(ct){
                 //console.log(ct+'   before=' + beforCity);
                 if(!ct||ct=='')
                     return ;
+                if(this.beginDate==''||this.endDate=='')
+                    return;
                 requestData['cityType']=ct;
                 this.getDataFromService(requestData);
-                beforCity = ct;
             }
 
         },
@@ -221,6 +279,13 @@
             .chart-header{
                 float: right;
                 margin-right: 20px;
+                position: relative;
+            }
+            .chart-header2{
+                float: left;
+                font-weight:500;
+                margin-left: 20px;
+                top:10px;
                 position: relative;
             }
             .chart-content{

@@ -4,10 +4,13 @@
             <el-col class="chart-container">
                 <div class="chart-header">
                     <el-select v-model="timeRange" placeholder="请选择" @change="TimeRangeChange"  >
-                        <el-option key="本月" label="本月" value="本月"></el-option>
+                        <el-option key="上月" label="上月" value="上月"></el-option>
                         <el-option key="本季" label="本季" value="本季"></el-option>
                         <el-option key="本年" label="本年" value="本年"></el-option>
                     </el-select>
+                </div>
+                <div class="chart-header2">
+                    统计期：{{ countDate }}
                 </div>
             </el-col>
         </el-row
@@ -38,7 +41,7 @@
     var barChart;
 
     var beforTimeRange = '';
-
+    var beforeMonth = '';
     var requestData = 
     {
     } 
@@ -217,6 +220,7 @@
         data() {
             return {
                 timeRange: '本月',
+                countDate: ''
             }
         },
        
@@ -224,8 +228,15 @@
 
             initRequestData(requestData){
                 var date = new Date();
-                var year = date.getFullYear().toString();
-                var mon = (date.getMonth()+1).toString();
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if(month==0){
+                    year = year -1;
+                    month = 12;
+                }else{
+                    if(month>=1 && month<=9)
+                        month = '0'+month;
+                }
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -237,7 +248,10 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = year+'-'+mon+'-01:'+year+'-'+mon+'-31';
+                requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
+
+                this.countDate = year+'年'+month+'月';
+                beforeMonth = requestData.timeRange;
             },
 
             getDataFromService(requestData){
@@ -274,8 +288,8 @@
             TimeRangeChange(tr){
                 if(!tr||tr== '')
                     return ;
-                if(tr=='本月'){
-                    var date = new Date;
+                if(tr=='上月'){
+                    /*var date = new Date;
                     var year = date.getFullYear().toString();
                     var month = (date.getMonth()+1).toString();
                     var day = (date.getDate()-1).toString();
@@ -284,39 +298,60 @@
                         month = '0' + month;
                     
                     if(day>=1&&day<=9)
-                        day = '0' + day;
-                    requestData['timeRange'] = year+'-'+month+'-01:'
-                                               +year+'-'+month+'-'+day
+                        day = '0' + day;*/
+                    requestData['timeRange'] = beforeMonth;
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }
                 if(tr=='本季'){
                     var date = new Date;
-                    var year = date.getFullYear().toString();
+                    var year = date.getFullYear();
                     var month = date.getMonth()+1;
-                    var day = (date.getDate()-1).toString();
                     var startMon = 3*Math.ceil(month/3)-2;
-                    if(month>=1&&month<=9)
-                        month = '0' + month;
-                    if(day>=1&&day<=9)
-                        day = '0' + day;
-                    requestData['timeRange'] = year+'-'+startMon.toString()+'-01:'
-                                               +year+'-'+month.toString()+'-'+day;
-                    this.getDataFromService(requestData);
-                    beforTimeRange = tr;
+                    if(month == startMon){
+                        this.$message({
+                            showClose: true,
+                            message: '本季度还未有统计数据上报',
+                            type: 'warning',
+                            duration:2500
+                        });
+                    }else{
+                        month = month - 1;
+                        if(month>=1&&month<=9)
+                            month = '0' + month;
+                        requestData['timeRange'] = year+'-'+startMon.toString()+'-01:'
+                                               +year+'-'+month.toString()+'-31';
+                        if(month == startMon){
+                            this.countDate = year+'年'+month+'月';
+                        }else{
+                            this.countDate = year+'年'+startMon+'月 至 '+year+'年'+month+'月';
+                        }
+                        this.getDataFromService(requestData);
+                        beforTimeRange = tr;
+                        
+                    }
+                    
                 }
                 if(tr=='本年'){
                     var date = new Date;
                     var year = date.getFullYear().toString();
                     var month = date.getMonth()+1;
-                    var day = (date.getDate()-1).toString();
-                    if(month>=1&&month<=9)
-                        month = '0' + month;
-                    if(day>=1&&day<=9)
-                        day = '0' + day;
-                    requestData['timeRange'] = year+'-01-01:'+year+'-'+month+'-'+day;
-                    this.getDataFromService(requestData);
-                    beforTimeRange = tr;
+                    if(month==1){
+                        this.$message({
+                            showClose: true,
+                            message: '本年度还未有统计数据上报',
+                            type: 'warning',
+                            duration:2500
+                        });
+                    }else{
+                        month = month -1;
+                        if(month>=1&&month<=9)
+                            month = '0' + month;
+                        requestData['timeRange'] = year+'-01-01:'+year+'-'+month+'-31';
+                        this.countDate = year+'年01月 至 '+year+'年'+month+'月';
+                        this.getDataFromService(requestData);
+                        beforTimeRange = tr;
+                    }        
                 }
             },
             EngTypeChange(){
@@ -371,6 +406,13 @@
             .chart-header{
                 float: right;
                 margin-right: 20px;
+                position: relative;
+            }
+            .chart-header2{
+                float: left;
+                font-weight:500;
+                margin-left: 20px;
+                top:10px;
                 position: relative;
             }
             .chart-content{

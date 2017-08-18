@@ -657,20 +657,30 @@
                 endDate:'',
                 pickerOptions0: {
                     disabledDate(time) {
-                        return time.getTime() > Date.now() - 8.64e7;
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
                     }
                 },
                 pickerOptions1: {
                     disabledDate(time) {
-                        return time.getTime() > Date.now() - 8.64e7;
+                        if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;        
                     }
                 },
                 pickerOptions2: {
                     disabledDate(time) {
-                        if(new Date().getMonth==0)
-                            return time.getTime() > Date.now() - 8.64e7;
+                        if((new Date()).getMonth==0)
+                            return time.getFullYear()>=(new Date()).getFullYear();
                         else
-                            return time.getTime() > Date.now() + 8.64e7;
+                            return time.getFullYear()>(new Date()).getFullYear();
                     }
                 }
             }
@@ -680,8 +690,13 @@
                 var date = new Date;
                 var year = date.getFullYear().toString();
                 var month = date.getMonth();
-                if(month>=1 && month<=9)
-                    month = '0'+month;
+                if(month==0){
+                    year = year -1;
+                    month = 12;
+                }else{
+                    if(month>=1 && month<=9)
+                        month = '0'+month;
+                }
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -713,16 +728,20 @@
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.oceangoodsAjax,requestData).
                 done(function (res){
-                    console.log(res);
+                    if(k==1||k==3){
+                        energyPieChart.hideLoading();
+                        engTonChart.hideLoading();
+                        companyChart.hideLoading();
+                        tonShipChart.hideLoading();
+                        engDisChart.hideLoading();
+                    }
+                    if(k==2){
+                        energyByYearChart.hideLoading();
+                    }
                     if(res.errCode==30){//data ok
                         setData(res);
                         if(k==1||k==3)
                         {
-                            energyPieChart.hideLoading();
-                            engTonChart.hideLoading();
-                            companyChart.hideLoading();
-                            tonShipChart.hideLoading();
-                            engDisChart.hideLoading();
                             
                             optionPi.series[0].data = dataForEngAll[1];
                             energyPieChart.clear();
@@ -752,8 +771,7 @@
                             engDisChart.setOption(optionEngDis);
                         }
                         if(k ==2 ){
-                            energyByYearChart.hideLoading();
-
+                            
                             //option.xAxis[0].data =  dataForMoth[0];
                             option.series[1].data = dataForMoth[2];
                             option.series[0].data = dataForMoth[1];
