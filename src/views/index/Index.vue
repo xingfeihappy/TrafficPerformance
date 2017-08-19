@@ -219,7 +219,7 @@
     export default {
         data() {
             return {
-                timeRange: '本月',
+                timeRange: '上月',
                 countDate: ''
             }
         },
