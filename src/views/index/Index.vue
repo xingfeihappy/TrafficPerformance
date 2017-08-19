@@ -241,11 +241,14 @@
             },
 
             getDataFromService(requestData){
+                console.log(requestData);
+                //requestData['timeRange'] = '2013-09-01:2013-10-31'; 
                 var _this = this;
                 energyTypePie.showLoading({text:'加载中'});
                 barChart.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.indexAjax,requestData).
                 done(function (res){
+                    console.log(JSON.stringify(res));
                     energyTypePie.hideLoading();
                     barChart.hideLoading();
                     if(res.errCode==30){//data ok
@@ -286,7 +289,7 @@
                     if(day>=1&&day<=9)
                         day = '0' + day;
                     requestData['timeRange'] = year+'-'+month+'-01:'
-                                               +year+'-'+month+'-'+day
+                                               +year+'-'+month+'-'+day                          
                     this.getDataFromService(requestData);
                     beforTimeRange = tr;
                 }

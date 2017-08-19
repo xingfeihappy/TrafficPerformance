@@ -254,7 +254,7 @@
 				if(!roleType) return '';
 				if(roleType==='R_TRA') return '交通厅';
 				else if(roleType==='R_LAN')  return '运管';
-				else if(roleType==='R_WAT')  return '港行';
+				else if(roleType==='R_WAT')  return '港航';
 				else if(roleType==='R_ENT')  return '企业';
 				else return roleType;
 			},
@@ -262,7 +262,7 @@
 				if(!roleTypeName) return '';
 				if(roleTypeName==='交通厅') return 'R_TRA';
 				else if(roleTypeName==='运管')  return 'R_LAN';
-				else if(roleTypeName==='港行')  return 'R_WAT';
+				else if(roleTypeName==='港航')  return 'R_WAT';
 				else if(roleTypeName==='企业')  return 'R_ENT';
 				else return roleTypeName;
 			},
