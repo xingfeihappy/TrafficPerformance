@@ -155,12 +155,22 @@ export default {
             endDate:'',
             pickerOptions0: {
                 disabledDate(time) {
-                    return time.getTime() > Date.now() - 8.64e7;
+                    if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;
                 }
             },
             pickerOptions1: {
                 disabledDate(time) {
-                    return time.getTime() > Date.now() - 8.64e7;
+                    if(time.getFullYear()>(new Date()).getFullYear())
+                            return true;
+                        if(time.getFullYear()==(new Date()).getFullYear())
+                            return time.getMonth() >= (new Date()).getMonth();
+                        else
+                            return false;  
                 }
             }
       }

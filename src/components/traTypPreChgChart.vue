@@ -233,10 +233,10 @@ export default {
             year:'',
             pickerOptions0: {
                 disabledDate(time) {
-                    if(new Date().getMonth==0)
-                        return time.getTime() > Date.now() - 8.64e7;
+                    if((new Date()).getMonth==0)
+                        return time.getFullYear()>=(new Date()).getFullYear();
                     else
-                        return time.getTime() > Date.now() + 8.64e7;
+                        return time.getFullYear()>(new Date()).getFullYear();
                 }
             }
         }
@@ -244,7 +244,7 @@ export default {
     methods:{
         initRequestData(requestData){
             var date = new Date;
-            var year = date.getFullYear().toString();
+           // var year = date.getFullYear().toString();
             var token = getCookie('token');
             var userInfo = JSON.parse(getCookie('userInfo'));
             requestData.token = token;
@@ -256,7 +256,7 @@ export default {
                 requestData.place1 =userInfo.place1;
             if(userInfo.place2!=null && userInfo.place2!="")
                 requestData.place2 = userInfo.place2;          
-            requestData.timeRange = year+'-01-01:'+year+'-12-31';
+          //  requestData.timeRange = year+'-01-01:'+year+'-12-31';
            
         },
         getDataFromService(requestData){

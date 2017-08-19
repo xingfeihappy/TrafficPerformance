@@ -7,7 +7,8 @@
                         v-model="beginYear"
                         type="year"
                         placeholder="起始年份"
-                        @change="selectBeginYear">
+                        @change="selectBeginEndYear"
+                        :picker-options="pickerOptions0">
                     </el-date-picker>
                 </div>
                 <div class="chart-header">
@@ -15,7 +16,8 @@
                         v-model="endYear"
                         type="year"
                         placeholder="结束年份"
-                        @change="selectEndYear">
+                        @change="selectBeginEndYear"
+                        :picker-options="pickerOptions1">
                     </el-date-picker>
                 </div>
                 
@@ -157,10 +159,10 @@
     };
 
     
-    var _endYear=(new Date).getFullYear();
-    var _beginYear=_endYear-1;
-    var _currentYear = _endYear;
-    var _engType='所有燃料';
+    var _endYear='';
+    var _beginYear='';
+    var _currentYear = '';
+    var _engType='';
     var allEnergys = [];
 
     function setData(res){
@@ -239,6 +241,7 @@
         dataForEngAll.push(yearMonSeries);   
 
         option.legend.data = dataForEngAll[0];
+        option.title.text = '能耗数据年度环比图（'+_engType+'）';
         // option.xAxis[0].data = dataForEngAll[1];
         option.series = dataForEngAll[2];
         engYearChgChart.clear();
@@ -298,6 +301,7 @@
         optionSort.legend.data = dataForEngSort[0];
         optionSort.yAxis.data = dataForEngSort[1];
         optionSort.series = dataForEngSort[2];
+        optionSort.title.text = '各燃料分季度消耗对比（'+_currentYear+'年）';
 
         engYearSortChart.clear();
         engYearSortChart.setOption(optionSort);
@@ -306,19 +310,35 @@
     export default {
         data(){
             return {
-                endYear:_endYear.toString(),
-                beginYear:_beginYear.toString(),
+                endYear:'',
+                beginYear:'',
                 optionSelect:[],
                 optionSY:[],
-                engerType : _engType,
-                currentYear:_currentYear.toString()
+                engerType : '',
+                currentYear:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        if((new Date()).getMonth==0)
+                            return time.getFullYear()>=(new Date()).getFullYear();
+                        else
+                            return time.getFullYear()>(new Date()).getFullYear();
+                    }
+                },
+                pickerOptions1: {
+                    disabledDate(time) {
+                        if((new Date()).getMonth==0)
+                            return time.getFullYear()>=(new Date()).getFullYear();
+                        else
+                            return time.getFullYear()>(new Date()).getFullYear();
+                    }
+                }
                 
             }
         },
         methods:{
             initRequestData(requestData){
-                var date = new Date;
-                var year = date.getFullYear().toString();
+               // var date = new Date;
+                //var year = date.getFullYear().toString();
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -330,13 +350,17 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                requestData.timeRange = (year-1)+'-01-01:'+year+'-12-31';
+                //requestData.timeRange = (year-1)+'-01-01:'+year+'-12-31';
             },
              
             getDataFromService(requestData){
                 var _this = this;
+                engYearChgChart.showLoading({text:'加载中'});
+                engYearSortChart.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.yearcompareAjax,requestData).
                 done(function (res){
+                    engYearChgChart.hideLoading();
+                    engYearSortChart.hideLoading();
                     console.log(res)
                     if(res.errCode==30){//data ok
                         console.log(res)
@@ -358,13 +382,48 @@
              
                 });
             },
-            selectBeginYear(by){
+
+            selectBeginEndYear(){
+                
+                if(this.beginYear!=''&&this.endYear!=''){
+                    _beginYear = this.beginYear.getFullYear();
+                    _endYear = this.endYear.getFullYear();
+                    if(_beginYear > _endYear){
+                        _$message({
+                            showClose: true,
+                            message: '起始年份不能大于结束年份',
+                            type: 'warning',
+                            duration:2500
+                        });
+                        return;
+                    }
+                    var date = new Date();
+                    var year = date.getFullYear();
+                    if(_endYear==year){
+                        var month = date.getMonth();
+                        if(month>=1&&month<=9)
+                            month='0'+month;
+                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-'+month+'-31';                        
+                    }else{
+                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31'; 
+                    }
+                    
+                    _engType = '所有燃料';
+                    _currentYear = _endYear;
+                    this.getDataFromService(requestData);
+                    
+                }   
+            },
+
+            /*selectBeginYear(by){
                 _beginYear = by;
                 if(_endYear==''){    
                 }else{
                     if(_endYear<_beginYear){
                         alert("起始年份应该小于结束年份");
                     }else{
+                        var date = new Date();
+                        var year = date.getFullYear();
                         requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
                         this.getDataFromService(requestData);
                     }         
@@ -381,7 +440,7 @@
                         this.getDataFromService(requestData);
                     }         
                 }
-            },
+            },*/
             selectEngType(et){
                 _engType = et;
                  chaEngType();
@@ -397,7 +456,7 @@
             engYearChgChart.setOption(option);
             engYearSortChart.setOption(optionSort);
             this.initRequestData(requestData)
-            this.getDataFromService(requestData);
+           // this.getDataFromService(requestData);
             
         },
         updated:function(){

@@ -18,7 +18,7 @@
                     type="date"
                     placeholder="请选择日期"
                     @change="selectDate"
-                >
+                    :picker-options="pickerOptions0">
                 </el-date-picker>
             </div>       
             
@@ -46,7 +46,7 @@ import {getCookie,delCookie,setCookie} from '../../common/js/Cookie.js';
 
 
 var titleName = '数据监测'
-var titleNameCo = '数据监测2'
+var titleNameCo = '数据监测'
 var tranTypeA = '公交客运';
 
 var relTimeData = [];//油气柱状图数据
@@ -242,11 +242,76 @@ export default {
             return {
                 datTimRange:(new Date()).toLocaleDateString(),
                 inputRank:'',
-                inputCode:''
+                inputCode:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        if((new Date()).getHours()==0)
+                            return time.getTime() > (Date.now()-60*60*1000);
+                        else
+                            return time.getTime() > Date.now();
+                    }
+                },
                 
             }
     },
     methods:{
+        initRequestData(){
+            var ui = this.$userInfo;
+            var token  =this.$token;
+
+            requestData.username = ui.username;
+            requestData.roleType = ui.roleType;
+            requestData.tranType = tranTypeA;
+            requestData.token = token;
+
+            if(requestData.roleType&&requestData.roleType==='R_ENT'){
+                console.log(ui);
+                this.companyId = ui.roleName;
+            }
+            if(!ui.roleName) 
+                delete requestData.roleName;
+            else
+                requestData.roleName = ui.roleName;
+
+            if(!ui.place1) 
+                delete requestData.place1;
+            else
+                requestData.place1 = ui.place1;
+            
+            if(!ui.place2) 
+                delete requestData.place2;
+            else
+                requestData.place2 = ui.place2;
+            
+
+            var d = new Date();    
+            var th = d.getHours();           
+            if(th==0){
+                var yesterday = (new Date()).setTime(d.getTime()-60*60*1000);
+                var ym = yesterday.getMonth()+1;
+                var yd = yesterday.getDate();
+                if(ym>=1 && ym <= 9)
+                    ym = '0' + ym;
+                if(yd>=1 && yd<=9)
+                    yd = '0'+yd;
+                var yy = yesterday.getFullYear()+'-'+ym+'-'+'yd';
+                requestData.timeRange = yy+' 00:00:00&'+yy+' 23:59:59';    
+                
+            }else{
+                var tm = d.getMonth()+1;
+                var td = d.getDate();
+                th = th-1;
+                if(tm>=1 && tm <= 9)
+                    tm = '0' + tm;
+                if(td>=1 && td<=9)
+                    td = '0'+td;
+                if(th>=0 && th<=9)
+                    th = '0'+th;
+                var t = d.getFullYear()+'-'+tm+'-'+td;
+                requestData.timeRange = t+' 00:00:00&'+t+' '+th+':59:59';
+                
+            }
+        },
         setData(res){
             var dataFulCa = [];
             var dataFulCo = [];
@@ -325,11 +390,31 @@ export default {
         },
 
         selectDate(tr){
-            console.log('timeRange r ='+tr);
+            //console.log('timeRange r ='+tr);
             if(!tr||tr==='')
                 requestData['timeRange'] = '';
-            else
-                requestData['timeRange']=tr+' 00:00:00&' +tr +' 23:59:59';   
+            else{
+                var date = new Date();
+                var year = date.getFullYear();
+                var month = date.getMonth()+1;
+                if(month>=1&&month<=9)
+                    month = '0'+month;
+                var day = date.getDate();
+                if(day>=1&&day<=9)
+                    day = '0'+day;
+                var today = year + '-' + month + '-' + day;
+                //console.log(today);
+                if(today == tr){
+                    var hour = date.getHours()-1;
+                    if(hour>=0 && hour <=9)
+                        hour = '0'+ hour;
+                    requestData.timeRange = tr+' 00:00:00&'+tr+' '+hour+':59:59';
+                }else{
+                    requestData['timeRange']=tr+' 00:00:00&' +tr +' 23:59:59';
+                }
+                
+            }
+                   
         },
         getData(){
 
@@ -344,8 +429,9 @@ export default {
             }
 
             if(this.inputCode==''){
-                this.$alert('未输入监测项（城市/企业/车辆）名称，默认查询浙江省全部地区的实时能耗数据，是否继续？','提示', {
-                    showCancelButton:true,
+                this.$confirm('未输入监测项（城市/企业/车辆）名称，默认查询浙江省全部地区的实时能耗数据，是否继续？','提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     delete requestData.carId;
@@ -399,8 +485,12 @@ export default {
         getDataFromService(requestData){
             console.log(requestData);
             var _this = this;
+            relTimeChart.showLoading({text:'加载中'});
+            relTimeChartCo.showLoading({text:'加载中'});
             $.get(this.Constant.ajaxAddress+this.Constant.relTimeAjax,requestData).
             done(function (res){
+                relTimeChart.hideLoading();
+                relTimeChartCo.hideLoading();
                 if(res.errCode==30){//data ok
                     _this.setData(res);
                     var c = '浙江省';
@@ -437,51 +527,8 @@ export default {
         relTimeChartCo = echarts.init(document.getElementById('relTimeChartCo'));
         relTimeChart.setOption(option);
         relTimeChartCo.setOption(optionCo);
-
-
-
-        var ui = this.$userInfo;
-        var token  =this.$token;
-
-        requestData.username = ui.username;
-        requestData.roleType = ui.roleType;
-        requestData.tranType = tranTypeA;
-        requestData.token = token;
-
-        if(requestData.roleType&&requestData.roleType==='R_ENT'){
-            
-            this.companyId = ui.roleName;
-        }
-
-
-        if(!ui.roleName) 
-            delete requestData.roleName;
-        else
-            requestData.roleName = ui.roleName;
-
-        if(!ui.place1) 
-            delete requestData.place1;
-        else
-            requestData.place1 = ui.place1;
-        
-        if(!ui.place2) 
-            delete requestData.place2;
-        else
-            requestData.place2 = ui.place2;
-        
-
-        var d = new Date();
-        var tm = d.getMonth()+1;
-        var td = d.getDate();
-        if(tm>=1 && tm <= 9)
-            tm = '0' + tm;
-        if(td>=1 && td<=9)
-            td = '0'+td;
-
-        var t = d.getFullYear()+'-'+tm+'-'+td;
-        requestData.timeRange = t+' 00:00:00&'+t+' 23:59:59';
-        this.timeRange =  t;
-        this.getDataFromService(requestData);
+        this.initRequestData();
+        //this.getDataFromService(requestData);
     },
     updated:function(){
 
