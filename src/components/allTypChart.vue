@@ -202,6 +202,7 @@ export default {
             allTypChart.showLoading({text:'加载中'});
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
+                console.log(JSON.stringify(res));
                     allTypChart.hideLoading();
                     if(res.errCode==30){//data ok
                     setData(res);

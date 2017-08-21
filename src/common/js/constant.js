@@ -28,4 +28,7 @@ export const regUserAjax = '/reguser.json'
 export const deleteUserAjax = '/deluser.json'
 export const setPasswordAjax = '/passsetting.json'
 
+export const upload = '/helpupload'
+
+
 

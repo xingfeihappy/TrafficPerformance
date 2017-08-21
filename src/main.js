@@ -22,9 +22,9 @@ import * as cityinfo from './common/js/cityinfo.js'
 import * as md5 from './common/js/jquery.md5.js'
 Vue.prototype.Constant = Constant
 Vue.prototype.cityinfo = cityinfo
-/*import VueResource from 'vue-resource'
+import VueResource from 'vue-resource'
 Vue.use(VueResource);
-*/
+
 import {getCookie,delCookie,setCookie} from './common/js/Cookie.js';
 
 Vue.use(ElementUI)
