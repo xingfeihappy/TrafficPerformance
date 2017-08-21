@@ -369,6 +369,7 @@
                             return { value: item, label: item };
                         });
                         _this.optionSelect.push({value:'所有燃料',label:'所有燃料'});
+                        _this.optionSY.splice(0,_this.optionSY.length);
                         for(var crtyear = _beginYear;crtyear<=_endYear;crtyear++){
                             _this.optionSY.push({value:crtyear,label:crtyear});
                         }
