@@ -1,36 +1,60 @@
 <template>
     <section>
-        <el-row :span="24">
-            <el-col :span="8"></el-col>
-            <el-col :span="8">
-                    <!-- <el-upload
+        <el-row  v-if="$userInfo&&$userInfo.roleType&&$userInfo.roleType=='R_ADMIN'"> 
+            <el-col :span= "6"  class="top">
+                <div class="grid-content"> 
+                    <!-- <input type="file"  @change="upload">  -->
+                    <el-upload
                     :action="murl"
                     :data = "data"
                     :on-preview="handlePreview"
                     :on-remove="handleRemove"
                     :headers="headers"
-                    :before-upload="beforeUpload">
+                    :before-upload="beforeUpload"
+                    :http-request="upload">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip"></div>
-                    </el-upload>    -->
-                    <input type="file"  @change="upload">  
-            </el-col>
-        </el-row>
-
-        <el-row >
-            <el-col :span="20">
-                <div>
-                    <el-button id="prev" @click="onPrevPage">Previous</el-button>
-                    <el-button id="next" @click="onNextPage">Next</el-button>
-                    &nbsp; &nbsp;
-                    <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+                    <div slot="tip" class="el-upload__tip">请上传10m 以内的pdf文件</div>
+                    </el-upload>   
                 </div>
             </el-col>
         </el-row>
 
-        <el-row>
-                <canvas id="the-canvas" class = "pdf"></canvas>
+        <el-row type="flex" >
+            <el-col :span= "6" class="top"> 
+                <div class="grid-content"> 
+                    <el-button @click="download">下载文档</el-button> 
+                </div> 
+            </el-col>
         </el-row>
+
+        <el-row type="flex" justify="center" v-if="!loading">
+            <el-col :span= "6"> 
+                    <div class="grid-content" > 
+                         <el-button id="prev" @click="onPrevPage" type="primary">上一页</el-button> 
+                    </div> 
+            </el-col>
+            <el-col :span= "4">
+                <div align="center">
+                    <span><span >{{ page_count}}</span> / <span  >{{ page_num }}</span></span>
+                </div>
+            </el-col>
+            <el-col :span= "6"> 
+                    <div class="grid-content" align="right"> 
+                           <el-button id="next" @click="onNextPage" type="primary">下一页</el-button>
+                    </div> 
+            </el-col>
+        </el-row>
+
+        <el-row type="flex"  v-loading="loading"
+            element-loading-text="拼命加载中">
+            <el-col class = "pdf">
+                <div class="grid-content" align="center">
+                    <canvas id="the-canvas" > </canvas>
+                </div>
+            </el-col>
+        </el-row>
+
+
 
 
 
@@ -43,13 +67,16 @@
 export default {
     data() {
         return {
+            loading:true,
             pageNum:1,
             pageRendering:false,
             pdfDoc:null,
             pageNumPending:null,
-            scale : 0.8,
+            scale : 1.5,
             canvas : {},
             ctx:{},
+            page_num:0,
+            page_count:0,
             murl:this.Constant.ajaxAddress+this.Constant.upload,
             durl:this.Constant.ajaxAddress+this.Constant.download,
             data:{},
@@ -60,7 +87,8 @@ export default {
     methods:{
         upload(event){
             console.log(event);
-            var pdfFile= event.target.files[0];
+           // var pdfFile= event.target.files[0];
+           var pdfFile= event.file;
             if(!pdfFile) return ;
             console.log(pdfFile);
             this.data.token = this.$token;
@@ -94,10 +122,12 @@ export default {
             this.pageNumPending=null;
             var _this = this;
             PDFJS.getDocument(this.durl).then(function(pdfDoc_) {
+                _this.loading= false;
                 console.log('pdfDoc',pdfDoc_);
                 _this.pdfDoc = pdfDoc_;
                 console.log('pdfDoc',_this.pdfDoc);
-                document.getElementById('page_count').textContent = _this.pdfDoc.numPages;
+                //document.getElementById('page_count').textContent = _this.pdfDoc.numPages;
+                _this.page_num = _this.pdfDoc.numPages;
                 // Initial/first page rendering
                 _this.renderPage(_this.pageNum);
             });
@@ -129,7 +159,7 @@ export default {
                 });
             });
             // Update page counters
-            document.getElementById('page_num').textContent = this.pageNum;
+             this.page_count =this.pageNum;
         },
         queueRenderPage(num) {
             if (this.pageRendering) {
@@ -151,6 +181,9 @@ export default {
             }
             this.pageNum++;
             this.queueRenderPage(this.pageNum);
+        },
+        download(){
+            window.location.href=this.durl;
         }
     },
     mounted:function(){
@@ -166,7 +199,13 @@ export default {
     .pdf{
         border:1px solid black;
     }
-
+    .grid-content{
+        border-radius: 8px;
+        min-height: 50px;
+    }
+    .top{
+        margin-top: 50px
+    }
 </style>
 
 

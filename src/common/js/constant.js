@@ -30,5 +30,5 @@ export const setPasswordAjax = '/passsetting.json'
 
 export const upload = '/helpupload'
 
-export const download = '/helpdownload'
+export const download = '/helpdownload/helpDocument.pdf'
 
