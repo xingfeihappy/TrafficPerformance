@@ -32,3 +32,8 @@ export const upload = '/helpupload'
 
 export const download = '/helpdownload/helpDocument.pdf'
 
+
+export const getSupport = '/getsupport'
+export const setSupport = '/setsupport'
+
+
