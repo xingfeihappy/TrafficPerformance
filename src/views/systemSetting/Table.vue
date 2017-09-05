@@ -57,7 +57,7 @@
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
-						<el-option key = "企业" label = "企业" value = "企业"></el-option>
+						<!-- <el-option key = "企业" label = "企业" value = "企业"></el-option> -->
 					</el-select>
 				</el-form-item>
 				
@@ -102,7 +102,7 @@
 						<el-option key = "交通厅" label = "交通厅" value = "交通厅"></el-option>
 						<el-option key = "运管" label = "运管" value = "运管"></el-option>
 						<el-option key = "港航" label = "港航" value = "港航"></el-option>
-						<el-option key = "企业" label = "企业" value = "企业"></el-option>
+						<!-- <el-option key = "企业" label = "企业" value = "企业"></el-option> -->
 					</el-select>
 				</el-form-item>
 				

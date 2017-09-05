@@ -256,7 +256,8 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 		.header {
 			height: 60px;
 			line-height: 60px;
-			background: $color-primary;
+			//background: $color-primary;
+			background:#18c79c;
 			color:#fff;
 			.userinfo {
 				text-align: right;

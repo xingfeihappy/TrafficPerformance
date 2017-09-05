@@ -8,9 +8,9 @@
     <el-form-item prop="checkPass">
       <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember" fill="#6bc5a4">记住密码</el-checkbox>
-    <span class="forgetPwd" >
-         忘记密码？
+    <!-- <el-checkbox v-model="checked" checked class="remember" fill="#6bc5a4">记住密码</el-checkbox> -->
+    <span class="newfogP" @click="">
+         忘记用户名或者密码？
     </span>
    <!-- <input type="checkbox" name="rempwd" class="remember" v-model="checked" checked>记住密码 -->
     <el-form-item style="width:100%;">
@@ -82,8 +82,7 @@
                   console.log(document.cookie);
                   _this.$router.push({ path: '/index' });
                 }else{
-                  window.alert("用户名或者密码错误");
-                  
+                    _this.$message.error("用户名或者密码错误");
                 }
             })
             
@@ -146,6 +145,10 @@
       .remember {
         margin: 0px 0px 20px 0px;    
         font-size: 12px;
+      }
+      .newfogP{
+        text-decoration: underline;
+        margin-bottom:30px
       }
       .el-checkbox__inner:hover{
          border-color: #6bc5a4 !important;
