@@ -10,9 +10,10 @@
 				</div>
 			</el-col>
 			<el-col :span="10" class="userinfo">
-				<el-dropdown trigger="hover">				
-					<span id="name_span" class="el-dropdown-link userinfo-inner">admin</span>
+				<el-dropdown trigger="click">				
+					<span id="name_span" class="el-dropdown-link userinfo-inner">{{$userInfo.username}}</span>
 					<el-dropdown-menu slot="dropdown">
+						<el-dropdown-item @click.native="showInfo">个人信息</el-dropdown-item>
 						<el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
 					</el-dropdown-menu>
 				</el-dropdown>
@@ -72,6 +73,24 @@
 						<i class="fa fa-arrow-circle-up"></i>
 					</div>
 				</div>
+
+				<el-dialog
+				title="个人信息"
+				size="tiny"
+				:visible.sync="dialogVisible">
+					<span>用户名：{{$userInfo.username}}</span><br>
+					<span>姓名：{{$userInfo.name}}</span><br>
+					<span>电话：{{$userInfo.phone}}</span><br>
+					<span>角色：{{decoRoleType($userInfo.roleType)}}</span><br>
+					<span>权限范围：{{decoPlace($userInfo.place1,$userInfo.place2)}}</span><br>
+					<span>注册时间：{{$userInfo.upAuth}}</span>
+					<span slot="footer" class="dialog-footer">
+						<el-button  @click="dialogVisible = false">确 定</el-button>
+					</span>
+				</el-dialog>
+
+
+
 			</section>
 			
 		</el-col>
@@ -89,7 +108,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 			return {
 				sysName:'浙江省能耗统计',
 				collapsed:false,
-
+				dialogVisible:false,
 				form: {
 					name: '',
 					region: '',
@@ -99,7 +118,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 					type: [],
 					resource: '',
 					desc: ''
-				},
+				}
 
 
 			}
@@ -119,29 +138,44 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 			handleselect: function (a, b) {
 			},
 			//退出登录
-			logout: function () {
+			logout() {
 				var _this = this;
-				this.$confirm('确认退出吗?', '提示', {
-					type: 'info'
-				}).then(() => {
-				_this.$router.push('/login');
-            $.get(this.Constant.ajaxAddress+"/logout.json",
-				{ username:_this.$userInfo.username,
-				  token:_this.$token}).done(function(data){
-					if(data.errCode==12){
-						_this.$userInfo = null;
-						_this.$token = null;
-						sessionStorage.removeItem('user');
+				this.$confirm('确认退出吗?', '提示').then(() => {
+					$.get(this.Constant.ajaxAddress+"/logout.json",
+						{ username:_this.$userInfo.username,
+						token:_this.$token}).done(function(data){
+							if(data.errCode==12){
+								_this.$userInfo = null;
+								_this.$token = null;
+								sessionStorage.removeItem('user');
 
-						_this.$router.push('/login');
-					}else{
-						window.alert("登出失败")
-					}
-				})
-				}).catch(() => {
-
+								_this.$router.push('/login');
+							}else{
+								window.alert("登出失败")
+							}
+						})
 				});
 			},
+			showInfo(){
+				this.dialogVisible= true;
+			},
+			decoRoleType(roleType){
+				if(!roleType) return '';
+				if(roleType==='R_TRA') return '交通厅';
+				else if(roleType==='R_LAN')  return '运管';
+				else if(roleType==='R_WAT')  return '港航';
+				else if(roleType==='R_ENT')  return '企业';
+				else if(roleType==='R_ADMIN')  return '管理员';
+				else return roleType;
+			},
+			decoPlace(place1,place2){
+				if((!place1||place1=='')&&(!place2||place2=='')) return '全省市县';
+				else if(place1&&place2!=''&&(!place2||place2=='')) return place1 + '市及其下区县';
+				else if(place1&&place2&&place1!=''&&place2!='') return place1+'市'+place2;
+			},
+
+
+
 			//折叠导航栏
 			collapse:function(){
 				this.collapsed=!this.collapsed;
@@ -155,9 +189,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 
 		},
 		mounted() {
-
-			 document.getElementById('name_span').innerHTML = this.$userInfo.username;
-
+			console.log(this.$userInfo);
 			console.log($('#sidebar-hook'));
 			$('#sidebar-hook').niceScroll({
    					cursorcolor: "#6bc5a4",//#CC0071 光标颜色E4F1F1
