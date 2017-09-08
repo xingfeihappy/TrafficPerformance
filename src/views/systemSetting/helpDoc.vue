@@ -1,7 +1,12 @@
 <template>
     <section>
-        <el-row  v-if="$userInfo&&$userInfo.roleType&&$userInfo.roleType=='R_ADMIN'"> 
-            <el-col :span= "6"  class="top">
+        <el-row> 
+            <el-col :span= "4" class="top"> 
+                <div class="grid-content" > 
+                    <el-button type="primary" @click="download">下载文档</el-button> 
+                </div> 
+            </el-col>
+            <el-col :span= "4"  class="top" v-if="$userInfo&&$userInfo.roleType&&$userInfo.roleType=='R_ADMIN'">
                 <div class="grid-content"> 
                     <!-- <input type="file"  @change="upload">  -->
                     <el-upload
@@ -12,38 +17,21 @@
                     :headers="headers"
                     :before-upload="beforeUpload"
                     :http-request="upload">
-                    <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">请上传10m 以内的pdf文件</div>
+                    <el-tooltip effect="dark" content="请上传10m 以内的pdf文件" placement="top-start">
+                        <el-button type="primary">点击上传</el-button>
+                    </el-tooltip>
+                    <!--<div slot="tip" class="el-upload__tip">请上传10m 以内的pdf文件</div>-->
                     </el-upload>   
                 </div>
             </el-col>
+            
         </el-row>
 
-        <el-row type="flex" >
-            <el-col :span= "6" class="top"> 
-                <div class="grid-content"> 
-                    <el-button @click="download">下载文档</el-button> 
-                </div> 
-            </el-col>
-        </el-row>
+        
+            
+    
 
-        <el-row type="flex" justify="center" v-if="!loading">
-            <el-col :span= "6"> 
-                    <div class="grid-content" > 
-                         <el-button id="prev" @click="onPrevPage" type="primary">上一页</el-button> 
-                    </div> 
-            </el-col>
-            <el-col :span= "4">
-                <div align="center">
-                    <span><span >{{ page_count}}</span> / <span  >{{ page_num }}</span></span>
-                </div>
-            </el-col>
-            <el-col :span= "6"> 
-                    <div class="grid-content" align="right"> 
-                           <el-button id="next" @click="onNextPage" type="primary">下一页</el-button>
-                    </div> 
-            </el-col>
-        </el-row>
+        
 
         <el-row type="flex"  v-loading="loading"
             element-loading-text="拼命加载中">
@@ -51,6 +39,24 @@
                 <div class="grid-content" align="center">
                     <canvas id="the-canvas" > </canvas>
                 </div>
+            </el-col>
+        </el-row>
+
+        <el-row type="flex" justify="center" v-if="!loading" class="buttons">
+            <el-col :span= "8"> 
+                    <div class="grid-content" align="right"> 
+                         <el-button id="prev" @click="onPrevPage" >上一页</el-button> 
+                    </div> 
+            </el-col>
+            <el-col :span= "8">
+                <div align="center">
+                    <span><span >{{ page_count}}</span> / <span  >{{ page_num }}</span></span>
+                </div>
+            </el-col>
+            <el-col :span= "8"> 
+                    <div class="grid-content" align="left"> 
+                           <el-button id="next" @click="onNextPage">下一页</el-button>
+                    </div> 
             </el-col>
         </el-row>
 
@@ -80,7 +86,7 @@ export default {
             murl:this.Constant.ajaxAddress+this.Constant.upload,
             durl:this.Constant.ajaxAddress+this.Constant.download,
             data:{},
-            headers:{'Access-Control-Allow-Origin':'*','Content-Type':'multipart/form-data'}
+            headers:{'Access-Control-Allow-Origin':'*','Content-Type':'multipart/form-data',}
         }
     },
 
@@ -204,7 +210,13 @@ export default {
         min-height: 50px;
     }
     .top{
-        margin-top: 50px
+        margin-top: 30px;
+        float:right;
+    }
+
+    .buttons{
+        margin-top: 10px;
+        
     }
 </style>
 

@@ -103,9 +103,9 @@ let routes = [
         children: [
             { path: '/userSetting', pri:['R_ADMIN'],component: Table, name: '用户管理' },
             { path: '/passSetting', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: passset, name: '密码修改' },
-            { path: '/support', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: support, name: '技术支持' },
             { path: '/helpDoc', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: helpdoc, name: '帮助文档' },
-            { path: '/dictSetting',pri:['R_ADMIN'], component: dataDic, name: '数据字典' }
+            { path: '/dictSetting',pri:['R_ADMIN'], component: dataDic, name: '数据字典' },
+            { path: '/support', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: support, name: '技术支持' }
         ]
     },
 
