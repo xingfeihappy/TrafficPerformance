@@ -108,7 +108,7 @@
 				
 				<el-form-item label="权限范围" prop="p1_p2">
 				<div class="bottom">
-					<el-tooltip class="item" effect="dark" content="Left Top 提示文字" placement="left-start">
+					<el-tooltip class="item" effect="dark" content="提示" placement="left-start">
 						<el-cascader
 						@change="onCityChangeAdd"
 						:options="cityOption"
@@ -243,8 +243,12 @@
 					var tmpl = [];
 					tmpc.label = cities[i];
 					tmpc.value = cities[i];
-					for(var j =0;j<counties[i].length;j++)
-						tmpl.push({label:counties[i][j],value:counties[i][j]});
+					
+					for(var j =0;j<counties[i].length;j++){
+						var ctm = {label:counties[i][j],value:counties[i][j]};
+						if(j!=0) ctm.disabled =  true;//在这把区县设置给屏蔽了
+						tmpl.push(ctm);
+					}
 					tmpc.cities = tmpl;	
 					this.cityOption.push(tmpc);
 				}

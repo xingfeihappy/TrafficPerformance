@@ -84,6 +84,8 @@
     var dataForEngDis = [];//能源运距;
     var dataForMoth = [];//年度图表
     
+    var shipTypeMap;
+
     var k=3; //标志
 
     var _year = (new Date).getFullYear().toString();
@@ -545,19 +547,23 @@
             }
         });
 
+
+
+        //生成车辆类型映射表
+        if(!shipTypeMap){
+            shipTypeMap = {};
+            var ts= res.xs[4];
+            for(var i=1;i<=ts.length;i++)
+                shipTypeMap['s'+i] = ts[i-1];
+            //console.log(shipTypeMap);
+        }
         //准备吨位船舶柱状图数据
-        res.xs[4].forEach(function(i){
-            var tmpEngDatas =[];
-            if(!togShipMap[i]){
-                var tmpSeriseObj = {
-                        name:i,
-                        type:'bar',
-                        data:[]
-                };
-                togShipSeries.push(tmpSeriseObj);
-            }else{
+        var xstmp = [];
+        for(var st in togShipMap){
+            if(togShipMap.hasOwnProperty(st)){
+                var tmpEngDatas =[];
                 res.xs[2].forEach(function(e1){
-                    var t = togShipMap[i][e1];
+                    var t = togShipMap[st][e1];
                     if(t){
                         tmpEngDatas.push((t[0]/t[1]).toFixed(2));
                     }else{
@@ -565,13 +571,44 @@
                     }
                 });
                 var tmpSeriseObj = {
-                    name:i,
+                    name:st,
                     type:'bar',
                     data:tmpEngDatas
                 };
                 togShipSeries.push(tmpSeriseObj);
+                xstmp.push(st);
             }
-        });
+        }
+        res.xs[4] = xstmp;
+
+
+        
+        // res.xs[4].forEach(function(i){
+        //     var tmpEngDatas =[];
+        //     if(!togShipMap[i]){
+        //         var tmpSeriseObj = {
+        //                 name:i,
+        //                 type:'bar',
+        //                 data:[]
+        //         };
+        //         togShipSeries.push(tmpSeriseObj);
+        //     }else{
+        //         res.xs[2].forEach(function(e1){
+        //             var t = togShipMap[i][e1];
+        //             if(t){
+        //                 tmpEngDatas.push((t[0]/t[1]).toFixed(2));
+        //             }else{
+        //                 tmpEngDatas.push(0);
+        //             }
+        //         });
+        //         var tmpSeriseObj = {
+        //             name:i,
+        //             type:'bar',
+        //             data:tmpEngDatas
+        //         };
+        //         togShipSeries.push(tmpSeriseObj);
+        //     }
+        // });
 
         //准备燃料运距柱状图数据
         res.xs[5].forEach(function(i){
