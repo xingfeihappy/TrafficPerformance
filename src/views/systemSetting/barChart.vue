@@ -90,6 +90,8 @@
     var dataForEngPsger = [];//能源客位
     var dataForMon = [];//年度图表
 
+    var carTypeMap;
+
     var k=3; //标志
 
     var _year=(new Date).getFullYear().toString();
@@ -491,15 +493,39 @@
             }
         });
 
-        //准备不同车辆类型柱状图数据
-        res.xs[5].forEach(function(e1){
-            var t = carTypeData[e1];
-            if(t){
-                eng_per_for_car.push((t[0]/t[1]).toFixed(2));
-            }else{
-                eng_per_for_car.push(0);
+        //生成车辆类型映射表
+        if(!carTypeMap){
+            carTypeMap = {};
+            var ts= res.xs[5];
+            for(var i=1;i<=ts.length;i++)
+                carTypeMap['c'+i] = ts[i-1];
+            //console.log(carTypeMap);
+        }
+         //准备不同车辆类型柱状图数据
+         var xstmp = [];
+        for(var i in carTypeData){
+            if(carTypeData.hasOwnProperty(i)){
+                var t = carTypeData[i];
+                if(t){
+                    eng_per_for_car.push((t[0]/t[1]).toFixed(2));
+                }else{
+                    eng_per_for_car.push(0);
+                }
+                xstmp.push(carTypeMap[i]);
             }
-        });
+        }
+        res.xs[5] = xstmp;
+        console.log(carTypeData);
+        console.log(eng_per_for_car);
+       
+        // res.xs[5].forEach(function(e1){
+        //     var t = carTypeData[e1];
+        //     if(t){
+        //         eng_per_for_car.push((t[0]/t[1]).toFixed(2));
+        //     }else{
+        //         eng_per_for_car.push(0);
+        //     }
+        // });
 
         //准备燃料客位柱状图数据
         res.xs[2].forEach(function(i){
