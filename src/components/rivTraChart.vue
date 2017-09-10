@@ -489,7 +489,7 @@
             var ts= res.xs[4];
             for(var i=1;i<=ts.length;i++)
                 shipTypeMap['s'+i] = ts[i-1];
-            console.log(shipTypeMap);
+            //console.log(shipTypeMap);
         }
         //准备吨位船舶类型数据
         var xstmp = [];
