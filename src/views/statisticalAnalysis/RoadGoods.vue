@@ -90,6 +90,8 @@
     var dataForCarTon = [];//车辆类型
     var dataForMon = [];//年度图表
 
+    var carTypeMap ;
+
     var k=3; //标志
     var _year = (new Date).getFullYear().toString();
     var beforTimeRange = '';
@@ -542,6 +544,18 @@
             }
         });
 
+
+        //生成车辆类型映射表
+        if(!carTypeMap){
+            carTypeMap = {};
+            var ts= res.xs[4];
+            for(var i=1;i<=ts.length;i++)
+                carTypeMap['c'+i] = ts[i-1];
+            console.log(carTypeMap);
+        }
+
+        var xstmp = [];
+        var nedset = true;
         //车辆类型吨位数据
         res.xs[2].forEach(function(i) {
             var tmpEngDatas =[];
@@ -553,15 +567,29 @@
                 };
                 carTonSeries.push(tmpSeriseObj);
             }else{
-                res.xs[4].forEach(function(e1){
-                    var t = carTonMap[i][e1];
-                    if(t)
-                    {
-                        tmpEngDatas.push((t[0]/t[1]).toFixed(2))
-                    }else{
-                        tmpEngDatas.push(0);
-                    }
-                });
+                for(var ci in carTonMap[i]){
+                    if(carTonMap[i].hasOwnProperty(ci)){
+                        var t = carTonMap[i][ci];
+                        if(t)
+                        {
+                            tmpEngDatas.push((t[0]/t[1]).toFixed(2))
+                        }else{
+                            tmpEngDatas.push(0);
+                        } 
+                        if(nedset)
+                            xstmp.push(carTypeMap[ci]);                      
+                    } 
+                }
+                nedset = false;
+                // res.xs[4].forEach(function(e1){
+                //     var t = carTonMap[i][e1];
+                //     if(t)
+                //     {
+                //         tmpEngDatas.push((t[0]/t[1]).toFixed(2))
+                //     }else{
+                //         tmpEngDatas.push(0);
+                //     }
+                // });
                 var tmpSeriseObj = {
                     name:i,
                     type:'bar',
@@ -570,6 +598,8 @@
                 carTonSeries.push(tmpSeriseObj);
             }
         });
+        res.xs[4] = xstmp;
+
         
         if(k==1||k==3){
             dataForEngAll.splice(0,dataForEngAll.length);
