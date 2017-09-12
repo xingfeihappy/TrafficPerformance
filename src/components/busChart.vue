@@ -177,6 +177,7 @@ var option = {
 let optionPi={
     title:{
         text: '公交车能源结构图',
+        subtext:'单位：万吨标准煤',
         x: 'center'
     },
     tooltip : {

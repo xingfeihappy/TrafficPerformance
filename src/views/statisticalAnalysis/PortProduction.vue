@@ -152,6 +152,7 @@
     var optionPi = {
         title:{
             text: '港口生产能源结构图',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {

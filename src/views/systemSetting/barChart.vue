@@ -179,6 +179,7 @@
     var optionPi = {
         title:{
             text: '道路客运能源结构图',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -280,7 +281,11 @@
         xAxis: {
             data: [],
             name:'车辆类型',
-            nameGap:'2'
+            nameGap:'2',
+            axisLabel: {
+                interval: 0,
+                rotate: 30
+            },
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -501,22 +506,34 @@
                 carTypeMap['c'+i] = ts[i-1];
             //console.log(carTypeMap);
         }
+        
          //准备不同车辆类型柱状图数据
-         var xstmp = [];
+        var xstmp = [];
+        var other=[0,0];
+        var hasother = false;
         for(var i in carTypeData){
             if(carTypeData.hasOwnProperty(i)){
                 var t = carTypeData[i];
-                if(t){
-                    eng_per_for_car.push((t[0]/t[1]).toFixed(2));
+                if(carTypeMap.hasOwnProperty(i)){
+                    //if(t){
+                        eng_per_for_car.push((t[0]/t[1]).toFixed(2));
+                   // }else{
+                       // eng_per_for_car.push(0);
+                   // }
+                    xstmp.push(carTypeMap[i]);
                 }else{
-                    eng_per_for_car.push(0);
+                   // if(t){
+                        hasother = true;
+                        other[0] += t[0];
+                        other[1] += t[1];
+                   // }
                 }
-                xstmp.push(carTypeMap[i]);
             }
         }
-        res.xs[5] = xstmp;
-        console.log(carTypeData);
-        console.log(eng_per_for_car);
+        if(hasother){
+            eng_per_for_car.push((other[0]/other[1]).toFixed(2));
+            xstmp.push('其它');
+        }
        
         // res.xs[5].forEach(function(e1){
         //     var t = carTypeData[e1];
@@ -571,7 +588,7 @@
             dataForDisPer.push(eng_per_for_dis);
 
             dataForCarPer.splice(0,dataForCarPer.length);
-            dataForCarPer.push(res.xs[5]);
+            dataForCarPer.push(xstmp);
             dataForCarPer.push(eng_per_for_car);
 
             dataForEngPsger.splice(0,dataForEngPsger.length);

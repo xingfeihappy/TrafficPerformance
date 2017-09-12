@@ -89,7 +89,7 @@ var optionTraEng = {
         {
             type : 'value',
             //nameLocation : 'middle',
-            name : '单位运距能耗(单位：吨标准煤/公里)',
+            name : '单位运距能耗(单位：千克标准煤/公里)',
             //nameGap : 35
         }
     ],
@@ -127,7 +127,7 @@ function setData(res){
             res.xs[0].forEach(function(e2){
                 var t = traEngMap[element][e2];
                 if(t){
-                    tmpEngDatas.push((t[0]/t[1]).toFixed(2))
+                    tmpEngDatas.push((t[0]*1000/t[1]).toFixed(2))
                 }else{
                     tmpEngDatas.push(0);
                 }

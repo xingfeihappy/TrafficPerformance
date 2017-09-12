@@ -175,6 +175,7 @@
     var optionPi = {
         title:{
             text: '海洋货运能源结构图',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -423,6 +424,15 @@
         var xAisMon = [_year+'-01',_year+'-02',_year+'-03',_year+'-04',_year+'-05',_year+'-06',
             _year+'-07',_year+'-08',_year+'-09',_year+'-10',_year+'-11',_year+'-12']
 
+
+        //生成车辆类型映射表
+        if(!shipTypeMap){
+            shipTypeMap = {};
+            var ts= res.xs[4];
+            for(var i=1;i<=ts.length;i++)
+                shipTypeMap['s'+i] = ts[i-1];
+            //console.log(shipTypeMap);
+        }
         //遍历计算
         //monthData  engerData engTogMap engDisMap
         res.engTypOther.forEach(function(element) {
@@ -470,17 +480,23 @@
         
 
         //togShipMap
+        var shipType;
         res.weiTypOther.forEach(function(element){
             element.weiTypSt.forEach(function(e2){
-                if(!togShipMap[e2.type])
-                    togShipMap[e2.type] = {};
-                if(!togShipMap[e2.type][element.baseTyp])
-                    togShipMap[e2.type][element.baseTyp] = [0,0];
+                if(shipTypeMap.hasOwnProperty(e2.type)){
+                    shipType = shipTypeMap[e2.type];
+                }else{
+                    shipType = "其它";
+                }
+                if(!togShipMap[shipType])
+                    togShipMap[shipType] = {};
+                if(!togShipMap[shipType][element.baseTyp])
+                    togShipMap[shipType][element.baseTyp] = [0,0];
                 
-                var t = togShipMap[e2.type][element.baseTyp];
+                var t = togShipMap[shipType][element.baseTyp];
                 t[0] += e2.typDatOfAllEng;
                 t[1] += e2.typDatOfAllLen; 
-                togShipMap[e2.type][element.baseTyp] = t;
+                togShipMap[shipType][element.baseTyp] = t;
             });
         });
 
@@ -549,14 +565,7 @@
 
 
 
-        //生成车辆类型映射表
-        if(!shipTypeMap){
-            shipTypeMap = {};
-            var ts= res.xs[4];
-            for(var i=1;i<=ts.length;i++)
-                shipTypeMap['s'+i] = ts[i-1];
-            //console.log(shipTypeMap);
-        }
+        
         //准备吨位船舶柱状图数据
         var xstmp = [];
         for(var st in togShipMap){
@@ -750,7 +759,7 @@
                 this.countDate = year+'年'+month+'月';
             },
             getDataFromService(requestData){
-                console.log(requestData);
+               // console.log(requestData);
                 var _this = this;
 
                 if(k==1||k==3){
