@@ -98,6 +98,8 @@
 
     var requestData = {}; 
 
+    
+
     var colors = ['#5793f3', '#d14a61'];
     var option = {
         color:colors,
@@ -139,7 +141,7 @@
         yAxis: [
             {
                 type: 'value',
-                name: '月使用能耗(万吨标准煤)',
+                name: '月使用能耗(吨标准煤)',
                 axisLine: {
                     lineStyle: {
                         color: '#5793f3'
@@ -179,9 +181,10 @@
     var optionPi = {
         title:{
             text: '道路客运能源结构图',
-            subtext:'单位：万吨标准煤',
+            subtext:'单位：吨标准煤',
             x: 'center'
         },
+        
         tooltip : {
             trigger: 'item',
             formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -215,6 +218,10 @@
         title:{
             text: '不同规模企业单位能耗柱状图',
             left:'center'
+        },
+        grid:{
+            left:55,
+            right:50
         },
         tooltip: {
             trigger: 'axis',
@@ -258,6 +265,10 @@
         title:{
             text: '不同车辆类型单位能耗柱状图',
             left:'center'
+        },
+        grid:{
+            left:55,
+            right:50
         },
         tooltip: {
             trigger: 'axis',
@@ -305,6 +316,10 @@
         title:{
             text: '不同运距车辆单位能耗柱状图',
             left:'center'
+        },
+        grid:{
+            left:55,
+            right:50
         },
         tooltip: {
             trigger: 'axis',
@@ -473,7 +488,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
             }else{
             }
         });
@@ -602,7 +617,7 @@
             var t = monthData[e1];
             if(t) 
             {
-                month_all.push((t[0]/10000).toFixed(2));
+                month_all.push((t[0]).toFixed(2));
                 month_per.push((t[0]/t[1]).toFixed(2));
             }else
             {
@@ -831,6 +846,15 @@
             energyByYearChart.setOption(option);
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                companyChart.resize();
+                carTypeChart.resize();
+                distanceChart.resize();
+                energyByYearChart.resize();
+                guestChart.resize();
+            });
 
         },
         updated: function () {

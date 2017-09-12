@@ -140,7 +140,7 @@
         yAxis: [
             {
                 type: 'value',
-                name: '月使用能耗(万吨标准煤)',
+                name: '月使用能耗(吨标准煤)',
                 axisLine: {
                     lineStyle: {
                         color: '#5793f3'
@@ -180,7 +180,7 @@
     var optionPi = {
         title:{
             text: '道路货运能源结构图',
-            subtext:'单位:万吨标准煤',
+            subtext:'单位:吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -223,6 +223,10 @@
                 type : 'shadow'        
             }
         },
+        grid:{
+            left:55,
+            right:50
+        },
 
         legend: {
             // orient: 'vertical',
@@ -262,6 +266,10 @@
         title:{
             text: '不同规模企业单位能耗柱状图',
             left:'center'
+        },
+        grid:{
+            left:55,
+            right:50
         },
         tooltip: {
             trigger: 'axis',
@@ -514,7 +522,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
             }else{
             }
         });
@@ -872,8 +880,20 @@
             engTonChart.setOption(optionEngTon);
             carTonChart.setOption(optionCarTon);
             energyByYearChart.setOption(option);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                tonnageChart.resize();
+                companyChart.resize();
+                engTonChart.resize();
+                carTonChart.resize();
+                energyByYearChart.resize();
+            });
+            
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
+
+            
         },
         updated: function () {
             console.log("update");

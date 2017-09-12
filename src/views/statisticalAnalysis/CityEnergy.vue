@@ -70,7 +70,7 @@
     var optionPi={
         title:{
             text: '各地市能耗构成图',
-            subtext:'单位：万吨标准煤',
+            subtext:'单位：吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -119,7 +119,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
                // eng_per.push((t[0]/t[1]).toFixed(2))
             }else{
                 //eng_all_for_PI.push({name:e1,value:0})
@@ -258,8 +258,15 @@
         mounted: function () {
             cityTypeEnergyPie = echarts.init(document.getElementById('cityTypeEnergyPie'));
             cityTypeEnergyPie.setOption(optionPi);
+
+            window.addEventListener("resize",function(){
+                cityTypeEnergyPie.resize();
+            });
+
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
+
+            
         },
         updated: function () {
             console.log("update");

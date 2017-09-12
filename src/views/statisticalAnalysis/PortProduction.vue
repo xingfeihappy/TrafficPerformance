@@ -124,7 +124,7 @@
             },
             {
                 type: 'value',
-                name: '单位能耗(亿吨标准煤/万吨生产量)',
+                name: '单位能耗(吨标准煤/吨生产量)',
                 nameGap : 35,
                 nameLocation:'middle',
                 axisLine: {
@@ -152,7 +152,7 @@
     var optionPi = {
         title:{
             text: '港口生产能源结构图',
-            subtext:'单位：万吨标准煤',
+            subtext:'单位：吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -189,6 +189,10 @@
             text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
+        grid:{
+            left:55,
+            right:50
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer : {            
@@ -214,7 +218,7 @@
             nameGap:'2'
         },
         yAxis: {
-            name:'单位能耗(亿吨标准煤/万吨生产量)',
+            name:'单位能耗(吨标准煤/吨生产量)',
             nameLocation:'middle',
             nameGap:'40'
         },
@@ -240,7 +244,6 @@
 
         var xAisMon = [_year+'-01',_year+'-02',_year+'-03',_year+'-04',_year+'-05',_year+'-06',
             _year+'-07',_year+'-08',_year+'-09',_year+'-10',_year+'-11',_year+'-12']
-
         res.engTypOther.forEach(function(element) {
 
             element.engTypMo.forEach(function(e2){
@@ -273,9 +276,9 @@
         //准备能源饼图数据
         res.xs[1].forEach(function(e1){
             var t = engerData[e1];
-            if(t)
+            if(t&&t[0]>0)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
             }else{
             }
         });
@@ -284,7 +287,7 @@
         res.xs[2].forEach(function(e1){
             var t = scaleData[e1];
             if(t){
-                eng_per_for_scale.push((t[0]/10000/t[1]).toFixed(2));
+                eng_per_for_scale.push((t[0]/t[1]).toFixed(2));
             }else{
                 eng_per_for_scale.push(0);
             }
@@ -307,7 +310,7 @@
             {
                 
                 month_all.push((t[0]/10000).toFixed(2));
-                month_per.push((t[0]/10000/t[1]).toFixed(2));
+                month_per.push((t[0]/t[1]).toFixed(2));
             }else
             {
                 month_all.push(0);
@@ -497,6 +500,13 @@
             energyPieChart.setOption(optionPi);
             companyChart.setOption(optionScale);
             energyByYearChart.setOption(option);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                companyChart.resize();
+                energyByYearChart.resize();
+            });
+
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
 

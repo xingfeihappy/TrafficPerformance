@@ -166,7 +166,7 @@
     var allEnergys = [];
 
     function setData(res){
-          
+        console.log(res)
         var allYearMon2Map = {};
         res.engTypOther.forEach(function(element){
             element.engTypMo.forEach(function(e2){
@@ -456,6 +456,12 @@
             engYearSortChart = echarts.init(document.getElementById('engYearSortChart'));
             engYearChgChart.setOption(option);
             engYearSortChart.setOption(optionSort);
+
+            window.addEventListener("resize",function(){
+                engYearChgChart.resize();
+                engYearSortChart.resize();
+            });
+
             this.initRequestData(requestData)
            // this.getDataFromService(requestData);
             

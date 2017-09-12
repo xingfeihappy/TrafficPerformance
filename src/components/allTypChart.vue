@@ -48,6 +48,9 @@ var optionTraEng = {
         text: '',
         //left:'center'
     },
+    grid:{
+        left:105
+    },
     dataZoom: [
         {
             id: 'dataZoomX',
@@ -253,6 +256,11 @@ export default {
     mounted:function(){
         allTypChart = echarts.init(document.getElementById('allTypChart'));
         allTypChart.setOption(optionTraEng);
+
+        window.addEventListener("resize",function(){
+            allTypChart.resize();
+        });
+
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
         

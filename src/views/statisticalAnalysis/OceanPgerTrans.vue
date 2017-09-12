@@ -211,6 +211,10 @@
             text: '不同燃料类型单位能耗柱状图',
             left:'center'
         },
+        grid:{
+            left:55,
+            right:50
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer : {            
@@ -258,6 +262,10 @@
             text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
+        grid:{
+            left:55,
+            right:50
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer : {            
@@ -300,6 +308,10 @@
         title:{
             text: '不同运距船舶单位能耗柱状图',
             left:'center'
+        },
+        grid:{
+            left:55,
+            right:50
         },
         tooltip: {
             trigger: 'axis',
@@ -770,6 +782,16 @@
             companyChart.setOption(optionScale);
             guestChart.setOption(optionEngPsger);
             energyByYearChart.setOption(option);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                unitEnergyChart.resize();
+                distanceShipChart.resize();
+                companyChart.resize();
+                guestChart.resize();
+                energyByYearChart.resize();
+            });
+
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
 
