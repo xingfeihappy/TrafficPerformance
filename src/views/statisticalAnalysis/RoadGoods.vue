@@ -180,6 +180,7 @@
     var optionPi = {
         title:{
             text: '道路货运能源结构图',
+            subtext:'单位:万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -403,8 +404,8 @@
     };
 
     function setData(res){
-
-        
+      
+         
         var monthData = new Object();
         var engerData = {};
        // var carTypeData={};
@@ -412,6 +413,7 @@
         var scaleData={};
         var engTonMap={};
         var carTonMap ={};
+        var xstmp = [];
 
         var month_all = new Array();//能耗
         var month_per = new Array();// eng_cl_e / eng_cl_l ;
@@ -423,6 +425,15 @@
 
         var xAisMon = [_year+'-01',_year+'-02',_year+'-03',_year+'-04',_year+'-05',_year+'-06',
             _year+'-07',_year+'-08',_year+'-09',_year+'-10',_year+'-11',_year+'-12']
+
+        //生成车辆类型映射表
+        if(!carTypeMap){
+            carTypeMap = {};
+            var ts= res.xs[4];
+            for(var i=1;i<=ts.length;i++)
+                carTypeMap['c'+i] = ts[i-1];
+            console.log(carTypeMap);
+        }
 
         res.engTypOther.forEach(function(element){
             element.engTypMo.forEach(function(e2){
@@ -465,16 +476,29 @@
         });
 
         //tonnageData carTonData
+        var xAisOther=false;
+        var carType;
         res.carTypOther.forEach(function(element){
+            //生成吨位车辆类型表x坐标轴
+            if(carTypeMap.hasOwnProperty(element.baseTyp)){               
+                carType = carTypeMap[element.baseTyp];
+                xstmp.push(carType);
+            }else{
+                carType = "其它";
+                if(!xAisOther){
+                    xstmp.push("其它");
+                    xAisOther=true;
+                }
+            }
             element.carTypWs.forEach(function(e2){
                 if(!carTonMap[e2.type])
                     carTonMap[e2.type]={};
-                if(!carTonMap[e2.type][element.baseTyp])
-                    carTonMap[e2.type][element.baseTyp]=[0,0];
-                var t = carTonMap[e2.type][element.baseTyp];
+                if(!carTonMap[e2.type][carType])
+                    carTonMap[e2.type][carType]=[0,0];
+                var t = carTonMap[e2.type][carType];
                 t[0] += e2.typDatOfAllEng;
                 t[1] += e2.typDatOfAllLen;
-                carTonMap[e2.type][element.baseTyp] = t;
+                carTonMap[e2.type][carType] = t;
 
                 var t = tonnageData[e2.type];
                 if(!t) t = [0,0];
@@ -545,18 +569,15 @@
         });
 
 
-        //生成车辆类型映射表
-        if(!carTypeMap){
-            carTypeMap = {};
-            var ts= res.xs[4];
-            for(var i=1;i<=ts.length;i++)
-                carTypeMap['c'+i] = ts[i-1];
-            console.log(carTypeMap);
-        }
+        
 
-        var xstmp = [];
-        var nedset = true;
+        
+        
         //车辆类型吨位数据
+        var other;
+        var hasOther;
+        console.log(carTonMap);
+
         res.xs[2].forEach(function(i) {
             var tmpEngDatas =[];
             if(!carTonMap[i]){
@@ -567,20 +588,16 @@
                 };
                 carTonSeries.push(tmpSeriseObj);
             }else{
-                for(var ci in carTonMap[i]){
+                xstmp.forEach(function(ci){
+                    var nedset = true;
                     if(carTonMap[i].hasOwnProperty(ci)){
                         var t = carTonMap[i][ci];
-                        if(t)
-                        {
-                            tmpEngDatas.push((t[0]/t[1]).toFixed(2))
-                        }else{
-                            tmpEngDatas.push(0);
-                        } 
-                        if(nedset)
-                            xstmp.push(carTypeMap[ci]);                      
-                    } 
-                }
-                nedset = false;
+                        tmpEngDatas.push((t[0]/t[1]).toFixed(2))             
+                    }else{
+                        tmpEngDatas.push(0);
+                    }
+                })
+                
                 // res.xs[4].forEach(function(e1){
                 //     var t = carTonMap[i][e1];
                 //     if(t)
@@ -598,7 +615,7 @@
                 carTonSeries.push(tmpSeriseObj);
             }
         });
-        res.xs[4] = xstmp;
+        //res.xs[4] = xstmp;
 
         
         if(k==1||k==3){
@@ -621,7 +638,7 @@
 
             dataForCarTon.splice(0,dataForCarTon.length);
             dataForCarTon.push(res.xs[2]);
-            dataForCarTon.push(res.xs[4]);
+            dataForCarTon.push(xstmp);
             dataForCarTon.push(carTonSeries);
 
         }

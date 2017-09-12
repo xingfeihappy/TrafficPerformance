@@ -111,7 +111,7 @@ var option = {
     yAxis: [
         {
             type: 'value',
-            name: '油耗（吨标准煤/百公里）',
+            name: '油耗（升/百公里）',
             axisLine: {
                 lineStyle: {
                     color: '#c23531'
@@ -123,7 +123,7 @@ var option = {
         },
         {
             type: 'value',
-            name: '电耗（吨标准煤/百公里）',
+            name: '电耗（度/百公里）',
             axisLine: {
                 lineStyle: {
                     color: '#2f4554'
@@ -185,7 +185,7 @@ var optionCo = {
     yAxis: [
         {
             type: 'value',
-            name: '油耗（吨标准煤/百公里）',
+            name: '油耗（千克标准煤/百公里）',
             axisLine: {
                 lineStyle: {
                     color: '#c23531'
@@ -197,7 +197,7 @@ var optionCo = {
         },
         {
             type: 'value',
-            name: '电耗（吨标准煤/百公里）',
+            name: '电耗（千克标准煤/百公里）',
             axisLine: {
                 lineStyle: {
                     color: '#2f4554'

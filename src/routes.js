@@ -143,7 +143,7 @@ let routes = [
             { path: '/rtTaxi', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: taxi, name: '出租车运输' },
             { path: '/rtBus', pri:['R_ADMIN','R_TRA','R_LAN','R_ENT'],component: bus, name: '公交客运' },
             { path: '/rtRiver', pri:['R_ADMIN','R_TRA','R_WAT','R_ENT'],component: riverShip, name: '内河船舶' },
-            { path: '/DataInMap', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: DataInMap, name: '专题图展示'}
+          //  { path: '/DataInMap', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: DataInMap, name: '专题图展示'}
         ]
     },
     {
