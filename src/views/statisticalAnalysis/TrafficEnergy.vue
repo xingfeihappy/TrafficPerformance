@@ -57,7 +57,7 @@
     var optionPi={
         title:{
             //text: '各运输类型能耗构成图',
-            subtext:'单位：万吨标准煤',
+            subtext:'单位：吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -105,7 +105,7 @@
             var t = engerData[e1];
             if(t)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
                // eng_per.push((t[0]/t[1]).toFixed(2))
             }else{
                 //eng_all_for_PI.push({name:e1,value:0})
@@ -224,8 +224,7 @@
                         });
                         return;
                     }
-                    if(this.cityType==''||!this.cityType)
-                        return;
+                    
                     var by = this.beginDate.getFullYear();
                     var bm = this.beginDate.getMonth()+1;
                     if(bm>=1 && bm <=9)
@@ -241,16 +240,17 @@
                         requestData['timeRange'] = by + '-' + bm +'-01:' + ey + '-' + em + '-31';
                         this.countDate = by+'年'+bm+'月 至 '+ey+'年'+em+'月';
                     }
+                    if(this.cityType==''||!this.cityType)
+                        return;
                     this.getDataFromService(requestData);
                 }
             },
             citySelectChange(ct){
-                //console.log(ct+'   before=' + beforCity);
                 if(!ct||ct=='')
                     return ;
+                requestData['cityType']=ct;
                 if(this.beginDate==''||this.endDate=='')
                     return;
-                requestData['cityType']=ct;
                 this.getDataFromService(requestData);
             }
 

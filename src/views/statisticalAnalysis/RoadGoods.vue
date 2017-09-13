@@ -413,7 +413,7 @@
 
     function setData(res){
       
-         
+        console.log(res);
         var monthData = new Object();
         var engerData = {};
        // var carTypeData={};
@@ -656,7 +656,7 @@
             var t = monthData[e1];
             if(t) 
             {;
-                month_all.push((t[0]/10000).toFixed(2));
+                month_all.push((t[0]).toFixed(2));
                 month_per.push((t[0]/t[1]).toFixed(2));
             }else
             {

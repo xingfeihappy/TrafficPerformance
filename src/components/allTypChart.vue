@@ -30,6 +30,11 @@
             <el-col class="chart-container">
                 <div id="allTypChart"style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
+      </el-row>
+      <el-row>
+            <el-col class="chart-container">
+                <div id="oceanTypChart"style="width:100%; height:400px;" class="chart-content"></div>
+            </el-col>
       </el-row>    
   </section>
 </template>
@@ -37,7 +42,9 @@
 <script>
 import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 var dataForTraEng = [];//运输类型燃料
+var dataForOanEng = [];
 var allTypChart;
+var oceanTypChart;
 
 var beforTimeRange = '';
 
@@ -99,11 +106,68 @@ var optionTraEng = {
     series : []
 };
 
+var optionOcean = {
+    title: {
+        text: '',
+        //left:'center'
+    },
+    grid:{
+        left:105
+    },
+    dataZoom: [
+        {
+            id: 'dataZoomX',
+            type: 'slider',
+            xAxisIndex: [0],
+            filterMode: 'filter'
+        }
+    ],
+
+    legend: {
+        data:[],
+        top : 10
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            magicType : {show: true, type: ['line', 'bar']},
+            dataView : {readOnly:false},
+            saveAsImage : {show: true}
+        },
+        right:'3%'
+    },
+    xAxis : [
+        {
+            type : 'category',
+            data : [],
+            name:'运输类型',
+            nameGap:5
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            //nameLocation : 'middle',
+            name : '单位运距能耗(单位：千克标准煤/公里)',
+            //nameGap : 35
+        }
+    ],
+    series : []
+}
+
 function setData(res){
     console.log(res)
     var traEngMap={};
 
-    var traEngSeries=[];
+    var roadEngSeries=[];
+    var oceanEngSeries=[];
 
     res.traTypOther.forEach(function(element){ 
         element.traTypEt.forEach(function(e2){
@@ -117,17 +181,38 @@ function setData(res){
             traEngMap[e2.type][element.baseTyp] =t;
         });
     });
+    var roadType = res.xs[0].slice(0,4);
+    var oceanType = res.xs[0].slice(4,7);
+
     res.xs[1].forEach(function(element){
         var tmpEngDatas = [];
+        var oanEngDatas=[];
         if(!traEngMap[element]){
             var tmpSeriseObj = {
                 name:element,
                 type:'bar',
                 data:[]
             };
-            traEngSeries.push(tmpSeriseObj);
+            oceanEngSeries.push(tmpSeriseObj);
+            roadEngSeries.push(tmpSeriseObj);
         }else{
-            res.xs[0].forEach(function(e2){
+            oceanType.forEach(function(e2){
+                var t = traEngMap[element][e2];
+                if(t){
+                    oanEngDatas.push((t[0]*1000/t[1]).toFixed(2))
+                }else{
+                    oanEngDatas.push(0);
+                }
+            });
+            var tmpSeriseObj={
+                name:element,
+                type:'bar',
+                data:oanEngDatas
+            };
+            oceanEngSeries.push(tmpSeriseObj);
+
+
+            roadType.forEach(function(e2){
                 var t = traEngMap[element][e2];
                 if(t){
                     tmpEngDatas.push((t[0]*1000/t[1]).toFixed(2))
@@ -140,14 +225,21 @@ function setData(res){
                 type:'bar',
                 data:tmpEngDatas
             };
-            traEngSeries.push(tmpSeriseObj);
+            roadEngSeries.push(tmpSeriseObj);
+
+
         }
     });
 
     dataForTraEng.splice(0,dataForTraEng.length);
     dataForTraEng.push(res.xs[1]);
-    dataForTraEng.push(res.xs[0]);
-    dataForTraEng.push(traEngSeries);
+    dataForTraEng.push(roadType);
+    dataForTraEng.push(roadEngSeries);
+
+    dataForOanEng.slice(0,dataForTraEng.length);
+    dataForOanEng.push(res.xs[1]);
+    dataForOanEng.push(oceanType);
+    dataForOanEng.push(oceanEngSeries);
 };
 
 export default {
@@ -180,6 +272,7 @@ export default {
     },
     methods:{
         initRequestData(requestData){
+            //console.log(requestData)
             var date = new Date;
             var year = date.getFullYear().toString();
             var month = date.getMonth();
@@ -203,10 +296,13 @@ export default {
         getDataFromService(requestData){
             var _this = this;
             allTypChart.showLoading({text:'加载中'});
+            oceanTypChart.showLoading({text:'加载中'})
+            
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
                 console.log(JSON.stringify(res));
                     allTypChart.hideLoading();
+                    oceanTypChart.hideLoading();
                     if(res.errCode==30){//data ok
                     setData(res);
                     optionTraEng.legend.data = dataForTraEng[0];
@@ -214,6 +310,12 @@ export default {
                     optionTraEng.series = dataForTraEng[2];
                     allTypChart.clear();
                     allTypChart.setOption(optionTraEng);
+
+                    optionOcean.legend.data = dataForOanEng[0];
+                    optionOcean.xAxis[0].data = dataForOanEng[1];
+                    optionOcean.series = dataForOanEng[2];
+                    oceanTypChart.clear();
+                    oceanTypChart.setOption(optionOcean);
                 }else if(res.errCode==31){ // data err
                     window.log('unknow err');
                 }else if(res.errCode==44){ // auth 
@@ -257,8 +359,12 @@ export default {
         allTypChart = echarts.init(document.getElementById('allTypChart'));
         allTypChart.setOption(optionTraEng);
 
+        oceanTypChart = echarts.init(document.getElementById('oceanTypChart'));
+        oceanTypChart.setOption(optionOcean);
+
         window.addEventListener("resize",function(){
             allTypChart.resize();
+            oceanTypChart.resize();
         });
 
         this.initRequestData(requestData);
