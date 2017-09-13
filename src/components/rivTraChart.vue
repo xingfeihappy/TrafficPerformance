@@ -211,6 +211,10 @@
             text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
+        grid:{
+            left:55,
+            right:50
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer : {            
@@ -355,7 +359,7 @@
     };
 
     function setData(res){
-        
+        console.log(res)
         var monthData = new Object();
         var engerData = {};
         var scaleData={};
@@ -772,11 +776,21 @@
             energyTonnageChart = echarts.init(document.getElementById('energyTonnageChart'));
             seaShipChart = echarts.init(document.getElementById('seaShipChart'));
             energyByYearChart = echarts.init(document.getElementById('energyByYearChart'));
+
             energyPieChart.setOption(optionPi);
             companyChart.setOption(optionScale);
             energyTonnageChart.setOption(optionEngTog);
             seaShipChart.setOption(optionTogShip);
             energyByYearChart.setOption(option);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                companyChart.resize();
+                energyTonnageChart.resize();
+                seaShipChart.resize();
+                energyByYearChart.resize();
+            });
+
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
         },

@@ -313,6 +313,12 @@ export default {
         unitEngChgChart.setOption(optionMonEngUnit);
         allEngChgChart = echarts.init(document.getElementById('allEngChgChart'));
         allEngChgChart.setOption(optionMonEngAll);
+
+        window.addEventListener("resize",function(){
+            unitEngChgChart.resize();
+            allEngChgChart.resize();
+        });
+
         this.initRequestData(requestData);
         //this.getDataFromService(requestData);
     },

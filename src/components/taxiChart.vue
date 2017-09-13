@@ -138,7 +138,7 @@ var option = {
     yAxis: [
         {
             type: 'value',
-            name: '月使用能耗(万吨标准煤)',
+            name: '月使用能耗(吨标准煤)',
             axisLine: {
                 lineStyle: {
                     color: '#5793f3'
@@ -178,7 +178,7 @@ var option = {
 let optionPi={
     title:{
         text: '出租车能源结构图',
-        subtext:'单位：万吨标准煤',
+        subtext:'单位：吨标准煤',
         x: 'center'
     },
     tooltip : {
@@ -367,7 +367,7 @@ function  setData(res){
         var t = engerData[e1];
         if(t)
         {
-            eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
+            eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
             eng_per.push((t[0]/t[1]).toFixed(2))
         }else{
             //eng_all_for_PI.push({name:e1,value:0})
@@ -440,7 +440,7 @@ function  setData(res){
         if(t) 
         {
             console.log(t);
-            month_all.push((t[0]/10000).toFixed(2));
+            month_all.push((t[0]).toFixed(2));
             month_per.push((t[0]/t[1]).toFixed(2));
         }else
         {
@@ -550,7 +550,7 @@ export default {
                     setData(res);
                     if(k==1||k==3)
                     {  
-                        optionPi.legend.data = dataForEngAll[0];
+                        //optionPi.legend.data = dataForEngAll[0];
                         optionPi.series[0].data = dataForEngAll[1];
                         engTypeAllChart.clear();
                         engTypeAllChart.setOption(optionPi);
@@ -645,8 +645,18 @@ export default {
         engTypeAllChart.setOption(optionPi);
         engTypeChart.setOption(optionEng);
         engPsChart.setOption(optionClsEng);
+
+        window.addEventListener("resize",function(){
+            perAllRelChart.resize();
+            engTypeAllChart.resize();
+            engTypeChart.resize();
+            engPsChart.resize();
+        });
+
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
+
+        
     },
     updated: function () {
            console.log("update");

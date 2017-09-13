@@ -212,6 +212,10 @@
             text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
+        grid:{
+            left:55,
+            right:50
+        },
         tooltip: {
             trigger: 'axis',
             axisPointer : {            
@@ -234,7 +238,7 @@
         xAxis: {
             data: [],
             name:'企业规模',
-            nameGap:'10'
+            nameGap:'2'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿吨公里)',
@@ -896,6 +900,16 @@
             tonShipChart.setOption(optionTogShip);
             engDisChart.setOption(optionEngDis);
             energyByYearChart.setOption(option);
+
+            window.addEventListener("resize",function(){
+                energyPieChart.resize();
+                companyChart.resize();
+                engTonChart.resize();
+                tonShipChart.resize();
+                engDisChart.resize();
+                energyByYearChart.resize();
+            });
+
             this.initRequestData(requestData);
             this.getDataFromService(requestData)
 

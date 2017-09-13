@@ -16,11 +16,11 @@
         </el-row
         <el-row> 
         <!-- 能源类型图 -->
-            <el-col :span="11" class="chart-container">                
+            <el-col :xs="24" :sm="24" :md="11" :lg="11" class="chart-container">                
                 <div id="energyTypePie" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
             <!-- 能源分时图 -->
-             <el-col :span="13" class="chart-container">                
+             <el-col :xs="24" :sm="24" :md="13" :lg="13" class="chart-container">                
                 <div id="barChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
         </el-row>
@@ -42,9 +42,9 @@
 
     var beforTimeRange = '';
     var beforeMonth = '';
-    var requestData = 
-    {
-    } 
+    var requestData = {};
+
+    
 
     var optionPi = {
         title:{
@@ -88,8 +88,7 @@
             left:'center'
         },
         grid: {
-            left: '10%',
-            right: '15%',
+            left: 55
         },
         dataZoom: [
             {
@@ -393,6 +392,10 @@
             this.getDataFromService(requestData);
             this.EngTypeChange();
             
+            window.addEventListener("resize",function(){
+                barChart.resize();
+                energyTypePie.resize();
+            });
         },
         updated: function () {
             console.log("update");
