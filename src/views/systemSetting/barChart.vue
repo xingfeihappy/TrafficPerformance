@@ -411,6 +411,7 @@
     };
 
     function setData(res){
+        console.log(res);
         var monthData = new Object();
         var engerData = {};
         var scaleData={};

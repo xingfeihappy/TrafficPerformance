@@ -323,8 +323,13 @@ export default {
                     if(!engTMuMap[eng.baseTyp][TMu.type]) 
                             engTMuMap[eng.baseTyp][TMu.type] = [0,0];
                     var t = engTMuMap[eng.baseTyp][TMu.type];
-                    t[0] = (TMu.typDatOfAllEng / TMu.typDatOfAllLen*100).toFixed(2);
-                    t[1] = (TMu.typDatOfAllCo / TMu.typDatOfAllLen*100).toFixed(2);
+                    if(TMu.typDatOfAllLen==0) 
+                            t[0] = t[1] =0;
+                    else{
+                        t[0] = (TMu.typDatOfAllEng / TMu.typDatOfAllLen*100).toFixed(2);
+                        t[1] = (TMu.typDatOfAllCo / TMu.typDatOfAllLen*100).toFixed(2);
+                    }
+
                     engTMuMap[eng.baseTyp][TMu.type] = t;              
                 });
             });
