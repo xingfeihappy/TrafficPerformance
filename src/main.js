@@ -40,7 +40,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 
-  console.log('main.js '+to.path);
+  //console.log('main.js '+to.path);
 
   if(!Vue.prototype.$userInfo || !Vue.prototype.$token){
     var c  = getCookie('userInfo');
