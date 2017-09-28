@@ -176,7 +176,9 @@
                     //console.log([minLong,minLat,maxLong,maxLat,val]);
                     if(val){
                         brush.fill = true;
-                        var alpha = (val/maxVal*256-1).toFixed(0);
+                        var alpha = (val/maxVal*256).toFixed(0);
+                        if(alpha>255)
+                            alpha = 255;
                         alpha = (alpha > 20) ? alpha : 20;
 
                         var offset = alpha*4;
@@ -239,7 +241,7 @@
                     this.countDate = th+':00 至 '+th+':59';                 
                 }
 
-                requestData.timeRange = '2017-09-09 00:00:00&2017-09-09 23:59:59';
+                //requestData.timeRange = '2017-09-09 00:00:00&2017-09-09 23:59:59';
             },
             //初始化请求数据
             initRequestData(){
