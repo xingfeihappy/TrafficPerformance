@@ -67,7 +67,6 @@
 				</div>
 				<div class="footer">
 					<div class="page-footer-inner">
-						 2017 &copy; Welcome to HangZhou DianZi University. 
 					</div>
 					<div class="scroll-to-top" @click="scrollToTop">
 						<i class="fa fa-arrow-circle-up"></i>

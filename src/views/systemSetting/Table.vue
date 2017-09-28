@@ -238,6 +238,7 @@
 				this.cityOption.splice(0,this.cityOption.length);
 				var cities = this.cityinfo.cities;
 				var counties = this.cityinfo.counties;
+				console.log(this.cityinfo)
 				for(var i=0;i<cities.length;i++){
 					var tmpc = {};
 					var tmpl = [];

@@ -46,6 +46,8 @@ var dataForOanEng = [];
 var allTypChart;
 var oceanTypChart;
 
+var screenWidth;
+
 var beforTimeRange = '';
 
 var requestData = {};
@@ -163,7 +165,6 @@ var optionOcean = {
 }
 
 function setData(res){
-    console.log(res)
     var traEngMap={};
 
     var roadEngSeries=[];
@@ -243,11 +244,41 @@ function setData(res){
 };
 
 export default {
+    watch:{
+        
+        /*'$route':function(to,from){
+            
+           // this.resizeChart();
+            if(from.path == "/perDisEng"){
+                //var divWidth = document.getElementById("allTypChart").style.width; 
+                //console.log("before" + divWidth);
+                //console.log(document.getElementById("allTypChart"))
+            }
+            //console.log(allTypChart)
+            if(to.path == "/perDisEng"){
+                console.log("afterRoute:"+this.screenWidth+" "+window.screenWidth);
+                
+               // var divWidth = document.getElementById("allTypChart").style.width; 
+                //console.log("after" + divWidth);
+                if(this.screenWidth!=window.screenWidth){
+                    console.log("enter resize()")
+                    this.screenWidth = window.screenWidth;
+                    console.log(allTypChart);
+                    console.log(document.getElementById("cityTypeEnergyPie"))
+                    allTypChart.setOption(optionTraEng);
+                    allTypChart.resize();
+                    
+                    oceanTypChart.resize();
+                }
+            }     
+        }*/
+    },
     data(){
       return {
             countDate: '',
             beginDate:'',
             endDate:'',
+            screenWidth:document.body.clientWidth,
             pickerOptions0: {
                 disabledDate(time) {
                     if(time.getFullYear()>(new Date()).getFullYear())
@@ -271,8 +302,10 @@ export default {
       }
     },
     methods:{
+        resizeChart(){
+            console.log(document.getElementById("allTypChart"));
+        },
         initRequestData(requestData){
-            //console.log(requestData)
             var date = new Date;
             var year = date.getFullYear().toString();
             var month = date.getMonth();
@@ -300,7 +333,6 @@ export default {
             
             $.get(this.Constant.ajaxAddress+this.Constant.perdisengAjax,requestData).
             done(function (res){
-                console.log(JSON.stringify(res));
                     allTypChart.hideLoading();
                     oceanTypChart.hideLoading();
                     if(res.errCode==30){//data ok
@@ -361,12 +393,15 @@ export default {
 
         oceanTypChart = echarts.init(document.getElementById('oceanTypChart'));
         oceanTypChart.setOption(optionOcean);
+        //console.log(this);
+        window.screenWidth = document.body.clientWidth;
 
         window.addEventListener("resize",function(){
+            window.screenWidth = document.body.clientWidth;
+            this.screenWidth = window.screenWidth;
             allTypChart.resize();
             oceanTypChart.resize();
         });
-
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
         
