@@ -201,7 +201,7 @@
                         cityTypeEnergyPie.hideLoading();
                         if(res.errCode==30){//data ok
                         setData(res);
-                        optionPi.legend.data = dataForCityEngAll[0];
+                        //optionPi.legend.data = dataForCityEngAll[0];
                         optionPi.series[0].data = dataForCityEngAll[1];
                         cityTypeEnergyPie.clear();
                         cityTypeEnergyPie.setOption(optionPi);
@@ -259,7 +259,10 @@
             cityTypeEnergyPie = echarts.init(document.getElementById('cityTypeEnergyPie'));
             cityTypeEnergyPie.setOption(optionPi);
 
+            window.screenWidth = document.body.clientWidth;
             window.addEventListener("resize",function(){
+                window.screenWidth = document.body.clientWidth;
+                console.log(window.screenWidth);
                 cityTypeEnergyPie.resize();
             });
 

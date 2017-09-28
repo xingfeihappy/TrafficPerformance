@@ -262,7 +262,6 @@
                 barChart.showLoading({text:'加载中'});
                 $.get(this.Constant.ajaxAddress+this.Constant.indexAjax,requestData).
                 done(function (res){
-                    console.log(JSON.stringify(res));
                     energyTypePie.hideLoading();
                     barChart.hideLoading();
                     if(res.errCode==30){//data ok
