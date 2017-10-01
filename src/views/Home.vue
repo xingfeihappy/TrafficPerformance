@@ -22,7 +22,7 @@
 		<el-col :span="24" class="main">
 			<aside :class="collapsed?'menu-collapsed':'menu-expanded'">
 				<!--导航菜单-->
-				<el-menu :default-active="$route.path" class="el-menu-vertical-demo" @open="handleopen" @close="handleclose" @select="handleselect"
+				<el-menu :default-active="$route.path" class="newMenu" @open="handleopen" @close="handleclose" @select="handleselect"
 					 unique-opened router v-show="!collapsed"  id="sidebar-hook">
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-submenu :index="index+''" v-if="!item.leaf">
@@ -192,50 +192,51 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 		mounted() {
 			console.log(this.$userInfo);
 			console.log($('#sidebar-hook'));
-			$('#sidebar-hook').niceScroll({
-   					cursorcolor: "#6bc5a4",//#CC0071 光标颜色E4F1F1
-				    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
-				    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
-				    cursorwidth: "2px", //像素光标的宽度
-				    cursorborder: "0", // 游标边框css定义
-				    cursorborderradius: "5px",//以像素为光标边界半径
-				    autohidemode: false, //是否隐藏滚动条
-				    hidecursordelay: 400
-			});
+			// $('#sidebar-hook').niceScroll({
+   			// 		cursorcolor: "#6bc5a4",//#CC0071 光标颜色E4F1F1
+			// 	    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+			// 	    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+			// 	    cursorwidth: "2px", //像素光标的宽度
+			// 	    cursorborder: "0", // 游标边框css定义
+			// 	    cursorborderradius: "5px",//以像素为光标边界半径
+			// 	    autohidemode: false, //是否隐藏滚动条
+			// 	    hidecursordelay: 400
+			// });
 			
-			$('.submenu-scroll-hook').each(function(){
-			    //计算ul隐藏的高度是否大于屏幕高度，如果是，则出现滚动条
-			    $(this).niceScroll({
-   					cursorcolor: "#65CEA7",//#CC0071 光标颜色
-				    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
-				    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
-				    cursorwidth: "1px", //像素光标的宽度
-				    cursorborder: "0", // 游标边框css定义
-				    cursorborderradius: "5px",//以像素为光标边界半径
-				    autohidemode: false //是否隐藏滚动条
-				});
-			});
+			// $('.submenu-scroll-hook').each(function(){
+			// 	//计算ul隐藏的高度是否大于屏幕高度，如果是，则出现滚动条
+			// 	console.log('hi hear!!!!!!')
+			//     $(this).niceScroll({
+   			// 		cursorcolor: "#65CEA7",//#CC0071 光标颜色
+			// 	    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+			// 	    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+			// 	    cursorwidth: "1px", //像素光标的宽度
+			// 	    cursorborder: "0", // 游标边框css定义
+			// 	    cursorborderradius: "5px",//以像素为光标边界半径
+			// 	    autohidemode: false //是否隐藏滚动条
+			// 	});
+			// });
 
-			$('.content-container').niceScroll({
-   					cursorcolor: "#5AB6DF",//#CC0071 光标颜色
-				    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
-				    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
-				    cursorwidth: "5px", //像素光标的宽度
-				    cursorborder: "0", // 游标边框css定义
-				    cursorborderradius: "5px",//以像素为光标边界半径
-				    background: "#999",
-				    autohidemode: true, //是否隐藏滚动条
-				    hidecursordelay: 400
-			});
+			// $('.content-container').niceScroll({
+   			// 		cursorcolor: "#5AB6DF",//#CC0071 光标颜色
+			// 	    cursoropacitymax: 1, //改变不透明度非常光标处于活动状态（scrollabar“可见”状态），范围从1到0
+			// 	    touchbehavior: false, //使光标拖动滚动像在台式电脑触摸设备
+			// 	    cursorwidth: "5px", //像素光标的宽度
+			// 	    cursorborder: "0", // 游标边框css定义
+			// 	    cursorborderradius: "5px",//以像素为光标边界半径
+			// 	    background: "#999",
+			// 	    autohidemode: true, //是否隐藏滚动条
+			// 	    hidecursordelay: 400
+			// });
 
-			//滚到顶部出现隐藏
-			$('.content-container').scroll(function() {   
-			        if($('.content-container').scrollTop() >= 100){
-			            $('.scroll-to-top').fadeIn(300); 
-			        }else{    
-			            $('.scroll-to-top').fadeOut(300);    
-			        }  
-			    });
+			// //滚到顶部出现隐藏
+			// $('.content-container').scroll(function() {   
+			//         if($('.content-container').scrollTop() >= 100){
+			//             $('.scroll-to-top').fadeIn(300); 
+			//         }else{    
+			//             $('.scroll-to-top').fadeOut(300);    
+			//         }  
+			//     });
 			}
 	}
 
@@ -244,11 +245,18 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 <style scoped lang="scss">
 	@import '~scss_vars';
 	
+	.newMenu{
+		overflow: auto;
+		width: 230px;
+	}
+
+
 	.container {
 		position: absolute;
 		top: 0px;
 		bottom: 0px;
 		width: 100%;
+		overflow: auto;
 		& .el-button--primary {
     		color: #fff;
    			background-color: red;
