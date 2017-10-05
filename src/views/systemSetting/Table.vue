@@ -247,7 +247,7 @@
 					
 					for(var j =0;j<counties[i].length;j++){
 						var ctm = {label:counties[i][j],value:counties[i][j]};
-						if(j!=0) ctm.disabled =  true;//在这把区县设置给屏蔽了
+						//if(j!=0) ctm.disabled =  true;//在这把区县设置给屏蔽了
 						tmpl.push(ctm);
 					}
 					tmpc.cities = tmpl;	

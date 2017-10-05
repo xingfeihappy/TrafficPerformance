@@ -67,6 +67,7 @@
 				</div>
 				<div class="footer">
 					<div class="page-footer-inner">
+						 2017 
 					</div>
 					<div class="scroll-to-top" @click="scrollToTop">
 						<i class="fa fa-arrow-circle-up"></i>
@@ -128,13 +129,14 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 				console.log('submit!');
 			},
 			handleopen() {
-				//console.log('handleopen');
+				console.log('handleopen',this.$route.path);
 				console.log(this.$route.path);
 			},
 			handleclose() {
-				//console.log('handleclose');
+			console.log('handleclose',this.$route.path);
 			},
 			handleselect: function (a, b) {
+				console.log('handleselect',a,b);
 			},
 			//退出登录
 			logout() {
@@ -197,7 +199,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 				    cursorwidth: "2px", //像素光标的宽度
 				    cursorborder: "0", // 游标边框css定义
 				    cursorborderradius: "5px",//以像素为光标边界半径
-				    autohidemode: true, //是否隐藏滚动条
+				    autohidemode: false, //是否隐藏滚动条
 				    hidecursordelay: 400
 			});
 			
