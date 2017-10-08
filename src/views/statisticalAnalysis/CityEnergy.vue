@@ -32,14 +32,22 @@
                 </div>
                 <div class="chart-header">
                     <el-select v-model="tranType" filterable placeholder="请选择交通工具" @change="trafficSelectChange">
-                        <el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
+                        <!--<el-option key="道路客运" label="道路客运" value="道路客运"></el-option>
                         <el-option key="道路货运" label="道路货运" value="道路货运"></el-option>
                         <el-option key="公交客运" label="公交客运" value="公交客运"></el-option>
                         <el-option key="出租客运" label="出租车运输" value="出租客运"></el-option>
                         <el-option key="内河运输" label="内河运输" value="内河运输"></el-option>
                         <el-option key="海洋货运" label="海洋货运" value="海洋货运"></el-option>
-                        <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>
+                        <el-option key="海洋客运" label="海洋客运" value="海洋客运"></el-option>-->
+                        <el-option
+                        v-for="item in optionTraffic"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                            :disabled="item.disabled">
+                        </el-option>
                     </el-select>
+                    
                 </div>
             
                 <div class="chart-header2">
@@ -139,10 +147,11 @@
         data(){
             return{
                 timeRange:'',
-                tranType:'道路客运',
+                tranType:'',
                 countDate: '',
                 beginDate:'',
                 endDate:'',
+                optionTraffic:[],
                 pickerOptions0: {
                     disabledDate(time) {
                         if(time.getFullYear()>(new Date()).getFullYear())
@@ -184,14 +193,30 @@
                 if(userInfo.roleName!=null && userInfo.roleName!="")
                     requestData.roleName = userInfo.roleName;
                 requestData.roleType = userInfo.roleType;
+                if(userInfo.roleType=='R_WAT')
+                    requestData.tranType = "海洋客运";
+                else
+                    requestData.tranType="道路客运"
                 if(userInfo.place1!=null && userInfo.place1!="")
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
-                    requestData.place2 = userInfo.place2;          
+                    requestData.place2 = userInfo.place2;       
                 requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
-                requestData.tranType = "道路客运";
-
                 this.countDate = year+'年'+month+'月';
+            },
+            initSelectBox(){
+                var userInfo = JSON.parse(getCookie('userInfo'));
+                if(userInfo.roleType=='R_LAN')
+                    var traffic = ['道路客运','道路货运','公交客运','出租车运输'];
+                else if(userInfo.roleType=='R_WAT')
+                    var traffic = ['海洋客运','海洋货运','内河运输'];
+                else
+                    var traffic = ['道路客运','道路货运','公交客运','出租车运输','海洋客运','海洋货运','内河运输']
+                var isDisabled;
+                this.optionTraffic= traffic.map(item => {
+                    isDisabled = false;
+                    return { value: item, label: item ,disabled: isDisabled};
+                });
             },
             getDataFromService(requestData){
                var _this = this;
@@ -200,6 +225,7 @@
                 done(function (res){
                         cityTypeEnergyPie.hideLoading();
                         if(res.errCode==30){//data ok
+                        optionPi.title.text = '各地市能耗构成图('+requestData.tranType+')'
                         setData(res);
                         //optionPi.legend.data = dataForCityEngAll[0];
                         optionPi.series[0].data = dataForCityEngAll[1];
@@ -245,12 +271,11 @@
                 }
             },
             trafficSelectChange(tt){
-                console.log(tt+'   before=' + beforTran);
                 if(!tt||tt=='')
                     return ;
-                if(this.beginDate==''||this.endDate=='')
-                    return;
                 requestData['tranType']=tt;
+                if(this.beginDate==''||this.endDate=='')
+                    return;    
                 this.getDataFromService(requestData);
                 beforTran = tt;              
             }
@@ -262,11 +287,11 @@
             window.screenWidth = document.body.clientWidth;
             window.addEventListener("resize",function(){
                 window.screenWidth = document.body.clientWidth;
-                console.log(window.screenWidth);
                 cityTypeEnergyPie.resize();
             });
 
             this.initRequestData(requestData);
+            this.initSelectBox();
             this.getDataFromService(requestData);
 
             

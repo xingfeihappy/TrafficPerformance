@@ -53,16 +53,9 @@
                         :picker-options="pickerOptions2">
                     </el-date-picker>
                 </div>
-             </el-col>
-        </el-row>
-        <el-row>
-             <el-col  class="chart-container">
-            <el-col class="chart-container">
                 <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
              </el-col>
         </el-row>
-
     </section>  
 </template>
 
@@ -521,7 +514,7 @@ export default {
             if(userInfo.place1!=null && userInfo.place1!="")
                 requestData.place1 =userInfo.place1;
             if(userInfo.place2!=null && userInfo.place2!="")
-                requestData.place2 = userInfo.place2;          
+                requestData.place2 = userInfo.place2;         
             requestData.timeRange = year+'-'+month+'-01:'+year+'-'+month+'-31';
 
             this.countDate = year+'年'+month+'月';
