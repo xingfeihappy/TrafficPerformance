@@ -44,7 +44,7 @@
             </el-col>
         </el-row>
         <el-row>
-             <el-col  class="chart-container">
+            <el-col  class="chart-container">
                 <div  class="chart-header">
                     <el-date-picker
                         v-model="year"
@@ -54,12 +54,8 @@
                         :picker-options="pickerOptions2">
                     </el-date-picker>
                 </div>
-             </el-col>
-        </el-row>
-        <el-row>   
-            <el-col class="chart-container">
                 <div id="perAllRelChart"style="width:100%; height:400px;" class="chart-content"></div>
-            </el-col>
+             </el-col>             
         </el-row>
 
     </section>  
