@@ -179,7 +179,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 
 			//折叠导航栏
 			collapse:function(){
-				this.collapsed=!this.collapsed;
+				//this.collapsed=!this.collapsed;
 			},
 			showMenu(i,status){
 				this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
@@ -247,7 +247,7 @@ import {getCookie,delCookie,setCookie} from '../common/js/Cookie.js';
 	
 	.newMenu{
 		overflow: auto;
-		width: 230px;
+		//width: 230px;
 	}
 
 

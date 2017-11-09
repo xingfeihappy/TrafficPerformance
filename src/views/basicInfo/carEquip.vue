@@ -28,7 +28,7 @@
 			<el-table-column type = "operateNum" label = "营运证号码" width = "130" sortable prop = "operateNum"></el-table-column>
 			<el-table-column type = "operateStartTime" label = "营运证获取时间" width = "155" sortable prop = "operateStartTime"></el-table-column>
 			<el-table-column fixed = "right" label="操作" width="150">
-				<template scope="scope">
+				<template slot-scope="scope">
 					<el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
 					<el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
 				</template>
