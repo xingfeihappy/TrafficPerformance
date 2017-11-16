@@ -869,7 +869,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

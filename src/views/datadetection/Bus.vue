@@ -1,5 +1,5 @@
 <template>
-<section class ="chart">
+<section class ="chart" >
     <el-row>
         <el-col  class="chart-container" >
             <div class="chart-header" >
@@ -545,8 +545,8 @@ export default {
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
-        float: left;
+        width: 1000px;
+        float: center;
         .chart-container{
              background-color: #F2F2F2; 
              border-radius: 8px;
