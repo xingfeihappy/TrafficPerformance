@@ -68,7 +68,7 @@ var dataForMoth = [];//年度图表
 var dataForEngCls = [];//能源车长
 var dataForEngPer = [];//各能源类型单耗
 var dataForEngAll = [];//各能源饼图
-var k = 3;//标志
+var k = 1;//标志
 
 var perAllRelChart;
 var engTypeAllChart;
@@ -463,7 +463,7 @@ export default {
             beginDate:'',
             endDate:'',
             countDate:'',
-            year:'',
+            year:(new Date()).getFullYear().toString(),
             pickerOptions0: {
                 disabledDate(time) {
                     if(time.getFullYear()>(new Date()).getFullYear())
@@ -525,7 +525,13 @@ export default {
 
         getDataFromService(requestData){
             var _this = this;
-            if(k==1||k==3){
+            if(k==1){
+                engTypeAllChart.showLoading({text:'加载中'});
+                engClsChart.showLoading({text:'加载中'});
+                engTypeChart.showLoading({text:'加载中'}); 
+                perAllRelChart.showLoading({text:'加载中'}); 
+            }
+            if(k==3){
                 engTypeAllChart.showLoading({text:'加载中'});
                 engClsChart.showLoading({text:'加载中'});
                 engTypeChart.showLoading({text:'加载中'});       
@@ -574,6 +580,9 @@ export default {
                         perAllRelChart.clear();
                         perAllRelChart.setOption(option);
                     }
+
+                    if(k==1)
+                        _this.selectYearMonth(new Date().getFullYear());
                 }else if(res.errCode==31){ // data err
                     window.log('unknow err');
                 }else if(res.errCode==44){ // auth 
@@ -652,12 +661,7 @@ export default {
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
 
-        window.addEventListener("resize",function(){
-            perAllRelChart.resize();
-            engTypeAllChart.resize();
-            engTypeChart.resize();
-            engClsChart.resize();
-        });
+        
     },
     updated: function () {
         console.log("update");

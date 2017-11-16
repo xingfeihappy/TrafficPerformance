@@ -92,7 +92,7 @@
 
     var carTypeMap ;
 
-    var k=3; //标志
+    var k=1; //标志
     var _year = (new Date).getFullYear().toString();
     var beforTimeRange = '';
     var beforeYear = '';
@@ -682,7 +682,7 @@
                 beginDate:'',
                 endDate:'',
                 countDate:'',
-                year:'',
+                year:(new Date()).getFullYear().toString(),
                 pickerOptions0: {
                     disabledDate(time) {
                         if(time.getFullYear()>(new Date()).getFullYear())
@@ -742,7 +742,15 @@
             },
             getDataFromService(requestData){
                 var _this = this;
-                if(k==1||k==3){
+                if(k==1){
+                    energyPieChart.showLoading({text:'加载中'});
+                    companyChart.showLoading({text:'加载中'});
+                    tonnageChart.showLoading({text:'加载中'});
+                    engTonChart.showLoading({text:'加载中'});
+                    carTonChart.showLoading({text:'加载中'});
+                    energyByYearChart.showLoading({text:'加载中'});
+                }
+                if(k==3){
                     energyPieChart.showLoading({text:'加载中'});
                     companyChart.showLoading({text:'加载中'});
                     tonnageChart.showLoading({text:'加载中'});
@@ -802,6 +810,8 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
+                        if(k==1)
+                            _this.selectYearMonth(new Date().getFullYear());
                     }else if(res.errCode==31){ // data err
                         window.log('unknow err');
                     }else if(res.errCode==44){ // auth 
@@ -881,14 +891,6 @@
             carTonChart.setOption(optionCarTon);
             energyByYearChart.setOption(option);
 
-            window.addEventListener("resize",function(){
-                energyPieChart.resize();
-                tonnageChart.resize();
-                companyChart.resize();
-                engTonChart.resize();
-                carTonChart.resize();
-                energyByYearChart.resize();
-            });
             
             this.initRequestData(requestData);
             this.getDataFromService(requestData);

@@ -92,7 +92,7 @@
 
     var carTypeMap;
 
-    var k=3; //标志
+    var k=1; //标志
 
     var _year=(new Date).getFullYear().toString();
 
@@ -640,7 +640,7 @@
     export default {
         data() {
             return {
-                year:'',
+                year:(new Date()).getFullYear().toString(),
                 countDate: '',
                 beginDate:'',
                 endDate:'',
@@ -704,7 +704,15 @@
             },
             getDataFromService(requestData){
                 var _this = this;
-                if(k==1||k==3){
+                if(k==1){
+                    energyPieChart.showLoading({text:'加载中'});
+                    companyChart.showLoading({text:'加载中'});
+                    carTypeChart.showLoading({text:'加载中'});
+                    distanceChart.showLoading({text:'加载中'});
+                    guestChart.showLoading({text:'加载中'});
+                    energyByYearChart.showLoading({text:'加载中'});
+                }
+                if(k==3){
                     energyPieChart.showLoading({text:'加载中'});
                     companyChart.showLoading({text:'加载中'});
                     carTypeChart.showLoading({text:'加载中'});
@@ -766,6 +774,8 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
+                        if(k==1)
+                            _this.selectYearMonth(new Date().getFullYear());
 
                     }else if(res.errCode==31){ // data err
                         window.log('unknow err');
@@ -847,16 +857,7 @@
             energyByYearChart.setOption(option);
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
-
-            window.addEventListener("resize",function(){
-                energyPieChart.resize();
-                companyChart.resize();
-                carTypeChart.resize();
-                distanceChart.resize();
-                energyByYearChart.resize();
-                guestChart.resize();
-            });
-
+            
         },
         updated: function () {
             console.log("update");
