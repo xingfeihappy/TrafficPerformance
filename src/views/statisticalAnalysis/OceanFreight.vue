@@ -237,8 +237,9 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模',
-            nameGap:'2'
+            name:'企业规模（单位：艘）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿吨公里)',
@@ -342,7 +343,7 @@
             {
                 type : 'category',
                 data : [],
-                name:'燃料类型',
+                name:'吨位',
                 nameGap:'2'
             }
         ],
@@ -358,7 +359,7 @@
     };
     var optionEngDis = {
         title: {
-            text: '不同燃料类型不同运距船舶单位能耗柱状图',
+            text: '不同燃料类型不同运距（运距单位：公里）船舶单位能耗柱状图',
             left:'center'
         },
         dataZoom: [
@@ -901,14 +902,6 @@
             engDisChart.setOption(optionEngDis);
             energyByYearChart.setOption(option);
 
-            window.addEventListener("resize",function(){
-                energyPieChart.resize();
-                companyChart.resize();
-                engTonChart.resize();
-                tonShipChart.resize();
-                engDisChart.resize();
-                energyByYearChart.resize();
-            });
 
             this.initRequestData(requestData);
             this.getDataFromService(requestData)

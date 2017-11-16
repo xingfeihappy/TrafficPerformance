@@ -259,10 +259,6 @@
             trafficTypeEnergyPie = echarts.init(document.getElementById('trafficTypeEnergyPie'));
             trafficTypeEnergyPie.setOption(optionPi);
 
-            window.addEventListener("resize",function(){
-                trafficTypeEnergyPie.resize();
-            });
-
             this.initSelectBox();
             this.initRequestData(requestData);
             this.getDataFromService(requestData);

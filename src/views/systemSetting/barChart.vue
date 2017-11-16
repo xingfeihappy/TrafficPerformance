@@ -216,7 +216,7 @@
     };
     var optionScale={
         title:{
-            text: '不同规模企业单位能耗柱状图',
+            text: '不同规模企业（车辆数）单位能耗柱状图',
             left:'center'
         },
         grid:{
@@ -244,8 +244,9 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模',
-            nameGap:'2'
+            name:'企业规模（单位：辆）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',
@@ -341,8 +342,9 @@
         },
         xAxis: {
             data: [],
-            name:'运输距离',
-            nameGap:'2'
+            name:'运输距离（单位：公里）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿人公里)',

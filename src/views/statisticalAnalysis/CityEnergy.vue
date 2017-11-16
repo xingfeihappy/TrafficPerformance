@@ -207,11 +207,11 @@
             initSelectBox(){
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 if(userInfo.roleType=='R_LAN')
-                    var traffic = ['道路客运','道路货运','公交客运','出租车运输'];
+                    var traffic = ['道路客运','道路货运','公交客运','出租客运'];
                 else if(userInfo.roleType=='R_WAT')
                     var traffic = ['海洋客运','海洋货运','内河运输'];
                 else
-                    var traffic = ['道路客运','道路货运','公交客运','出租车运输','海洋客运','海洋货运','内河运输']
+                    var traffic = ['道路客运','道路货运','公交客运','出租客运','海洋客运','海洋货运','内河运输']
                 var isDisabled;
                 this.optionTraffic= traffic.map(item => {
                     isDisabled = false;
@@ -231,6 +231,7 @@
                         optionPi.series[0].data = dataForCityEngAll[1];
                         cityTypeEnergyPie.clear();
                         cityTypeEnergyPie.setOption(optionPi);
+                        console.log(res);
                     }else if(res.errCode==31){ // data err
                         window.log('unknow err');
                     }else if(res.errCode==44){ // auth 
@@ -285,10 +286,6 @@
             cityTypeEnergyPie.setOption(optionPi);
 
             window.screenWidth = document.body.clientWidth;
-            window.addEventListener("resize",function(){
-                window.screenWidth = document.body.clientWidth;
-                cityTypeEnergyPie.resize();
-            });
 
             this.initRequestData(requestData);
             this.initSelectBox();

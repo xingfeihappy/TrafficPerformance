@@ -255,7 +255,7 @@ var optionEng = {
 
 let optionClsEng = {
     title: {
-        text: '不同燃料类型不同长度车长单位能耗柱状图',
+        text: '不同燃料类型不同长度车长（车长单位：米）单位能耗柱状图',
         left:'center'
     },
     dataZoom: [

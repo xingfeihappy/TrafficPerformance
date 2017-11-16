@@ -253,7 +253,7 @@ var optionEng = {
 
 let optionClsEng = {
     title: {
-        text: '不同燃料类型不同排量单位能耗柱状图',
+        text: '不同燃料类型不同排量（排量单位：升）单位能耗柱状图',
         left:'center'
     },
     dataZoom: [
@@ -638,13 +638,6 @@ export default {
         engTypeAllChart.setOption(optionPi);
         engTypeChart.setOption(optionEng);
         engPsChart.setOption(optionClsEng);
-
-        window.addEventListener("resize",function(){
-            perAllRelChart.resize();
-            engTypeAllChart.resize();
-            engTypeChart.resize();
-            engPsChart.resize();
-        });
 
         this.initRequestData(requestData);
         this.getDataFromService(requestData);

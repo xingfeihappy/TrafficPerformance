@@ -391,10 +391,6 @@
             this.getDataFromService(requestData);
             this.EngTypeChange();
             
-            window.addEventListener("resize",function(){
-                barChart.resize();
-                energyTypePie.resize();
-            });
         },
         updated: function () {
             console.log("update");

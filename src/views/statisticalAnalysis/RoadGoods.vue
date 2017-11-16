@@ -291,8 +291,9 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模',
-            nameGap:'2'
+            name:'企业规模（单位：辆）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿吨公里)',

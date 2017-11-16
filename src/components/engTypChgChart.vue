@@ -457,10 +457,6 @@
             engYearChgChart.setOption(option);
             engYearSortChart.setOption(optionSort);
 
-            window.addEventListener("resize",function(){
-                engYearChgChart.resize();
-                engYearSortChart.resize();
-            });
 
             this.initRequestData(requestData)
            // this.getDataFromService(requestData);

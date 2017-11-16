@@ -237,8 +237,9 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模',
-            nameGap:'2'
+            name:'企业规模（单位：艘）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(万吨标煤/亿吨公里)',
@@ -782,14 +783,6 @@
             energyTonnageChart.setOption(optionEngTog);
             seaShipChart.setOption(optionTogShip);
             energyByYearChart.setOption(option);
-
-            window.addEventListener("resize",function(){
-                energyPieChart.resize();
-                companyChart.resize();
-                energyTonnageChart.resize();
-                seaShipChart.resize();
-                energyByYearChart.resize();
-            });
 
             this.initRequestData(requestData);
             this.getDataFromService(requestData);

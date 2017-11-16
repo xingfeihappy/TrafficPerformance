@@ -396,12 +396,6 @@ export default {
         //console.log(this);
         window.screenWidth = document.body.clientWidth;
 
-        window.addEventListener("resize",function(){
-            window.screenWidth = document.body.clientWidth;
-            this.screenWidth = window.screenWidth;
-            allTypChart.resize();
-            oceanTypChart.resize();
-        });
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
         

@@ -214,8 +214,9 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模',
-            nameGap:'2'
+            name:'企业规模（单位：万吨）',
+            nameLocation:'middle',
+            nameGap:'25'
         },
         yAxis: {
             name:'单位能耗(吨标准煤/吨生产量)',
@@ -500,12 +501,6 @@
             energyPieChart.setOption(optionPi);
             companyChart.setOption(optionScale);
             energyByYearChart.setOption(option);
-
-            window.addEventListener("resize",function(){
-                energyPieChart.resize();
-                companyChart.resize();
-                energyByYearChart.resize();
-            });
 
             this.initRequestData(requestData);
             this.getDataFromService(requestData);
