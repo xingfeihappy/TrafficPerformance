@@ -255,7 +255,8 @@ var optionEng = {
 
 let optionClsEng = {
     title: {
-        text: '不同燃料类型不同长度车长（车长单位：米）单位能耗柱状图',
+        text: '不同燃料类型不同长度车辆单位能耗柱状图',
+        subtext:'车长单位 : 米',
         left:'center'
     },
     dataZoom: [
@@ -269,7 +270,8 @@ let optionClsEng = {
 
     legend: {
         data:[],
-        top : 30
+        left:20,
+        top : 30,
     },
     tooltip : {
         trigger: 'axis',
@@ -463,7 +465,7 @@ export default {
             beginDate:'',
             endDate:'',
             countDate:'',
-            year:(new Date()).getFullYear().toString(),
+            year:'',
             pickerOptions0: {
                 disabledDate(time) {
                     if(time.getFullYear()>(new Date()).getFullYear())
@@ -499,10 +501,10 @@ export default {
         initRequestData(requestData){
             var date = new Date;
             var year = date.getFullYear().toString();
-            var month = date.getMonth();
-            if(month==0){
+            var month = date.getMonth()-1;
+            if(month<=0){
                 year = year -1;
-                month = 12;
+                month += 12;
             }else{
                 if(month>=1 && month<=9)
                     month = '0'+month;
@@ -525,18 +527,12 @@ export default {
 
         getDataFromService(requestData){
             var _this = this;
-            if(k==1){
-                engTypeAllChart.showLoading({text:'加载中'});
-                engClsChart.showLoading({text:'加载中'});
-                engTypeChart.showLoading({text:'加载中'}); 
-                perAllRelChart.showLoading({text:'加载中'}); 
-            }
-            if(k==3){
+            if(k==1||k==3){
                 engTypeAllChart.showLoading({text:'加载中'});
                 engClsChart.showLoading({text:'加载中'});
                 engTypeChart.showLoading({text:'加载中'});       
             }
-            if(k==2){
+            if(k==1||k==2){
                 perAllRelChart.showLoading({text:'加载中'});
             }
             $.get(this.Constant.ajaxAddress+this.Constant.bustranAjax,requestData).
@@ -581,10 +577,22 @@ export default {
                         perAllRelChart.setOption(option);
                     }
 
-                    if(k==1)
-                        _this.selectYearMonth(new Date().getFullYear());
+                    if(k==1){
+                        var date = new Date;
+                        var year = date.getFullYear();
+                        var month = date.getMonth()-1;
+                        if(month<=0){
+                            year -= 1;
+                        }
+                        _this.selectYearMonth(year);
+                    }
                 }else if(res.errCode==31){ // data err
-                    window.log('unknow err');
+                    _this.$message({
+                        showClose: true,
+                        message: '获取数据失败，请稍后再试',
+                        type: 'error',
+                        duration:2500
+                    });
                 }else if(res.errCode==44){ // auth 
                     _this.$router.push('/login');
                 }
@@ -632,7 +640,7 @@ export default {
 
             if(!y||y=='')
                 return ;
-            
+            option.title.text = y +'年度单耗、使用能耗关系图';
             _year = y;
             var date = new Date();
             var year = date.getFullYear();

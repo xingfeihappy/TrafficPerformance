@@ -67,7 +67,7 @@ var dataForMoth = [];//年度图表
 var dataForEngPs = [];//排量车长
 var dataForEngPer = [];//各能源类型单耗
 var dataForEngAll = [];//各能源饼图
-var k = 3;//标志
+var k = 1;//标志
 
 var perAllRelChart;
 var engTypeAllChart;
@@ -253,7 +253,8 @@ var optionEng = {
 
 let optionClsEng = {
     title: {
-        text: '不同燃料类型不同排量（排量单位：升）单位能耗柱状图',
+        text: '不同燃料类型不同排量车辆单位能耗柱状图',
+        subtext:'排量单位 : 升',
         left:'center'
     },
     dataZoom: [
@@ -267,6 +268,7 @@ let optionClsEng = {
 
     legend: {
         data:[],
+        left:20,
         top : 30
     },
     tooltip : {
@@ -496,10 +498,10 @@ export default {
         initRequestData(requestData){
             var date = new Date;
             var year = date.getFullYear().toString();
-            var month = date.getMonth();
-            if(month==0){
+            var month = date.getMonth()-1;
+            if(month<=0){
                 year = year -1;
-                month = 12;
+                month += 12;
             }else{
                 if(month>=1 && month<=9)
                     month = '0'+month;
@@ -526,7 +528,7 @@ export default {
                 engPsChart.showLoading({text:'加载中'});
                 engTypeChart.showLoading({text:'加载中'});
             }
-            if(k==2){
+            if(k==1||k==2){
                 perAllRelChart.showLoading({text:'加载中'});
             }
             $.get(this.Constant.ajaxAddress+this.Constant.taxitranAjax,requestData).
@@ -567,8 +569,23 @@ export default {
                         perAllRelChart.clear();
                         perAllRelChart.setOption(option);
                     }
+                    
+                    if(k==1){
+                        var date = new Date;
+                        var year = date.getFullYear();
+                        var month = date.getMonth()-1;
+                        if(month<=0){
+                            year -= 1;
+                        }
+                        _this.selectYearMonth(year);
+                    }
                 }else if(res.errCode==31){ // data err
-                    window.log('unknow err');
+                    _this.$message({
+                        showClose: true,
+                        message: '获取数据失败，请稍后再试',
+                        type: 'error',
+                        duration:2500
+                    });
                 }else if(res.errCode==44){ // auth 
                     _this.$router.push('/login');
                 }
@@ -612,7 +629,7 @@ export default {
 
             if(!y||y=='')
                 return ;
-            
+            option.title.text = y +'年度单耗、使用能耗关系图';
             _year = y;
             var date = new Date();
             var year = date.getFullYear();

@@ -279,7 +279,12 @@
                         barChart.clear();
                         barChart.setOption(optionMon); */
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }
@@ -400,7 +405,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

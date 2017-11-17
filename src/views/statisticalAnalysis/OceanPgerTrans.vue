@@ -27,19 +27,19 @@
             </el-col>
         </el-row>
         <el-row> 
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="unitEnergyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
               
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="distanceShipChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>        
         </el-row>
@@ -86,7 +86,7 @@
     var dataForEngPsger = [];//能源客位
     var dataForMoth = [];//年度图表
     
-    var k=3; //标志
+    var k=1; //标志
 
     var _year = (new Date).getFullYear().toString();
 
@@ -287,7 +287,7 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模（单位：艘）',
+            name:'企业规模/船舶数（单位：艘）',
             nameLocation:'middle',
             nameGap:'25'
         },
@@ -356,6 +356,7 @@
     var optionEngPsger={
         title: {
             text: '不同燃料类型不同客位船舶单位能耗柱状图',
+            subtext:'客位单位 : 座',
             left:'center'
         },
         dataZoom: [
@@ -368,6 +369,7 @@
         ],
         legend: {
             data:[],
+            left:20,
             top : 30
         },
         tooltip : {
@@ -626,10 +628,10 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
-                var month = date.getMonth();
-                if(month==0){
+                var month = date.getMonth()-1;
+                if(month<=0){
                     year = year -1;
-                    month = 12;
+                    month += 12;
                 }else{
                     if(month>=1 && month<=9)
                         month = '0'+month;
@@ -658,7 +660,7 @@
                     distanceShipChart.showLoading({text:'加载中'});
                     guestChart.showLoading({text:'加载中'});
                 }
-                if(k==2){
+                if(k==1||k==2){
                     energyByYearChart.showLoading({text:'加载中'});
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.oceanpassAjax,requestData).
@@ -712,8 +714,22 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
+                        if(k==1){
+                            var date = new Date;
+                            var year = date.getFullYear();
+                            var month = date.getMonth()-1;
+                            if(month<=0){
+                                year -= 1;
+                            }
+                            _this.selectYearMonth(year);
+                        }
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }         
@@ -755,7 +771,7 @@
 
                 if(!y||y=='')
                     return ;
-                
+                option.title.text = y +'年度单耗、使用能耗关系图';
                 _year = y;
                 var date = new Date();
                 var year = date.getFullYear();
@@ -797,7 +813,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

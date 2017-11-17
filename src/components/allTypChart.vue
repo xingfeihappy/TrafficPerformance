@@ -184,7 +184,7 @@ function setData(res){
     });
     var roadType = res.xs[0].slice(0,4);
     var oceanType = res.xs[0].slice(4,7);
-
+    console.log(traEngMap)
     res.xs[1].forEach(function(element){
         var tmpEngDatas = [];
         var oanEngDatas=[];
@@ -231,48 +231,19 @@ function setData(res){
 
         }
     });
-
+    console.log(oceanEngSeries)
     dataForTraEng.splice(0,dataForTraEng.length);
     dataForTraEng.push(res.xs[1]);
     dataForTraEng.push(roadType);
     dataForTraEng.push(roadEngSeries);
 
-    dataForOanEng.slice(0,dataForTraEng.length);
+    dataForOanEng.splice(0,dataForOanEng.length);
     dataForOanEng.push(res.xs[1]);
     dataForOanEng.push(oceanType);
     dataForOanEng.push(oceanEngSeries);
 };
 
 export default {
-    watch:{
-        
-        /*'$route':function(to,from){
-            
-           // this.resizeChart();
-            if(from.path == "/perDisEng"){
-                //var divWidth = document.getElementById("allTypChart").style.width; 
-                //console.log("before" + divWidth);
-                //console.log(document.getElementById("allTypChart"))
-            }
-            //console.log(allTypChart)
-            if(to.path == "/perDisEng"){
-                console.log("afterRoute:"+this.screenWidth+" "+window.screenWidth);
-                
-               // var divWidth = document.getElementById("allTypChart").style.width; 
-                //console.log("after" + divWidth);
-                if(this.screenWidth!=window.screenWidth){
-                    console.log("enter resize()")
-                    this.screenWidth = window.screenWidth;
-                    console.log(allTypChart);
-                    console.log(document.getElementById("cityTypeEnergyPie"))
-                    allTypChart.setOption(optionTraEng);
-                    allTypChart.resize();
-                    
-                    oceanTypChart.resize();
-                }
-            }     
-        }*/
-    },
     data(){
       return {
             countDate: '',
@@ -302,15 +273,17 @@ export default {
       }
     },
     methods:{
-        resizeChart(){
-            console.log(document.getElementById("allTypChart"));
-        },
         initRequestData(requestData){
             var date = new Date;
-            var year = date.getFullYear().toString();
-            var month = date.getMonth();
-            if(month>=1 && month<=9)
-                month = '0'+month;
+            var year = date.getFullYear();
+            var month = date.getMonth()-1;
+            if(month<=0){
+                year = year -1;
+                month += 12;
+            }else{
+                if(month>=1 && month<=9)
+                    month = '0'+month;
+            }
             var token = getCookie('token');
             var userInfo = JSON.parse(getCookie('userInfo'));
             requestData.token = token;
@@ -336,23 +309,28 @@ export default {
                     allTypChart.hideLoading();
                     oceanTypChart.hideLoading();
                     if(res.errCode==30){//data ok
-                    setData(res);
-                    optionTraEng.legend.data = dataForTraEng[0];
-                    optionTraEng.xAxis[0].data = dataForTraEng[1];
-                    optionTraEng.series = dataForTraEng[2];
-                    allTypChart.clear();
-                    allTypChart.setOption(optionTraEng);
+                        setData(res);
+                        optionTraEng.legend.data = dataForTraEng[0];
+                        optionTraEng.xAxis[0].data = dataForTraEng[1];
+                        optionTraEng.series = dataForTraEng[2];
+                        allTypChart.clear();
+                        allTypChart.setOption(optionTraEng);
 
-                    optionOcean.legend.data = dataForOanEng[0];
-                    optionOcean.xAxis[0].data = dataForOanEng[1];
-                    optionOcean.series = dataForOanEng[2];
-                    oceanTypChart.clear();
-                    oceanTypChart.setOption(optionOcean);
-                }else if(res.errCode==31){ // data err
-                    window.log('unknow err');
-                }else if(res.errCode==44){ // auth 
-                    _this.$router.push('/login');
-                }                
+                        optionOcean.legend.data = dataForOanEng[0];
+                        optionOcean.xAxis[0].data = dataForOanEng[1];
+                        optionOcean.series = dataForOanEng[2];
+                        oceanTypChart.clear();
+                        oceanTypChart.setOption(optionOcean);
+                    }else if(res.errCode==31){ // data err
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
+                    }else if(res.errCode==44){ // auth 
+                        _this.$router.push('/login');
+                    }                
 
             });
             
@@ -393,8 +371,6 @@ export default {
 
         oceanTypChart = echarts.init(document.getElementById('oceanTypChart'));
         oceanTypChart.setOption(optionOcean);
-        //console.log(this);
-        window.screenWidth = document.body.clientWidth;
 
         this.initRequestData(requestData);
         this.getDataFromService(requestData);
@@ -408,7 +384,7 @@ export default {
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

@@ -27,10 +27,10 @@
             </el-col>
         </el-row>
         <el-row> 
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
         </el-row>
@@ -77,7 +77,7 @@
     var dataForEngTog = [];//能源吨位
     var dataforTogShip =[];//吨位船舶类型
     var dataForEngAll = [];//各能源饼图
-    var k=3; //标志
+    var k=1; //标志
 
     var shipTypeMap;
 
@@ -237,7 +237,7 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模（单位：艘）',
+            name:'企业规模/船舶数（单位：艘）',
             nameLocation:'middle',
             nameGap:'25'
         },
@@ -635,10 +635,15 @@
         methods: {
             initRequestData(requestData){
                 var date = new Date;
-                var year = date.getFullYear().toString();
-                var month = date.getMonth();
-                if(month>=1 && month<=9)
-                    month = '0'+month;
+                var year = date.getFullYear();
+                var month = date.getMonth()-1;
+                if(month<=0){
+                    year = year -1;
+                    month += 12;
+                }else{
+                    if(month>=1 && month<=9)
+                        month = '0'+month;
+                }
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -662,7 +667,7 @@
                     companyChart.showLoading({text:'加载中'});
                     seaShipChart.showLoading({text:'加载中'});
                 }
-                if(k==2){
+                if(k==1||k==2){
                     energyByYearChart.showLoading({text:'加载中'});
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.rivertranAjax,requestData).
@@ -710,8 +715,22 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
+                        if(k==1){
+                            var date = new Date;
+                            var year = date.getFullYear();
+                            var month = date.getMonth()-1;
+                            if(month<=0){
+                                year -= 1;
+                            }
+                            _this.selectYearMonth(year);
+                        }   
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }
@@ -754,7 +773,7 @@
 
                 if(!y||y=='')
                     return ;
-                
+                option.title.text = y +'年度单耗、使用能耗关系图';
                 _year = y;
                 var date = new Date();
                 var year = date.getFullYear();
@@ -795,7 +814,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

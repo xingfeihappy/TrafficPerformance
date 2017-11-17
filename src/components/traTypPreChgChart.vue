@@ -244,7 +244,11 @@ export default {
     methods:{
         initRequestData(requestData){
             var date = new Date;
-           // var year = date.getFullYear().toString();
+            var year = date.getFullYear();
+            var month = date.getMonth()-1;
+            if(month<=0){
+                year -= 1;
+            }
             var token = getCookie('token');
             var userInfo = JSON.parse(getCookie('userInfo'));
             requestData.token = token;
@@ -256,10 +260,11 @@ export default {
                 requestData.place1 =userInfo.place1;
             if(userInfo.place2!=null && userInfo.place2!="")
                 requestData.place2 = userInfo.place2;          
-          //  requestData.timeRange = year+'-01-01:'+year+'-12-31';
+            this.selectYearMonth(year);
            
         },
         getDataFromService(requestData){
+            console.log(requestData);
             var _this = this;
             unitEngChgChart.showLoading({text:'加载中'});
             allEngChgChart.showLoading({text:'加载中'});
@@ -281,7 +286,12 @@ export default {
                     allEngChgChart.clear();
                     allEngChgChart.setOption(optionMonEngAll);
                 }else if(res.errCode==31){ // data err
-                    window.log('unknow err');
+                    _this.$message({
+                        showClose: true,
+                        message: '获取数据失败，请稍后再试',
+                        type: 'error',
+                        duration:2500
+                    });
                 }else if(res.errCode==44){ // auth 
                     _this.$router.push('/login');
                 }
@@ -293,7 +303,8 @@ export default {
 
             if(!y||y=='')
                 return ;
-            
+            optionMonEngAll.title.text= y+"年总能耗变化趋势";
+            optionMonEngUnit.title.text = y+"年单位能耗变化趋势";
             _year = y;
             var date = new Date();
             var year = date.getFullYear();
@@ -303,7 +314,7 @@ export default {
             }else{
                 y = y +'-01-01:'+y+'-12-31';
             }
-            requestData['timeRange']=y;
+            requestData.timeRange=y;
             
             this.getDataFromService(requestData);
         }    
@@ -328,7 +339,7 @@ export default {
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

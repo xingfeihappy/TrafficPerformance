@@ -166,7 +166,6 @@
     var allEnergys = [];
 
     function setData(res){
-        console.log(res)
         var allYearMon2Map = {};
         res.engTypOther.forEach(function(element){
             element.engTypMo.forEach(function(e2){
@@ -337,8 +336,16 @@
         },
         methods:{
             initRequestData(requestData){
-               // var date = new Date;
-                //var year = date.getFullYear().toString();
+                var date = new Date;
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if((month-1)<=0){
+                    year = year-1;
+                    month = 12;
+                }else{
+                    if(month>=1 && month<=9)
+                        month = '0'+month;
+                }
                 var token = getCookie('token');
                 var userInfo = JSON.parse(getCookie('userInfo'));
                 requestData.token = token;
@@ -350,7 +357,13 @@
                     requestData.place1 =userInfo.place1;
                 if(userInfo.place2!=null && userInfo.place2!="")
                     requestData.place2 = userInfo.place2;          
-                //requestData.timeRange = (year-1)+'-01-01:'+year+'-12-31';
+                requestData.timeRange = (year-1)+'-01-01:'+year+'-'+month+'-31';
+
+                
+                _engType = '所有燃料';
+                _endYear = year;
+                _currentYear = _endYear;
+                _beginYear = year-1;
             },
              
             getDataFromService(requestData){
@@ -361,9 +374,7 @@
                 done(function (res){
                     engYearChgChart.hideLoading();
                     engYearSortChart.hideLoading();
-                    console.log(res)
                     if(res.errCode==30){//data ok
-                        console.log(res)
                         allEnergys = res.xs[1];
                         _this.optionSelect  = allEnergys.map(item => {
                             return { value: item, label: item };
@@ -375,7 +386,12 @@
                         }
                         setData(res);  
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     } 
@@ -385,7 +401,6 @@
             },
 
             selectBeginEndYear(){
-                
                 if(this.beginYear!=''&&this.endYear!=''){
                     _beginYear = this.beginYear.getFullYear();
                     _endYear = this.endYear.getFullYear();
@@ -416,32 +431,6 @@
                 }   
             },
 
-            /*selectBeginYear(by){
-                _beginYear = by;
-                if(_endYear==''){    
-                }else{
-                    if(_endYear<_beginYear){
-                        alert("起始年份应该小于结束年份");
-                    }else{
-                        var date = new Date();
-                        var year = date.getFullYear();
-                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
-                        this.getDataFromService(requestData);
-                    }         
-                }    
-            },
-            selectEndYear(ey){
-                _endYear = ey;
-                if(_beginYear==''){
-                }else{
-                    if(_endYear<_beginYear){
-                        alert("起始年份应该小于结束年份");
-                    }else{
-                        requestData.timeRange = _beginYear+'-01-01:'+_endYear+'-12-31';
-                        this.getDataFromService(requestData);
-                    }         
-                }
-            },*/
             selectEngType(et){
                 _engType = et;
                  chaEngType();
@@ -459,7 +448,7 @@
 
 
             this.initRequestData(requestData)
-           // this.getDataFromService(requestData);
+            this.getDataFromService(requestData);
             
         },
         updated:function(){
@@ -470,7 +459,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

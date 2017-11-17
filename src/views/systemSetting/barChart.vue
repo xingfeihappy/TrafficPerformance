@@ -29,20 +29,20 @@
             </el-col>
         </el-row>
         <el-row > 
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
             
               
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="carTypeChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="distanceChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
                  
@@ -216,7 +216,7 @@
     };
     var optionScale={
         title:{
-            text: '不同规模企业（车辆数）单位能耗柱状图',
+            text: '不同规模企业单位能耗柱状图',
             left:'center'
         },
         grid:{
@@ -244,7 +244,7 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模（单位：辆）',
+            name:'企业规模/车辆数（单位：辆）',
             nameLocation:'middle',
             nameGap:'25'
         },
@@ -264,7 +264,7 @@
     };
     var optionCarType={
         title:{
-            text: '不同车辆类型单位能耗柱状图',
+            text: '不同类型车辆单位能耗柱状图',
             left:'center'
         },
         grid:{
@@ -642,7 +642,7 @@
     export default {
         data() {
             return {
-                year:(new Date()).getFullYear().toString(),
+                year:'',
                 countDate: '',
                 beginDate:'',
                 endDate:'',
@@ -680,10 +680,10 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear();
-                var month = date.getMonth();
-                if(month==0){
+                var month = date.getMonth()-1;
+                if(month<=0){
                     year = year -1;
-                    month = 12;
+                    month += 12;
                 }else{
                     if(month>=1 && month<=9)
                         month = '0'+month;
@@ -706,22 +706,14 @@
             },
             getDataFromService(requestData){
                 var _this = this;
-                if(k==1){
-                    energyPieChart.showLoading({text:'加载中'});
-                    companyChart.showLoading({text:'加载中'});
-                    carTypeChart.showLoading({text:'加载中'});
-                    distanceChart.showLoading({text:'加载中'});
-                    guestChart.showLoading({text:'加载中'});
-                    energyByYearChart.showLoading({text:'加载中'});
-                }
-                if(k==3){
+                if(k==1||k==3){
                     energyPieChart.showLoading({text:'加载中'});
                     companyChart.showLoading({text:'加载中'});
                     carTypeChart.showLoading({text:'加载中'});
                     distanceChart.showLoading({text:'加载中'});
                     guestChart.showLoading({text:'加载中'});
                 }
-                if(k==2){
+                if(k==1||k==2){
                     energyByYearChart.showLoading({text:'加载中'});
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.roadpassAjax,requestData).
@@ -776,11 +768,22 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
-                        if(k==1)
-                            _this.selectYearMonth(new Date().getFullYear());
-
+                        if(k==1){
+                            var date = new Date;
+                            var year = date.getFullYear();
+                            var month = date.getMonth()-1;
+                            if(month<=0){
+                                year -= 1;
+                            }
+                            _this.selectYearMonth(year);
+                        }
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }  
@@ -827,7 +830,7 @@
 
                 if(!y||y=='')
                     return ;
-                
+                option.title.text = y +'年度单耗、使用能耗关系图';
                 _year = y;
                 var date = new Date();
                 var year = date.getFullYear();

@@ -34,10 +34,10 @@
             </el-col>       
         </el-row>
         <el-row>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="tonnageChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>        
         </el-row>
@@ -291,7 +291,7 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模（单位：辆）',
+            name:'企业规模/车辆数（单位：辆）',
             nameLocation:'middle',
             nameGap:'25'
         },
@@ -683,7 +683,7 @@
                 beginDate:'',
                 endDate:'',
                 countDate:'',
-                year:(new Date()).getFullYear().toString(),
+                year:'',
                 pickerOptions0: {
                     disabledDate(time) {
                         if(time.getFullYear()>(new Date()).getFullYear())
@@ -718,10 +718,10 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear();
-                var month = date.getMonth();
-                if(month==0){
+                var month = date.getMonth()-1;
+                if(month<=0){
                     year = year -1;
-                    month = 12;
+                    month += 12;
                 }else{
                     if(month>=1 && month<=9)
                         month = '0'+month;
@@ -743,22 +743,14 @@
             },
             getDataFromService(requestData){
                 var _this = this;
-                if(k==1){
-                    energyPieChart.showLoading({text:'加载中'});
-                    companyChart.showLoading({text:'加载中'});
-                    tonnageChart.showLoading({text:'加载中'});
-                    engTonChart.showLoading({text:'加载中'});
-                    carTonChart.showLoading({text:'加载中'});
-                    energyByYearChart.showLoading({text:'加载中'});
-                }
-                if(k==3){
+                if(k==1||k==3){
                     energyPieChart.showLoading({text:'加载中'});
                     companyChart.showLoading({text:'加载中'});
                     tonnageChart.showLoading({text:'加载中'});
                     engTonChart.showLoading({text:'加载中'});
                     carTonChart.showLoading({text:'加载中'});
                 }
-                if(k==2){
+                if(k==1||k==2){
                     energyByYearChart.showLoading({text:'加载中'});
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.roadgoodsAjax,requestData).
@@ -811,10 +803,22 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         }
-                        if(k==1)
-                            _this.selectYearMonth(new Date().getFullYear());
+                        if(k==1){
+                            var date = new Date;
+                            var year = date.getFullYear();
+                            var month = date.getMonth()-1;
+                            if(month<=0){
+                                year -= 1;
+                            }
+                            _this.selectYearMonth(year);
+                        }
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }
@@ -862,7 +866,7 @@
 
                 if(!y||y=='')
                     return ;
-                
+                option.title.text = y +'年度单耗、使用能耗关系图';
                 _year = y;
                 var date = new Date();
                 var year = date.getFullYear();
@@ -906,7 +910,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

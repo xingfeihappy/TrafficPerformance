@@ -515,7 +515,12 @@ export default {
                     relTimeChartCo.clear();
                     relTimeChartCo.setOption(optionCo);
                 }else if(res.errCode==31){ // data err
-                    window.log('unknow err');
+                    _this.$message({
+                        showClose: true,
+                        message: '获取数据失败，请稍后再试',
+                        type: 'error',
+                        duration:2500
+                    });
                 }else if(res.errCode==44){ // auth 
                     _this.$router.push('/login');
                 }
@@ -533,7 +538,7 @@ export default {
 
         
         //this.timeRange =  t;
-        //this.getDataFromService(requestData);
+        this.getDataFromService(requestData);
     },
     updated:function(){
 
@@ -546,7 +551,7 @@ export default {
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

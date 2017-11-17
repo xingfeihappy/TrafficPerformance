@@ -178,10 +178,10 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear();
-                var month = date.getMonth();
-                if(month==0){
+                var month = date.getMonth()-1;
+                if(month<=0){
                     year = year -1;
-                    month = 12;
+                    month += 12;
                 }else{
                     if(month>=1 && month<=9)
                         month = '0'+month;
@@ -233,7 +233,12 @@
                         cityTypeEnergyPie.setOption(optionPi);
                         console.log(res);
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }
@@ -284,8 +289,7 @@
         mounted: function () {
             cityTypeEnergyPie = echarts.init(document.getElementById('cityTypeEnergyPie'));
             cityTypeEnergyPie.setOption(optionPi);
-
-            window.screenWidth = document.body.clientWidth;
+;
 
             this.initRequestData(requestData);
             this.initSelectBox();
@@ -302,7 +306,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 

@@ -86,7 +86,7 @@
     
     var shipTypeMap;
 
-    var k=3; //标志
+    var k=1; //标志
 
     var _year = (new Date).getFullYear().toString();
     
@@ -237,7 +237,7 @@
         },
         xAxis: {
             data: [],
-            name:'企业规模（单位：艘）',
+            name:'企业规模/船舶数（单位：艘）',
             nameLocation:'middle',
             nameGap:'25'
         },
@@ -359,7 +359,8 @@
     };
     var optionEngDis = {
         title: {
-            text: '不同燃料类型不同运距（运距单位：公里）船舶单位能耗柱状图',
+            text: '不同燃料类型不同运距船舶单位能耗柱状图',
+            subtext:'运距单位 : 公里',
             left:'center'
         },
         dataZoom: [
@@ -372,6 +373,7 @@
         ],
         legend: {
             data:[],
+            left:20,
             top : 30
         },
         tooltip : {
@@ -740,10 +742,10 @@
             initRequestData(requestData){
                 var date = new Date;
                 var year = date.getFullYear().toString();
-                var month = date.getMonth();
-                if(month==0){
+                var month = date.getMonth()-1;
+                if(month<=0){
                     year = year -1;
-                    month = 12;
+                    month += 12;
                 }else{
                     if(month>=1 && month<=9)
                         month = '0'+month;
@@ -774,7 +776,7 @@
                     tonShipChart.showLoading({text:'加载中'});
                     engDisChart.showLoading({text:'加载中'});
                 }
-                if(k==2){
+                if(k==1||k==2){
                     energyByYearChart.showLoading({text:'加载中'});
                 }
                 $.get(this.Constant.ajaxAddress+this.Constant.oceangoodsAjax,requestData).
@@ -829,8 +831,22 @@
                             energyByYearChart.clear();
                             energyByYearChart.setOption(option);
                         } 
+                        if(k==1){
+                            var date = new Date;
+                            var year = date.getFullYear();
+                            var month = date.getMonth()-1;
+                            if(month<=0){
+                                year -= 1;
+                            }
+                            _this.selectYearMonth(year);
+                        } 
                     }else if(res.errCode==31){ // data err
-                        window.log('unknow err');
+                        _this.$message({
+                            showClose: true,
+                            message: '获取数据失败，请稍后再试',
+                            type: 'error',
+                            duration:2500
+                        });
                     }else if(res.errCode==44){ // auth 
                         _this.$router.push('/login');
                     }  
@@ -872,7 +888,7 @@
 
                 if(!y||y=='')
                     return ;
-                
+                option.title.text = y +'年度单耗、使用能耗关系图';
                 _year = y;
                 var date = new Date();
                 var year = date.getFullYear();
@@ -915,7 +931,7 @@
 
 <style scoped lang="scss">
     .chart {
-        width: 100%;
+        width: 1100px;
         float: left;
         .chart-container{
              background-color: #F2F2F2; 
