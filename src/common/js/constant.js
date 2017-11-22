@@ -37,4 +37,6 @@ export const download = '/helpdownload/helpDocument.pdf'
 export const getSupport = '/getsupport'
 export const setSupport = '/setsupport'
 
+export const analyzeReport = '/reportallO.json'
+
 

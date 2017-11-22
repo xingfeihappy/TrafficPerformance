@@ -175,8 +175,6 @@ export default {
                     _this.$router.push('/login');
                 }
             });
-
-
         }
     },
     mounted() {

@@ -26,6 +26,8 @@ import relTimDatChart from './components/relTimDatChart.vue'
 import OceanFreight from './views/statisticalAnalysis/OceanFreight.vue'
 import TrafficEnergy from './views/statisticalAnalysis/TrafficEnergy.vue'
 import CityEnergy from './views/statisticalAnalysis/CityEnergy.vue'
+import analyzeReport from './components/analyzeReport.vue'
+
 //import TotalEnergy from './views/statisticalAnalysis/TotalEnergy.vue'
 import DataInMap from './views/datadetection/DataInMap.vue'
 import GuestCar from './views/datadetection/GuestCar.vue'//数据监测，客运车辆
@@ -127,7 +129,8 @@ let routes = [
             { path: '/perDisEng', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: allTypChart,  name: '单位运距能耗指标' },
             { path: '/cityTranTypEnger', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: CityEnergy,  name: '地市能耗构成图' },
             { path: '/traCitTypeEng', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: TrafficEnergy,  name: '交通方式能耗构成图' }, 
-            { path: '/engTypYear', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '年度数据对比' },           
+            { path: '/engTypYear', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: engTypChgChart,  name: '年度数据对比' },
+            { path: '/reportAll', pri:['R_ADMIN','R_TRA','R_LAN','R_WAT','R_ENT'],component: analyzeReport,  name: '分析报告' },          
         ]
     },
 
