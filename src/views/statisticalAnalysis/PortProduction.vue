@@ -234,6 +234,8 @@
     };
 
     function setData(res){
+
+        //console.log(JSON.stringify(res));
         var monthData = new Object();
         var engerData = {};
         var scaleData={};
@@ -251,7 +253,8 @@
                 var t = monthData[e2.type];
                 if(!t) t = [0,0];
                 t[0] += e2.typDatOfAllEng;
-                t[1] += e2.typDatOfAllLen;
+                //t[1] += e2.typDatOfAllLen;
+                t[1] = e2.typDatOfAllLen;
                 monthData[e2.type] = t;
 
                 // cal engall
@@ -272,7 +275,6 @@
             t[1] += element.baseTypDatOfAllLen;
             scaleData[element.baseTyp] = t;
         });
-        console.log(scaleData)
 
         //准备能源饼图数据
         res.xs[1].forEach(function(e1){
@@ -303,7 +305,7 @@
             dataForScalePer.push(res.xs[2]);
             dataForScalePer.push(eng_per_for_scale);
         }
-        console.log(monthData)
+
         //准备年度数据
         xAisMon.forEach(function(e1){
             var t = monthData[e1];
