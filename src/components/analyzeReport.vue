@@ -78,7 +78,7 @@ var optionTraffic = {
         left:'left'*/
     },
     tooltip : {
-        
+
     },
     grid: {
         right:80,
@@ -88,7 +88,7 @@ var optionTraffic = {
     tooltip: {},
     xAxis: [
         {
-            
+
             name:'行业',       
             data:[]
         }
@@ -561,6 +561,7 @@ export default {
                                  '第三是'+trafficSortArr[2].name+'，占'+(trafficSortArr[2].eng/total[0]*100).toFixed(2)+"%。"
             
             /*---- 各地市部分填写----*/
+            this.cityitems.splice(0,this.cityitems.length);
             for(var i = 0;i<citySortArr.length;i++){
                 var name = citySortArr[i].name;
                 var eng = citySortArr[i].eng;
@@ -578,6 +579,7 @@ export default {
             }
 
             /*---- 各能源部分填写----*/
+            this.engeritems.splice(0,this.engeritems);
             for(var i = 0;i<engerSortArr.length;i++){
                 var name = engerSortArr[i].name;
                 var eng = engerSortArr[i].eng;
