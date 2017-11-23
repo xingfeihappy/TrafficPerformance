@@ -27,10 +27,10 @@
             </el-col>
         </el-row>
         <el-row> 
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="energyPieChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12" class="chart-container">                
+            <el-col :xs="12" :sm="12" :md="12" :lg="12" class="chart-container">                
                 <div id="companyChart" style="width:100%; height:400px;" class="chart-content"></div>
             </el-col>   
         </el-row>  
@@ -101,9 +101,7 @@
         xAxis: [
             {
                 type: 'category',
-                axisPointer: {
-                    type: 'shadow'
-                },
+                
                 name:'月份',
                 nameGap:'20',
                 data: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
@@ -124,7 +122,7 @@
             },
             {
                 type: 'value',
-                name: '单位能耗(吨标准煤/吨生产量)',
+                name: '单位能耗(亿吨标准煤/万吨生产量)',
                 nameGap : 35,
                 nameLocation:'middle',
                 axisLine: {
@@ -152,7 +150,7 @@
     var optionPi = {
         title:{
             text: '港口生产能源结构图',
-            subtext:'单位：吨标准煤',
+            subtext:'单位：万吨标准煤',
             x: 'center'
         },
         tooltip : {
@@ -219,7 +217,7 @@
             nameGap:'25'
         },
         yAxis: {
-            name:'单位能耗(吨标准煤/吨生产量)',
+            name:'单位能耗(亿吨标准煤/万吨生产量)',
             nameLocation:'middle',
             nameGap:'40'
         },
@@ -281,7 +279,7 @@
             var t = engerData[e1];
             if(t&&t[0]>0)
             {
-                eng_all_for_PI.push({name:e1,value:(t[0]).toFixed(2)})
+                eng_all_for_PI.push({name:e1,value:(t[0]/10000).toFixed(2)})
             }else{
             }
         });
@@ -290,7 +288,7 @@
         res.xs[2].forEach(function(e1){
             var t = scaleData[e1];
             if(t){
-                eng_per_for_scale.push((t[0]/t[1]).toFixed(2));
+                eng_per_for_scale.push((t[0]/10000/t[1]).toFixed(2));
             }else{
                 eng_per_for_scale.push(0);
             }
@@ -313,7 +311,7 @@
             {
                 
                 month_all.push((t[0]/10000).toFixed(2));
-                month_per.push((t[0]/t[1]).toFixed(2));
+                month_per.push((t[0]/10000/t[1]).toFixed(2));
             }else
             {
                 month_all.push(0);

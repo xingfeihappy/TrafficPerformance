@@ -138,7 +138,7 @@
         dataForCityEngAll.splice(0,dataForCityEngAll.length);
         dataForCityEngAll.push(res.xs[0]);
         dataForCityEngAll.push(eng_all_for_PI);
-
+        
     }
 
 
