@@ -263,7 +263,7 @@
                 if(ui.place1==""||ui.place1==null){
                     requestData.cityType = '杭州';
                 }
-                //this.getTime();
+                this.getTime();
                 
                 console.log(requestData)
             },
@@ -286,7 +286,7 @@
             this.initMap();
             this.setCityInfo();
             this.initRequestData();
-            //this.getDataFromService(requestData);
+            this.getDataFromService(requestData);
             //this.MakeHeatMap();
             
         },

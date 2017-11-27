@@ -579,7 +579,7 @@ export default {
             }
 
             /*---- 各能源部分填写----*/
-            this.engeritems.splice(0,this.engeritems);
+            this.engeritems.splice(0,this.engeritems.length);
             for(var i = 0;i<engerSortArr.length;i++){
                 var name = engerSortArr[i].name;
                 var eng = engerSortArr[i].eng;
